@@ -2,8 +2,16 @@
 
 import React from 'react';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export const Footer: React.FC = () => {
+  const pathname = usePathname();
+
+  // On 1:1 detail page, hide bottom footer so the app workspace is viewport-locked
+  if (pathname?.startsWith('/request')) {
+    return null;
+  }
+
   return (
     <footer
       style={{

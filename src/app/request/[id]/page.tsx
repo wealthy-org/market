@@ -77,16 +77,7 @@ export default function RequestDetailPage({
   const nextDeal = deals[(currentIndex + 1) % deals.length];
 
   return (
-    <div
-      style={{
-        background: 'var(--bg)',
-        color: 'var(--ink)',
-        minHeight: '100vh',
-        width: '100%',
-        padding: '20px 32px 32px',
-        boxSizing: 'border-box',
-      }}
-    >
+    <div className="detail-page-container">
       {/* Top Header Bar harmonized with prototype colors */}
       <div
         style={{
@@ -94,10 +85,11 @@ export default function RequestDetailPage({
           justifyContent: 'space-between',
           alignItems: 'center',
           flexWrap: 'wrap',
-          gap: 16,
-          paddingBottom: 20,
+          gap: 12,
+          paddingBottom: 12,
           borderBottom: '1px solid var(--line)',
-          marginBottom: 24,
+          marginBottom: 14,
+          flexShrink: 0,
         }}
       >
         {/* Left Title & Breadcrumbs */}
@@ -105,7 +97,7 @@ export default function RequestDetailPage({
           <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
             <h1
               style={{
-                fontSize: 28,
+                fontSize: 24,
                 fontWeight: 900,
                 letterSpacing: '-0.02em',
                 margin: 0,
@@ -364,10 +356,11 @@ export default function RequestDetailPage({
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
-              padding: '12px 4px 6px',
+              padding: '6px 4px 2px',
+              flexShrink: 0,
             }}
           >
-            <div style={{ fontSize: 11.5, color: 'var(--muted)', fontWeight: 650 }}>
+            <div style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 650 }}>
               Robinhood Testnet Pool Contract
             </div>
             <div style={{ display: 'flex', gap: 12, color: 'var(--muted)' }}>
@@ -377,7 +370,7 @@ export default function RequestDetailPage({
                 style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'inherit' }}
                 title="Copy address"
               >
-                <Download size={15} />
+                <Download size={14} />
               </button>
               <button
                 type="button"
@@ -385,7 +378,7 @@ export default function RequestDetailPage({
                 style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'inherit' }}
                 title="Open Simulator"
               >
-                <Maximize2 size={15} />
+                <Maximize2 size={14} />
               </button>
             </div>
           </div>
@@ -395,21 +388,22 @@ export default function RequestDetailPage({
             style={{
               display: 'flex',
               alignItems: 'center',
-              gap: 8,
-              padding: '10px 12px',
+              gap: 6,
+              padding: '6px 8px',
               background: 'var(--paper)',
-              borderRadius: 14,
+              borderRadius: 12,
               border: '1px solid var(--line)',
-              marginTop: 10,
+              marginTop: 4,
               boxShadow: '0 2px 10px rgba(17, 18, 15, 0.02)',
+              flexShrink: 0,
             }}
           >
             <button
               type="button"
               onClick={() => router.push(`/request/${prevDeal.id}`)}
               style={{
-                width: 28,
-                height: 28,
+                width: 26,
+                height: 26,
                 borderRadius: '50%',
                 background: '#ffffff',
                 border: '1px solid var(--line)',
@@ -421,14 +415,14 @@ export default function RequestDetailPage({
                 flexShrink: 0,
               }}
             >
-              <ChevronLeft size={15} />
+              <ChevronLeft size={14} />
             </button>
 
             {/* Thumbnail Row */}
             <div
               style={{
                 display: 'flex',
-                gap: 8,
+                gap: 6,
                 overflowX: 'auto',
                 scrollbarWidth: 'none',
                 flex: 1,
@@ -443,9 +437,9 @@ export default function RequestDetailPage({
                     type="button"
                     onClick={() => router.push(`/request/${d.id}`)}
                     style={{
-                      width: 42,
-                      height: 42,
-                      borderRadius: 10,
+                      width: 36,
+                      height: 36,
+                      borderRadius: 8,
                       overflow: 'hidden',
                       border: isActive ? '2px solid var(--ink)' : '1px solid var(--line)',
                       boxShadow: isActive ? '0 0 0 2px var(--lime)' : 'none',
