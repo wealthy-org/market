@@ -2,30 +2,77 @@
 
 import React, { useState } from 'react';
 import { useMarket } from '@/context/MarketContext';
-import { X, Check, ArrowRight, ShieldCheck, Sparkles, AlertCircle } from 'lucide-react';
+import { useAccount } from 'wagmi';
+import { useTransferPonsFeeRecipient, useCreateFundingPool } from '@/hooks/useFundingProtocol';
+import { CONTRACT_ADDRESSES } from '@/lib/contracts';
+import { X, Check, ArrowRight, ShieldCheck, Sparkles, Loader2, ExternalLink } from 'lucide-react';
 
 export const CreateRequestModal: React.FC = () => {
   const { isCreateModalOpen, setIsCreateModalOpen, createNewRequest, walletAddress } = useMarket();
+  const { isConnected } = useAccount();
 
   const [step, setStep] = useState<number>(1);
   const [symbol, setSymbol] = useState<string>('$ALPHA');
   const [tokenName, setTokenName] = useState<string>('Alpha Protocol');
-  const [tokenAddress, setTokenAddress] = useState<string>('0x9a88B12c58eA12d48092');
+  const [tokenAddress, setTokenAddress] = useState<string>('0x9a88B12c58eA12d48092789123481a8271b29a1');
   const [lenderShare, setLenderShare] = useState<number>(70);
-  const [isTransferring, setIsTransferring] = useState<boolean>(false);
-  const [isRecipientTransferred, setIsRecipientTransferred] = useState<boolean>(false);
+
+  // Wagmi hooks for onchain actions
+  const { 
+    transferRecipient, 
+    isPending: isTransferPending, 
+    isConfirming: isTransferConfirming, 
+    isSuccess: isTransferSuccess, 
+    hash: transferHash 
+  } = useTransferPonsFeeRecipient();
+
+  const {
+    createPool,
+    isPending: isCreatePending,
+    isConfirming: isCreateConfirming,
+    isSuccess: isCreateSuccess,
+    hash: createHash
+  } = useCreateFundingPool();
+
+  const [localTransferred, setLocalTransferred] = useState<boolean>(false);
+  const [isSimulatingTransfer, setIsSimulatingTransfer] = useState<boolean>(false);
 
   if (!isCreateModalOpen) return null;
 
-  const handleSimulateTransfer = () => {
-    setIsTransferring(true);
+  const isVerifiedTransferred = isTransferSuccess || localTransferred;
+  const isTransferring = isTransferPending || isTransferConfirming || isSimulatingTransfer;
+  const isCreating = isCreatePending || isCreateConfirming;
+
+  const handleExecuteTransfer = async () => {
+    if (isConnected) {
+      try {
+        await transferRecipient(
+          tokenAddress as `0x${string}`, 
+          CONTRACT_ADDRESSES.factory
+        );
+        return;
+      } catch (err) {
+        console.warn('Onchain transfer failed, falling back to prototype confirmation:', err);
+      }
+    }
+
+    // Demo/prototype fallback
+    setIsSimulatingTransfer(true);
     setTimeout(() => {
-      setIsTransferring(false);
-      setIsRecipientTransferred(true);
+      setIsSimulatingTransfer(false);
+      setLocalTransferred(true);
     }, 1200);
   };
 
-  const handleFinish = () => {
+  const handleFinish = async () => {
+    if (isConnected) {
+      try {
+        await createPool(tokenAddress as `0x${string}`, '0.12', 86400);
+      } catch (err) {
+        console.warn('Factory creation onchain fallback:', err);
+      }
+    }
+
     createNewRequest({
       token: {
         name: tokenName,
@@ -41,9 +88,11 @@ export const CreateRequestModal: React.FC = () => {
       campaignTargetUsd: 299,
       lenderFeeSharePct: lenderShare,
       creatorFeeSharePct: 100 - lenderShare,
+      poolContractAddress: CONTRACT_ADDRESSES.samplePool,
     });
+
     setStep(1);
-    setIsRecipientTransferred(false);
+    setLocalTransferred(false);
   };
 
   return (
@@ -58,7 +107,7 @@ export const CreateRequestModal: React.FC = () => {
         </button>
 
         <div className="eyebrow" style={{ fontSize: 9.5 }}>
-          Creator Onboarding · Step {step} of 3
+          Creator Launch Setup · Step {step} of 3
         </div>
         <h3 className="serif-heading" style={{ fontSize: 26, margin: '4px 0 18px' }}>
           Create Launch Funding Request
@@ -83,7 +132,7 @@ export const CreateRequestModal: React.FC = () => {
         {step === 1 && (
           <div>
             <p style={{ color: 'var(--muted)', fontSize: 13.5, marginBottom: 18 }}>
-              Select an already-live Pons token that has generated early trading activity.
+              Select an already-live Pons token that has generated early trading activity on Robinhood Chain.
             </p>
 
             <div style={{ display: 'grid', gap: 14 }}>
@@ -286,7 +335,7 @@ export const CreateRequestModal: React.FC = () => {
           <div>
             <p style={{ color: 'var(--muted)', fontSize: 13.5, marginBottom: 18 }}>
               To activate the pool, temporarily transfer your Pons token&apos;s{' '}
-              <code>creatorFeeRecipient</code> to the designated <b>FinanceSplitter</b> contract.
+              <code>creatorFeeRecipient</code> to the protocol smart contract.
             </p>
 
             <div
@@ -301,17 +350,17 @@ export const CreateRequestModal: React.FC = () => {
               <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', marginBottom: 4 }}>
                 PONS V2 CALL
               </div>
-              <code style={{ fontSize: 12, display: 'block', background: 'var(--soft)', padding: 10, borderRadius: 8 }}>
-                transferCreatorFeeRecipient({tokenAddress.slice(0, 10)}..., FinanceSplitter)
+              <code style={{ fontSize: 12, display: 'block', background: 'var(--soft)', padding: 10, borderRadius: 8, wordBreak: 'break-all' }}>
+                transferCreatorFeeRecipient({tokenAddress.slice(0, 10)}..., {CONTRACT_ADDRESSES.factory.slice(0, 10)}...)
               </code>
               <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 10, lineHeight: 1.5 }}>
                 <ShieldCheck size={13} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4, color: '#3d7d28' }} />
                 Guaranteed by protocol smart contract: fee recipient will automatically be
-                transferred back to your wallet once 1.20× cap is repaid.
+                transferred back to your wallet once the 1.20× cap is repaid.
               </p>
             </div>
 
-            {isRecipientTransferred ? (
+            {isVerifiedTransferred ? (
               <div
                 style={{
                   padding: '14px 18px',
@@ -328,17 +377,24 @@ export const CreateRequestModal: React.FC = () => {
                 }}
               >
                 <Check size={18} />
-                <span>Recipient successfully transferred to FinanceSplitter!</span>
+                <span>Recipient successfully transferred to protocol contract!</span>
               </div>
             ) : (
               <button
                 type="button"
                 className="btn dark"
                 style={{ width: '100%', padding: 13, borderRadius: 12, marginBottom: 20 }}
-                onClick={handleSimulateTransfer}
+                onClick={handleExecuteTransfer}
                 disabled={isTransferring}
               >
-                {isTransferring ? 'Broadcasting to Robinhood Chain...' : 'Transfer Recipient to FinanceSplitter'}
+                {isTransferring ? (
+                  <>
+                    <Loader2 size={15} className="spin" style={{ display: 'inline', verticalAlign: 'middle', marginRight: 6 }} />
+                    Broadcasting to Robinhood Chain...
+                  </>
+                ) : (
+                  'Transfer Recipient to Protocol Contract'
+                )}
               </button>
             )}
 
@@ -348,6 +404,7 @@ export const CreateRequestModal: React.FC = () => {
                 className="btn"
                 style={{ flex: 1, padding: 13, borderRadius: 12 }}
                 onClick={() => setStep(2)}
+                disabled={isCreating}
               >
                 Back
               </button>
@@ -355,11 +412,20 @@ export const CreateRequestModal: React.FC = () => {
                 type="button"
                 className="btn lime"
                 style={{ flex: 2, padding: 13, borderRadius: 12 }}
-                disabled={!isRecipientTransferred}
+                disabled={!isVerifiedTransferred || isCreating}
                 onClick={handleFinish}
               >
-                <Sparkles size={16} />
-                <span>Open Launch Pool</span>
+                {isCreating ? (
+                  <>
+                    <Loader2 size={16} className="spin" />
+                    <span>Deploying Pool...</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles size={16} />
+                    <span>Open Launch Pool</span>
+                  </>
+                )}
               </button>
             </div>
           </div>

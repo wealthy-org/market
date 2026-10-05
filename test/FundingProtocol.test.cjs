@@ -205,4 +205,35 @@ describe("Pons Creator Fee Funding Protocol", function () {
       expect(await escrow.isExecuted()).to.be.true;
     });
   });
+
+  describe("4. FundingPoolFactory", function () {
+    it("Should allow creator to deploy a new standardized pool", async function () {
+      const Factory = await ethers.getContractFactory("FundingPoolFactory");
+      const factory = await Factory.deploy(
+        await mockPons.getAddress(),
+        protocolTreasury.address,
+        operator.address
+      );
+      await factory.waitForDeployment();
+
+      const newToken = ethers.Wallet.createRandom().address;
+      const tx = await factory.connect(creator).createPool(newToken, ethers.parseEther("0.12"), 86400);
+      const receipt = await tx.wait();
+
+      expect(await factory.totalPools()).to.equal(1);
+      const allPools = await factory.getAllPools();
+      expect(allPools.length).to.equal(1);
+
+      const creatorPools = await factory.getPoolsByCreator(creator.address);
+      expect(creatorPools.length).to.equal(1);
+      expect(creatorPools[0]).to.equal(allPools[0]);
+
+      // Connect to newly created pool and verify settings
+      const FundingPool = await ethers.getContractFactory("FundingPool");
+      const createdPool = FundingPool.attach(allPools[0]);
+      expect(await createdPool.creator()).to.equal(creator.address);
+      expect(await createdPool.campaignTargetEth()).to.equal(ethers.parseEther("0.12"));
+    });
+  });
 });
+

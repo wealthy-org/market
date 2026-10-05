@@ -57,6 +57,7 @@ export interface FundingDeal {
   eligibility: EligibilityStatus;
   createdAt: string;
   splitterAddress: string;
+  poolContractAddress?: string;
 }
 
 export interface LenderPosition {
@@ -74,7 +75,9 @@ export interface LenderPosition {
   claimableEth: number;
   status: 'ACTIVE' | 'COOLING' | 'REPAID';
   timestamp: string;
+  splitterAddress?: string;
 }
+
 
 export interface ActivityItem {
   id: string;

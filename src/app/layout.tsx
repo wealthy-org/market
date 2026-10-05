@@ -9,6 +9,7 @@ import { ContributionModal } from '@/components/ContributionModal';
 import { CreateRequestModal } from '@/components/CreateRequestModal';
 import { WalletModalContainer } from '@/components/WalletModalContainer';
 import { Toast } from '@/components/Toast';
+import { TestnetPlayground } from '@/components/TestnetPlayground';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -47,9 +48,11 @@ export default function RootLayout({
             <CreateRequestModal />
             <WalletModalContainer />
             <Toast />
+            <TestnetPlayground />
           </MarketProvider>
         </Web3Provider>
       </body>
     </html>
   );
 }
+

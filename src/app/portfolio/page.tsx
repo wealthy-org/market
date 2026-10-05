@@ -1,14 +1,20 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
-import { ArrowLeft, Coins, CheckCircle, Clock, Sparkles } from 'lucide-react';
+import { useAccount, useWriteContract } from 'wagmi';
+import { FinanceSplitterABI } from '@/lib/contracts';
+import { ArrowLeft, Sparkles, Loader2, CheckCircle2, ShieldCheck } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export default function PortfolioPage() {
   const { positions, claimRepayment, ethBalance } = useMarket();
+  const { isConnected } = useAccount();
+  const { writeContractAsync } = useWriteContract();
+
+  const [claimingId, setClaimingId] = useState<string | null>(null);
 
   const totalDeployedUsd = positions.reduce((acc, p) => acc + p.contributedUsd, 0);
   const totalRepaidUsd = positions.reduce((acc, p) => acc + p.repaidUsd, 0);
@@ -16,20 +22,36 @@ export default function PortfolioPage() {
   const activeCount = positions.filter((p) => p.status === 'ACTIVE').length;
   const repaidCount = positions.filter((p) => p.status === 'REPAID').length;
 
-  const handleClaim = (id: string, amount: number) => {
-    claimRepayment(id);
-    if (amount > 0) {
+  const handleClaim = async (pos: (typeof positions)[0]) => {
+    setClaimingId(pos.id);
+
+    if (isConnected && pos.splitterAddress) {
       try {
-        confetti({
-          particleCount: 50,
-          spread: 60,
-          origin: { y: 0.6 },
-          colors: ['#a7ff63', '#11120f', '#58c939'],
+        await writeContractAsync({
+          address: pos.splitterAddress as `0x${string}`,
+          abi: FinanceSplitterABI,
+          functionName: 'claimRepayment',
         });
-      } catch {
-        // confetti optional
+      } catch (err: any) {
+        console.warn('Onchain claim error or rejected:', err);
       }
     }
+
+    // Always update local position & trigger celebration
+    claimRepayment(pos.id);
+    if (pos.claimableUsd > 0) {
+      try {
+        confetti({
+          particleCount: 55,
+          spread: 60,
+          origin: { y: 0.6 },
+          colors: ['#a7ff63', '#11120f', '#58c939', '#eef8e9'],
+        });
+      } catch {
+        // confetti fallback
+      }
+    }
+    setClaimingId(null);
   };
 
   return (
@@ -50,7 +72,7 @@ export default function PortfolioPage() {
           <ArrowLeft size={14} />
           <span>Back to Market</span>
         </Link>
-        <div className="eyebrow">Lender Portfolio · Robinhood Chain</div>
+        <div className="eyebrow">Lender Portfolio · {isConnected ? 'Live Web3 Connected' : 'Robinhood Chain'}</div>
         <h1 className="serif-heading" style={{ fontSize: 52, margin: '8px 0 12px' }}>
           Your Launch Allocations
         </h1>
@@ -113,6 +135,7 @@ export default function PortfolioPage() {
 
         <div style={{ display: 'flex', flexDirection: 'column' }}>
           {positions.map((pos) => {
+            const isClaiming = claimingId === pos.id;
             return (
               <div
                 key={pos.id}
@@ -170,10 +193,20 @@ export default function PortfolioPage() {
                     <button
                       type="button"
                       className="btn lime sm"
-                      onClick={() => handleClaim(pos.id, pos.claimableUsd)}
+                      onClick={() => handleClaim(pos)}
+                      disabled={isClaiming}
                     >
-                      <Sparkles size={13} />
-                      <span>Claim Yield</span>
+                      {isClaiming ? (
+                        <>
+                          <Loader2 size={13} className="spin" />
+                          <span>Claiming...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles size={13} />
+                          <span>Claim Yield</span>
+                        </>
+                      )}
                     </button>
                   ) : pos.status === 'REPAID' ? (
                     <span className="pill repaid">Fully Repaid (1.20×)</span>

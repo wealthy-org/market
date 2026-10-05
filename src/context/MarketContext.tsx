@@ -20,7 +20,7 @@ interface MarketContextType {
   isWalletModalOpen: boolean;
   connectDemoWallet: () => void;
   disconnectWallet: () => void;
-  contributeToPool: (dealId: string, amountUsd: number) => { success: boolean; message: string };
+  contributeToPool: (dealId: string, amountUsd: number, customTxHash?: string) => { success: boolean; message?: string };
   claimRepayment: (positionId: string) => void;
   createNewRequest: (newDeal: Partial<FundingDeal>) => void;
   isContributionModalOpen: boolean;
@@ -31,7 +31,13 @@ interface MarketContextType {
   setIsCreateModalOpen: (open: boolean) => void;
   toastMessage: string | null;
   clearToast: () => void;
+  simulateFeeInflow: (dealId: string, amountUsd: number) => void;
+  simulatePoolFill: (dealId: string) => void;
+  simulateExpireAndRefund: (dealId: string) => void;
+  claimRefund: (dealId: string) => void;
+  resetAllDemoState: () => void;
 }
+
 
 const MarketContext = createContext<MarketContextType | undefined>(undefined);
 
@@ -104,7 +110,7 @@ export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setModalDeal(null);
   };
 
-  const contributeToPool = (dealId: string, amountUsd: number) => {
+  const contributeToPool = (dealId: string, amountUsd: number, customTxHash?: string) => {
     if (!isWalletConnected) {
       openWalletModal();
       return { success: false, message: 'Please connect wallet first' };
@@ -180,6 +186,7 @@ export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         claimableEth: 0,
         status: 'ACTIVE',
         timestamp: 'Just now',
+        splitterAddress: deal.splitterAddress,
       };
       setPositions((prev) => [newPos, ...prev]);
     }
@@ -194,12 +201,13 @@ export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       amountUsd: finalAmount,
       amountEth: +costEth.toFixed(4),
       userAddress: walletAddress,
-      txHash: `0x${Math.random().toString(16).substring(2, 10)}...${Math.random().toString(16).substring(2, 6)}`,
+      txHash: customTxHash || `0x${Math.random().toString(16).substring(2, 10)}...${Math.random().toString(16).substring(2, 6)}`,
       timestamp: 'Just now',
       details: `Funded $${finalAmount} into ${deal.token.symbol} pool`,
     };
 
     setActivity((prev) => [newAct, ...prev]);
+
 
     if (isNowFilled) {
       const fillAct: ActivityItem = {
@@ -348,6 +356,140 @@ export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setIsCreateModalOpen(false);
   };
 
+  const simulateFeeInflow = (dealId: string, amountUsd: number) => {
+    const targetDeal = deals.find((d) => d.id === dealId) || selectedDeal;
+    if (!targetDeal) return;
+
+    const lenderShareUsd = amountUsd * (targetDeal.lenderFeeSharePct / 100);
+    const creatorShareUsd = amountUsd * (targetDeal.creatorFeeSharePct / 100);
+    const newFeesAccrued = targetDeal.creatorFeesAccruedUsd + amountUsd;
+    const newRepaidToLenders = targetDeal.repaidToLendersUsd + lenderShareUsd;
+    const maxRepayCapUsd = targetDeal.campaignTargetUsd * targetDeal.repayCapMultiplier;
+    const isNowFullyRepaid = newRepaidToLenders >= maxRepayCapUsd;
+
+    setDeals((prev) =>
+      prev.map((d) => {
+        if (d.id === targetDeal.id) {
+          return {
+            ...d,
+            creatorFeesAccruedUsd: newFeesAccrued,
+            repaidToLendersUsd: isNowFullyRepaid ? maxRepayCapUsd : newRepaidToLenders,
+            status: isNowFullyRepaid ? 'REPAID' : (d.status === 'LIVE' || d.status === 'MOMENTUM' ? 'REPAYING' : d.status),
+          };
+        }
+        return d;
+      })
+    );
+
+    setPositions((prev) =>
+      prev.map((p) => {
+        if (p.dealId === targetDeal.id && p.status !== 'REPAID') {
+          const myShareUsd = +(lenderShareUsd * (p.poolSharePct / 100)).toFixed(2);
+          const myShareEth = +(myShareUsd / ETH_PRICE_USD).toFixed(4);
+          const updatedRepaid = +(p.repaidUsd + myShareUsd).toFixed(2);
+          const capForPos = +(p.contributedUsd * 1.20).toFixed(2);
+          const isPosRepaid = updatedRepaid >= capForPos;
+          const cappedRepaid = isPosRepaid ? capForPos : updatedRepaid;
+
+          return {
+            ...p,
+            repaidUsd: cappedRepaid,
+            repaidPct: Math.min(100, Math.round((cappedRepaid / capForPos) * 100)),
+            claimableUsd: +(p.claimableUsd + myShareUsd).toFixed(2),
+            claimableEth: +(p.claimableEth + myShareEth).toFixed(4),
+            status: isPosRepaid ? 'REPAID' : p.status,
+          };
+        }
+        return p;
+      })
+    );
+
+    const act: ActivityItem = {
+      id: `fee-${Date.now()}`,
+      type: 'REPAYMENT',
+      dealId: targetDeal.id,
+      tokenSymbol: targetDeal.token.symbol,
+      tokenAvatar: targetDeal.token.avatar,
+      amountUsd: amountUsd,
+      amountEth: +(amountUsd / ETH_PRICE_USD).toFixed(4),
+      userAddress: 'Pons V2 Fee Router',
+      txHash: `0xfee...${Math.random().toString(16).substring(2, 6)}`,
+      timestamp: 'Just now',
+      details: isNowFullyRepaid
+        ? `1.20x Cap Hit! Fee recipient automatically returned to creator.`
+        : `Routed $${amountUsd} fees ($${lenderShareUsd.toFixed(2)} to lenders, $${creatorShareUsd.toFixed(2)} to creator)`,
+    };
+    setActivity((prev) => [act, ...prev]);
+
+    if (isNowFullyRepaid) {
+      showToast(`🎉 1.20x Cap reached on ${targetDeal.token.symbol}! Fee rights returned to creator.`);
+    } else {
+      showToast(`Streamed $${amountUsd} Pons fees: $${lenderShareUsd.toFixed(2)} routed to lenders`);
+    }
+  };
+
+  const simulatePoolFill = (dealId: string) => {
+    const targetDeal = deals.find((d) => d.id === dealId) || selectedDeal;
+    if (!targetDeal) return;
+
+    setDeals((prev) =>
+      prev.map((d) => (d.id === targetDeal.id ? { ...d, fundedUsd: d.campaignTargetUsd, status: 'REPAYING' } : d))
+    );
+
+    const act: ActivityItem = {
+      id: `fill-${Date.now()}`,
+      type: 'POOL_FILLED',
+      dealId: targetDeal.id,
+      tokenSymbol: targetDeal.token.symbol,
+      tokenAvatar: targetDeal.token.avatar,
+      amountUsd: targetDeal.campaignTargetUsd,
+      amountEth: +(targetDeal.campaignTargetUsd / ETH_PRICE_USD).toFixed(4),
+      userAddress: 'FinanceSplitter Deployed',
+      txHash: `0xfill...${Math.random().toString(16).substring(2, 6)}`,
+      timestamp: 'Just now',
+      details: `100% Filled! Deployed FinanceSplitter & CampaignEscrow on Robinhood Chain.`,
+    };
+    setActivity((prev) => [act, ...prev]);
+    showToast(`Pool filled 100%! FinanceSplitter active on ${targetDeal.token.symbol}`);
+  };
+
+  const simulateExpireAndRefund = (dealId: string) => {
+    const targetDeal = deals.find((d) => d.id === dealId) || selectedDeal;
+    if (!targetDeal) return;
+
+    setDeals((prev) =>
+      prev.map((d) => (d.id === targetDeal.id ? { ...d, status: 'LIVE' } : d))
+    );
+
+    showToast(`Simulated pool expiration. 100% refunds enabled.`);
+  };
+
+  const claimRefund = (dealId: string) => {
+    const userPositions = positions.filter((p) => p.dealId === dealId);
+    if (userPositions.length === 0) {
+      showToast('No contribution found for this pool');
+      return;
+    }
+    const refundEth = userPositions.reduce((acc, p) => acc + p.contributedEth, 0);
+    const refundUsd = userPositions.reduce((acc, p) => acc + p.contributedUsd, 0);
+
+    if (!isWagmiConnected) {
+      setDemoBalance((prev) => +(prev + refundEth).toFixed(4));
+    }
+    setPositions((prev) => prev.filter((p) => p.dealId !== dealId));
+
+    showToast(`Refund of $${refundUsd} (${refundEth.toFixed(4)} ETH) claimed successfully!`);
+  };
+
+  const resetAllDemoState = () => {
+    setDeals(INITIAL_DEALS);
+    setPositions(INITIAL_POSITIONS);
+    setActivity(INITIAL_ACTIVITY);
+    setDemoBalance(4.85);
+    showToast('Reset all testnet states to default');
+  };
+
+
   return (
     <MarketContext.Provider
       value={{
@@ -375,7 +517,13 @@ export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         setIsCreateModalOpen,
         toastMessage,
         clearToast,
+        simulateFeeInflow,
+        simulatePoolFill,
+        simulateExpireAndRefund,
+        claimRefund,
+        resetAllDemoState,
       }}
+
     >
       {children}
     </MarketContext.Provider>
