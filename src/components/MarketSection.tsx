@@ -1,7 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useMarket } from '@/context/MarketContext';
+
 import { DealStatus, FundingDeal } from '@/types/market';
 import { ArrowUpRight, ArrowDownRight, Radio } from 'lucide-react';
 
@@ -170,7 +172,26 @@ export const MarketSection: React.FC = () => {
                     <span className="value">{deal.repayCapMultiplier.toFixed(2)}×</span>
                   </div>
 
-                  <div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <Link
+                      href={`/request/${deal.id}`}
+                      onClick={(e) => e.stopPropagation()}
+                      style={{
+                        padding: '6px 10px',
+                        borderRadius: 999,
+                        border: '1px solid var(--line)',
+                        background: '#ffffff',
+                        fontSize: 11.5,
+                        fontWeight: 700,
+                        color: 'var(--ink)',
+                        textDecoration: 'none',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                      }}
+                    >
+                      View
+                    </Link>
+
                     {isFilled ? (
                       <button
                         type="button"
@@ -192,6 +213,7 @@ export const MarketSection: React.FC = () => {
                       </button>
                     )}
                   </div>
+
                 </div>
               );
             })}
