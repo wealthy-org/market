@@ -65,6 +65,21 @@ export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  // Fetch live deals from NeonDB via API route
+  useEffect(() => {
+    fetch('/api/deals')
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success && data.deals?.length > 0) {
+          setDeals(data.deals);
+        }
+      })
+      .catch((err) => {
+        console.warn('API fetch deals error, using default mock deals:', err);
+      });
+  }, []);
+
+
   const isWalletConnected = isWagmiConnected || isDemoConnected;
   const walletAddress = isWagmiConnected && wagmiAddress ? wagmiAddress : demoAddress;
   const ethBalance = isWagmiConnected && balanceData ? parseFloat(formatEther(balanceData.value)) : demoBalance;
@@ -354,7 +369,19 @@ export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setActivity((prev) => [act, ...prev]);
     showToast(`Funding pool for ${newDeal.token.symbol} opened successfully!`);
     setIsCreateModalOpen(false);
+
+    // Persist new deal to NeonDB
+    try {
+      fetch('/api/deals', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newDeal),
+      }).catch((e) => console.warn('Could not persist deal to NeonDB:', e));
+    } catch (e) {
+      // background sync
+    }
   };
+
 
   const simulateFeeInflow = (dealId: string, amountUsd: number) => {
     const targetDeal = deals.find((d) => d.id === dealId) || selectedDeal;

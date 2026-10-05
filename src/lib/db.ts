@@ -199,3 +199,40 @@ export async function dbGetDeals(): Promise<FundingDeal[]> {
     return INITIAL_DEALS;
   }
 }
+
+/**
+ * Insert or update a deal in NeonDB
+ */
+export async function dbInsertDeal(deal: FundingDeal) {
+  if (!sql) return { success: false, message: 'No DB connection' };
+  try {
+    await sql`
+      INSERT INTO deals (
+        id, name, symbol, address, avatar, age, chain, pair_token, creator_address,
+        status, fee_velocity, fee_velocity_trend, trend_direction, liquidity_usd,
+        market_cap_usd, unique_traders, campaign_name, campaign_target_usd, funded_usd,
+        lender_fee_share_pct, creator_fee_share_pct, repay_cap_multiplier,
+        projected_payback_hours, creator_fees_accrued_usd, repaid_to_lenders_usd,
+        splitter_address, pool_contract_address
+      ) VALUES (
+        ${deal.id}, ${deal.token.name}, ${deal.token.symbol}, ${deal.token.address}, ${deal.token.avatar},
+        ${deal.token.age}, ${deal.token.chain}, ${deal.token.pairToken}, ${deal.token.creatorAddress},
+        ${deal.status}, ${deal.feeVelocity}, ${deal.feeVelocityTrend}, ${deal.trendDirection},
+        ${deal.liquidityUsd}, ${deal.marketCapUsd}, ${deal.uniqueTraders}, ${deal.campaignName},
+        ${deal.campaignTargetUsd}, ${deal.fundedUsd}, ${deal.lenderFeeSharePct}, ${deal.creatorFeeSharePct},
+        ${deal.repayCapMultiplier}, ${deal.projectedPaybackHours}, ${deal.creatorFeesAccruedUsd},
+        ${deal.repaidToLendersUsd}, ${deal.splitterAddress}, ${deal.poolContractAddress || null}
+      )
+      ON CONFLICT (id) DO UPDATE SET
+        funded_usd = EXCLUDED.funded_usd,
+        status = EXCLUDED.status,
+        creator_fees_accrued_usd = EXCLUDED.creator_fees_accrued_usd,
+        repaid_to_lenders_usd = EXCLUDED.repaid_to_lenders_usd;
+    `;
+    return { success: true };
+  } catch (err: any) {
+    console.error('dbInsertDeal error:', err);
+    return { success: false, error: err?.message };
+  }
+}
+
