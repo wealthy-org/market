@@ -13,6 +13,16 @@ export const GondiCarousel: React.FC = () => {
   const [isPaused, setIsPaused] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
+  // Refs so the rAF loop never restarts on hover toggle (restart = jump/reset feel)
+  const pausedRef = useRef(false);
+  const hoveredRef = useRef(false);
+
+  useEffect(() => {
+    pausedRef.current = isPaused;
+  }, [isPaused]);
+  useEffect(() => {
+    hoveredRef.current = isHovered;
+  }, [isHovered]);
 
   const filteredDeals = deals.filter((deal) => {
     if (filter === 'Hot') return deal.status === 'HOT' || deal.fundedUsd / deal.campaignTargetUsd > 0.6;
@@ -35,7 +45,9 @@ export const GondiCarousel: React.FC = () => {
     }
   }, [filter]);
 
-  // Smooth continuous auto-scroll (marquee ticker) via requestAnimationFrame
+  // Smooth continuous auto-scroll (marquee ticker) via single requestAnimationFrame loop.
+  // Loop is mounted once per dataset — hover/pause only flips refs, never restarts the loop,
+  // so there is no jump/reset when cursor enters/leaves.
   useEffect(() => {
     const container = scrollContainerRef.current;
     if (!container || displayDeals.length === 0) return;
@@ -44,20 +56,27 @@ export const GondiCarousel: React.FC = () => {
     let lastTime = performance.now();
     // Gentle ticker speed (~32 pixels per second)
     const speed = 32;
+    const GAP = 16; // must match flex gap in style/class
 
     const animate = (now: number) => {
-      const delta = (now - lastTime) / 1000;
+      const delta = Math.min((now - lastTime) / 1000, 0.05);
       lastTime = now;
 
-      if (!isPaused && !isHovered && container) {
+      if (!pausedRef.current && !hoveredRef.current && container) {
+        // stride = width of exactly one set (n cards + n gaps).
+        // scrollWidth/2 = n*W + (n-0.5)*gap, so add half a gap to land pixel-perfect.
         const halfWidth = container.scrollWidth / 2;
+        const stride = halfWidth + GAP / 2;
         if (halfWidth > 0 && container.scrollWidth > container.clientWidth) {
           container.scrollLeft += speed * delta;
           // Seamless infinite wrap around
-          if (container.scrollLeft >= halfWidth) {
-            container.scrollLeft -= halfWidth;
+          if (container.scrollLeft >= stride) {
+            container.scrollLeft -= stride;
           }
         }
+      } else {
+        // Keep clock in sync while paused so resume has no delta jump
+        lastTime = now;
       }
 
       animId = requestAnimationFrame(animate);
@@ -68,25 +87,27 @@ export const GondiCarousel: React.FC = () => {
     return () => {
       cancelAnimationFrame(animId);
     };
-  }, [isPaused, isHovered, displayDeals.length]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [displayDeals.length]);
 
   const handleScroll = (direction: 'left' | 'right') => {
     if (scrollContainerRef.current) {
       const container = scrollContainerRef.current;
-      const halfWidth = container.scrollWidth / 2;
+      const GAP = 16;
+      const stride = container.scrollWidth / 2 + GAP / 2;
       const scrollAmount = 260 * 2;
 
       if (direction === 'left') {
-        if (container.scrollLeft <= 10 && halfWidth > 0) {
-          container.scrollLeft += halfWidth;
+        if (container.scrollLeft <= 10 && stride > 0) {
+          container.scrollLeft += stride;
         }
         container.scrollBy({
           left: -scrollAmount,
           behavior: 'smooth',
         });
       } else {
-        if (container.scrollLeft >= halfWidth && halfWidth > 0) {
-          container.scrollLeft -= halfWidth;
+        if (container.scrollLeft >= stride && stride > 0) {
+          container.scrollLeft -= stride;
         }
         container.scrollBy({
           left: scrollAmount,
@@ -223,7 +244,7 @@ export const GondiCarousel: React.FC = () => {
       {/* Cards Scroll Container */}
       <div
         ref={scrollContainerRef}
-        className={`gondi-carousel-cards ${isPaused || isHovered ? 'is-paused' : 'is-autoscrolling'}`}
+        className="gondi-carousel-cards is-autoscrolling"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         onTouchStart={() => setIsHovered(true)}

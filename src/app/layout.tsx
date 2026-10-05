@@ -5,7 +5,6 @@ import { Web3Provider } from '@/components/Web3Provider';
 import { MarketProvider } from '@/context/MarketContext';
 import { GondiSidebar } from '@/components/GondiSidebar';
 import { GondiHeader } from '@/components/GondiHeader';
-import { Footer } from '@/components/Footer';
 import { ContributionModal } from '@/components/ContributionModal';
 import { CreateRequestModal } from '@/components/CreateRequestModal';
 import { WalletModalContainer } from '@/components/WalletModalContainer';
@@ -47,7 +46,6 @@ export default function RootLayout({
               <div className="gondi-main-area">
                 <GondiHeader />
                 <main style={{ flex: 1, minWidth: 0 }}>{children}</main>
-                <Footer />
               </div>
             </div>
             <ContributionModal />
