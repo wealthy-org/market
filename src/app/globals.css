@@ -299,12 +299,18 @@ textarea {
   display: flex;
   gap: 16px;
   overflow-x: auto;
-  scroll-snap-type: x mandatory;
   padding-bottom: 8px;
   scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
 }
 .gondi-carousel-cards::-webkit-scrollbar {
   display: none;
+}
+.gondi-carousel-cards.is-paused {
+  scroll-snap-type: x proximity;
+}
+.gondi-carousel-cards.is-autoscrolling {
+  scroll-snap-type: none;
 }
 
 .gondi-pool-card {
@@ -317,8 +323,9 @@ textarea {
   display: flex;
   flex-direction: column;
   box-shadow: 0 8px 24px rgba(20, 20, 15, 0.04);
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
+  user-select: none;
 }
 
 .gondi-pool-card:hover {

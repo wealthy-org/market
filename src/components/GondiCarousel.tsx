@@ -1,26 +1,18 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
-import { ChevronLeft, ChevronRight, Info } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Info, Play, Pause } from 'lucide-react';
 
 export const GondiCarousel: React.FC = () => {
   const router = useRouter();
   const { deals, openContributionModal, setSelectedDealId } = useMarket();
   const [filter, setFilter] = useState<'All' | 'Hot' | 'Near Cap' | 'Repaying'>('All');
+  const [isPaused, setIsPaused] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
-
-  const handleScroll = (direction: 'left' | 'right') => {
-    if (scrollContainerRef.current) {
-      const scrollAmount = 260 * 2;
-      scrollContainerRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth',
-      });
-    }
-  };
 
   const filteredDeals = deals.filter((deal) => {
     if (filter === 'Hot') return deal.status === 'HOT' || deal.fundedUsd / deal.campaignTargetUsd > 0.6;
@@ -28,6 +20,81 @@ export const GondiCarousel: React.FC = () => {
     if (filter === 'Repaying') return deal.status === 'REPAYING' || deal.status === 'REPAID';
     return true;
   });
+
+  // Ensure enough items so continuous wrap is seamless without empty gaps
+  const baseDeals = [...filteredDeals];
+  while (baseDeals.length > 0 && baseDeals.length < 5) {
+    baseDeals.push(...filteredDeals);
+  }
+  const displayDeals = baseDeals.length > 0 ? [...baseDeals, ...baseDeals] : [];
+
+  // Reset scroll position when filter changes
+  useEffect(() => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollLeft = 0;
+    }
+  }, [filter]);
+
+  // Smooth continuous auto-scroll (marquee ticker) via requestAnimationFrame
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container || displayDeals.length === 0) return;
+
+    let animId: number;
+    let lastTime = performance.now();
+    // Gentle ticker speed (~32 pixels per second)
+    const speed = 32;
+
+    const animate = (now: number) => {
+      const delta = (now - lastTime) / 1000;
+      lastTime = now;
+
+      if (!isPaused && !isHovered && container) {
+        const halfWidth = container.scrollWidth / 2;
+        if (halfWidth > 0 && container.scrollWidth > container.clientWidth) {
+          container.scrollLeft += speed * delta;
+          // Seamless infinite wrap around
+          if (container.scrollLeft >= halfWidth) {
+            container.scrollLeft -= halfWidth;
+          }
+        }
+      }
+
+      animId = requestAnimationFrame(animate);
+    };
+
+    animId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelAnimationFrame(animId);
+    };
+  }, [isPaused, isHovered, displayDeals.length]);
+
+  const handleScroll = (direction: 'left' | 'right') => {
+    if (scrollContainerRef.current) {
+      const container = scrollContainerRef.current;
+      const halfWidth = container.scrollWidth / 2;
+      const scrollAmount = 260 * 2;
+
+      if (direction === 'left') {
+        if (container.scrollLeft <= 10 && halfWidth > 0) {
+          container.scrollLeft += halfWidth;
+        }
+        container.scrollBy({
+          left: -scrollAmount,
+          behavior: 'smooth',
+        });
+      } else {
+        if (container.scrollLeft >= halfWidth && halfWidth > 0) {
+          container.scrollLeft -= halfWidth;
+        }
+        container.scrollBy({
+          left: scrollAmount,
+          behavior: 'smooth',
+        });
+      }
+    }
+  };
 
   return (
     <div className="gondi-carousel-wrapper" style={{ marginBottom: 36 }}>
@@ -80,8 +147,32 @@ export const GondiCarousel: React.FC = () => {
           </div>
         </div>
 
-        {/* Carousel Nav Arrows */}
-        <div style={{ display: 'flex', gap: 6 }}>
+        {/* Carousel Nav Arrows & Auto-scroll Toggle */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <button
+            type="button"
+            onClick={() => setIsPaused((prev) => !prev)}
+            title={isPaused ? "Play auto-scroll marquee" : "Pause auto-scroll marquee"}
+            style={{
+              height: 32,
+              padding: '0 12px',
+              borderRadius: 'var(--radius-full)',
+              background: isPaused ? 'var(--soft)' : '#ffffff',
+              border: '1px solid var(--line)',
+              color: isPaused ? 'var(--muted)' : 'var(--ink)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 11.5,
+              fontWeight: 750,
+              cursor: 'pointer',
+              transition: 'all 0.15s ease',
+            }}
+          >
+            {isPaused ? <Play size={12} fill="currentColor" /> : <Pause size={12} fill="currentColor" />}
+            <span>{isPaused ? 'Paused' : 'Auto-scroll'}</span>
+          </button>
+
           <button
             type="button"
             onClick={() => handleScroll('left')}
@@ -132,24 +223,27 @@ export const GondiCarousel: React.FC = () => {
       {/* Cards Scroll Container */}
       <div
         ref={scrollContainerRef}
-        className="gondi-carousel-cards"
+        className={`gondi-carousel-cards ${isPaused || isHovered ? 'is-paused' : 'is-autoscrolling'}`}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        onTouchStart={() => setIsHovered(true)}
+        onTouchEnd={() => setIsHovered(false)}
         style={{
           display: 'flex',
           gap: 16,
           overflowX: 'auto',
-          scrollSnapType: 'x mandatory',
           paddingBottom: 8,
           scrollbarWidth: 'none',
         }}
       >
-        {filteredDeals.map((deal) => {
+        {displayDeals.map((deal, idx) => {
           const targetEth = deal.campaignTargetUsd / ETH_PRICE_USD;
           const raisedEth = deal.fundedUsd / ETH_PRICE_USD;
           const progressPercent = Math.min(100, Math.round((deal.fundedUsd / deal.campaignTargetUsd) * 100));
 
           return (
             <div
-              key={deal.id}
+              key={`${deal.id}-${idx}`}
               className="gondi-pool-card"
               style={{
                 flex: '0 0 230px',
