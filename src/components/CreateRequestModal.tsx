@@ -5,7 +5,7 @@ import { useMarket } from '@/context/MarketContext';
 import { useAccount } from 'wagmi';
 import { useTransferPonsFeeRecipient, useCreateFundingPool } from '@/hooks/useFundingProtocol';
 import { CONTRACT_ADDRESSES } from '@/lib/contracts';
-import { X, Check, ArrowRight, ShieldCheck, Sparkles, Loader2, Info } from 'lucide-react';
+import { X, Check, ArrowRight, ShieldCheck, Sparkles, Loader2 } from 'lucide-react';
 
 export const CreateRequestModal: React.FC = () => {
   const { isCreateModalOpen, setIsCreateModalOpen, createNewRequest, walletAddress } = useMarket();
@@ -97,7 +97,7 @@ export const CreateRequestModal: React.FC = () => {
       <div 
         className="modal-content" 
         onClick={(e) => e.stopPropagation()} 
-        style={{ maxWidth: 540, background: '#14181c', border: '1px solid var(--line-strong)' }}
+        style={{ maxWidth: 540, background: 'var(--paper)', border: '1px solid var(--line)' }}
       >
         <button
           type="button"
@@ -107,10 +107,10 @@ export const CreateRequestModal: React.FC = () => {
           <X size={18} />
         </button>
 
-        <div className="eyebrow" style={{ fontSize: 9.5, color: 'var(--muted)', letterSpacing: '0.08em' }}>
-          CREATOR LAUNCH SETUP · STEP {step} OF 3
+        <div className="eyebrow" style={{ fontSize: 9.5, color: 'var(--muted)', letterSpacing: '0.12em' }}>
+          Creator Launch Setup · Step {step} of 3
         </div>
-        <h3 style={{ fontSize: 24, fontWeight: 800, color: '#ffffff', margin: '6px 0 18px', letterSpacing: '-0.02em' }}>
+        <h3 className="serif-heading" style={{ fontSize: 26, color: 'var(--ink)', margin: '4px 0 16px' }}>
           Create Launch Funding Request
         </h3>
 
@@ -123,9 +123,8 @@ export const CreateRequestModal: React.FC = () => {
                 flex: 1,
                 height: 4,
                 borderRadius: 4,
-                background: s <= step ? 'var(--lime)' : 'var(--line-soft)',
-                boxShadow: s <= step ? '0 0 10px rgba(167, 255, 99, 0.4)' : undefined,
-                transition: 'background 0.25s, box-shadow 0.25s',
+                background: s <= step ? 'var(--ink)' : 'var(--line)',
+                transition: 'background 0.2s',
               }}
             />
           ))}
@@ -133,13 +132,13 @@ export const CreateRequestModal: React.FC = () => {
 
         {step === 1 && (
           <div>
-            <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 18, lineHeight: 1.5 }}>
+            <p style={{ color: 'var(--muted)', fontSize: 13.5, marginBottom: 18, lineHeight: 1.5 }}>
               Select an already-live Pons token that has generated early trading activity on Robinhood Chain.
             </p>
 
             <div style={{ display: 'grid', gap: 14 }}>
               <div>
-                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>
+                <label style={{ fontSize: 11, fontWeight: 800, color: 'var(--muted)', display: 'block', marginBottom: 6, letterSpacing: '0.04em' }}>
                   TOKEN SYMBOL
                 </label>
                 <input
@@ -149,10 +148,10 @@ export const CreateRequestModal: React.FC = () => {
                   style={{
                     width: '100%',
                     padding: '11px 14px',
-                    borderRadius: 10,
+                    borderRadius: 12,
                     border: '1px solid var(--line)',
-                    background: 'var(--surface-input)',
-                    color: '#ffffff',
+                    background: '#ffffff',
+                    color: 'var(--ink)',
                     fontWeight: 750,
                     fontSize: 14,
                   }}
@@ -160,7 +159,7 @@ export const CreateRequestModal: React.FC = () => {
               </div>
 
               <div>
-                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>
+                <label style={{ fontSize: 11, fontWeight: 800, color: 'var(--muted)', display: 'block', marginBottom: 6, letterSpacing: '0.04em' }}>
                   TOKEN NAME
                 </label>
                 <input
@@ -170,17 +169,17 @@ export const CreateRequestModal: React.FC = () => {
                   style={{
                     width: '100%',
                     padding: '11px 14px',
-                    borderRadius: 10,
+                    borderRadius: 12,
                     border: '1px solid var(--line)',
-                    background: 'var(--surface-input)',
-                    color: '#ffffff',
+                    background: '#ffffff',
+                    color: 'var(--ink)',
                     fontSize: 14,
                   }}
                 />
               </div>
 
               <div>
-                <label style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', display: 'block', marginBottom: 6 }}>
+                <label style={{ fontSize: 11, fontWeight: 800, color: 'var(--muted)', display: 'block', marginBottom: 6, letterSpacing: '0.04em' }}>
                   PONS TOKEN CONTRACT (ROBINHOOD CHAIN)
                 </label>
                 <input
@@ -190,10 +189,10 @@ export const CreateRequestModal: React.FC = () => {
                   style={{
                     width: '100%',
                     padding: '11px 14px',
-                    borderRadius: 10,
+                    borderRadius: 12,
                     border: '1px solid var(--line)',
-                    background: 'var(--surface-input)',
-                    color: '#ffffff',
+                    background: '#ffffff',
+                    color: 'var(--ink)',
                     fontFamily: 'var(--font-mono)',
                     fontSize: 12,
                   }}
@@ -201,34 +200,34 @@ export const CreateRequestModal: React.FC = () => {
               </div>
             </div>
 
-            {/* Live Eligibility Check preview */}
+            {/* Live Eligibility Check preview matching prototype */}
             <div
               style={{
                 marginTop: 20,
                 padding: '14px 18px',
-                background: 'rgba(16, 185, 129, 0.08)',
-                borderRadius: 12,
-                border: '1px solid rgba(16, 185, 129, 0.25)',
+                background: 'var(--green-bg)',
+                borderRadius: 14,
+                border: '1px solid #d4ebd0',
               }}
             >
-              <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--emerald)', marginBottom: 8, letterSpacing: '0.04em' }}>
+              <div style={{ fontSize: 11, fontWeight: 800, color: '#40792c', marginBottom: 8, letterSpacing: '0.08em' }}>
                 PONS V2 ELIGIBILITY AUDIT
               </div>
-              <div style={{ display: 'grid', gap: 6, fontSize: 12.5, color: '#e5e7eb' }}>
+              <div style={{ display: 'grid', gap: 6, fontSize: 12.5, color: '#315c22' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Check size={14} color="var(--emerald)" />
+                  <Check size={14} color="#3d7d28" />
                   <span>Token age &gt;= 15m (Detected: 24m)</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Check size={14} color="var(--emerald)" />
+                  <Check size={14} color="#3d7d28" />
                   <span>Unique traders &gt;= 20 (Detected: 42 traders)</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Check size={14} color="var(--emerald)" />
+                  <Check size={14} color="#3d7d28" />
                   <span>Creator fees generated &gt;= $15 (Detected: $38.20)</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <Check size={14} color="var(--emerald)" />
+                  <Check size={14} color="#3d7d28" />
                   <span>Creator fee recipient transferable</span>
                 </div>
               </div>
@@ -236,25 +235,19 @@ export const CreateRequestModal: React.FC = () => {
 
             <button
               type="button"
+              className="btn dark"
               style={{
                 width: '100%',
                 marginTop: 24,
                 padding: '12px 18px',
                 borderRadius: 'var(--radius-full)',
-                background: '#ffffff',
-                color: '#0e1113',
-                border: 0,
                 fontSize: 13,
                 fontWeight: 800,
-                cursor: 'pointer',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 gap: 8,
-                transition: 'all 0.15s ease',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = '#e5e7eb')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = '#ffffff')}
               onClick={() => setStep(2)}
             >
               <span>Continue to Campaign Terms</span>
@@ -265,35 +258,35 @@ export const CreateRequestModal: React.FC = () => {
 
         {step === 2 && (
           <div>
-            <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 18 }}>
+            <p style={{ color: 'var(--muted)', fontSize: 13.5, marginBottom: 18 }}>
               Standardized V1 launch campaign and repayment terms.
             </p>
 
             <div
               style={{
                 border: '1px solid var(--line)',
-                borderRadius: 12,
+                borderRadius: 14,
                 padding: 16,
-                background: 'var(--surface-input)',
+                background: '#ffffff',
                 marginBottom: 18,
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <b style={{ fontSize: 15, color: '#ffffff' }}>DEX Screener Fast-Track Paid</b>
+                <b style={{ fontSize: 15, color: 'var(--ink)' }}>DEX Screener Fast-Track Paid</b>
                 <span className="pill momentum" style={{ fontSize: 10.5 }}>Standard V1</span>
               </div>
               <div style={{ fontSize: 12, color: 'var(--muted)', marginTop: 6 }}>
                 Enhanced Token Info, banner, social verification, and trending qualification.
               </div>
-              <div style={{ marginTop: 12, fontSize: 14, fontWeight: 800, color: 'var(--lime)' }}>
+              <div style={{ marginTop: 12, fontSize: 14, fontWeight: 800, color: 'var(--ink)' }}>
                 Target Cost: $299 in ETH (0.1196 ETH)
               </div>
             </div>
 
             <div style={{ marginBottom: 18 }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, fontWeight: 700, marginBottom: 8 }}>
-                <span style={{ color: '#ffffff' }}>Lender Fee Share</span>
-                <span style={{ color: 'var(--emerald)' }}>{lenderShare}% to lenders / {100 - lenderShare}% you keep</span>
+                <span style={{ color: 'var(--ink)' }}>Lender Fee Share</span>
+                <span style={{ color: 'var(--emerald)', fontWeight: 800 }}>{lenderShare}% to lenders / {100 - lenderShare}% you keep</span>
               </div>
               <input
                 type="range"
@@ -302,7 +295,7 @@ export const CreateRequestModal: React.FC = () => {
                 step="5"
                 value={lenderShare}
                 onChange={(e) => setLenderShare(Number(e.target.value))}
-                style={{ width: '100%', accentColor: 'var(--lime)', cursor: 'pointer' }}
+                style={{ width: '100%', accentColor: 'var(--ink)', cursor: 'pointer' }}
               />
               <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>
                 <span>60% (Slower fill)</span>
@@ -313,8 +306,8 @@ export const CreateRequestModal: React.FC = () => {
 
             <div
               style={{
-                background: 'var(--surface-input)',
-                border: '1px solid var(--line-soft)',
+                background: 'var(--soft)',
+                border: '1px solid var(--line)',
                 borderRadius: 12,
                 padding: '12px 16px',
                 fontSize: 12.5,
@@ -324,7 +317,7 @@ export const CreateRequestModal: React.FC = () => {
             >
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--muted)' }}>Repayment Cap</span>
-                <b style={{ color: '#ffffff' }}>1.20× ($358.80 max return)</b>
+                <b style={{ color: 'var(--ink)' }}>1.20× ($358.80 max return)</b>
               </div>
               <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <span style={{ color: 'var(--muted)' }}>Estimated payback</span>
@@ -335,13 +328,11 @@ export const CreateRequestModal: React.FC = () => {
             <div style={{ display: 'flex', gap: 10, marginTop: 24 }}>
               <button
                 type="button"
+                className="btn"
                 style={{
                   flex: 1,
                   padding: 12,
                   borderRadius: 'var(--radius-full)',
-                  background: 'var(--surface-elevated)',
-                  color: 'var(--ink)',
-                  border: '1px solid var(--line)',
                   fontSize: 12.5,
                   fontWeight: 750,
                   cursor: 'pointer',
@@ -352,13 +343,11 @@ export const CreateRequestModal: React.FC = () => {
               </button>
               <button
                 type="button"
+                className="btn dark"
                 style={{
                   flex: 2,
                   padding: 12,
                   borderRadius: 'var(--radius-full)',
-                  background: '#ffffff',
-                  color: '#0e1113',
-                  border: 0,
                   fontSize: 12.5,
                   fontWeight: 800,
                   cursor: 'pointer',
@@ -378,17 +367,17 @@ export const CreateRequestModal: React.FC = () => {
 
         {step === 3 && (
           <div>
-            <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 18 }}>
+            <p style={{ color: 'var(--muted)', fontSize: 13.5, marginBottom: 18 }}>
               To activate the pool, temporarily transfer your Pons token&apos;s{' '}
-              <code style={{ color: 'var(--lime)' }}>creatorFeeRecipient</code> to the protocol smart contract.
+              <code style={{ background: 'var(--soft)', padding: '2px 6px', borderRadius: 4 }}>creatorFeeRecipient</code> to the protocol smart contract.
             </p>
 
             <div
               style={{
                 border: '1px solid var(--line)',
-                borderRadius: 12,
+                borderRadius: 14,
                 padding: 16,
-                background: 'var(--surface-input)',
+                background: '#ffffff',
                 marginBottom: 20,
               }}
             >
@@ -399,19 +388,19 @@ export const CreateRequestModal: React.FC = () => {
                 style={{
                   fontSize: 11.5,
                   display: 'block',
-                  background: '#111417',
+                  background: 'var(--soft)',
                   border: '1px solid var(--line-soft)',
                   padding: 10,
                   borderRadius: 8,
                   wordBreak: 'break-all',
-                  color: 'var(--lime)',
+                  color: 'var(--ink)',
                   fontFamily: 'var(--font-mono)',
                 }}
               >
                 transferCreatorFeeRecipient({tokenAddress.slice(0, 10)}..., {CONTRACT_ADDRESSES.factory.slice(0, 10)}...)
               </code>
               <p style={{ fontSize: 12, color: 'var(--muted)', marginTop: 10, lineHeight: 1.5 }}>
-                <ShieldCheck size={13} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4, color: 'var(--emerald)' }} />
+                <ShieldCheck size={13} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4, color: '#3d7d28' }} />
                 Guaranteed by protocol smart contract: fee recipient will automatically be
                 transferred back to your wallet once the 1.20× cap is repaid.
               </p>
@@ -421,13 +410,13 @@ export const CreateRequestModal: React.FC = () => {
               <div
                 style={{
                   padding: '14px 18px',
-                  background: 'rgba(16, 185, 129, 0.12)',
-                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  background: 'var(--green-bg)',
+                  border: '1px solid #d4ebd0',
                   borderRadius: 12,
                   display: 'flex',
                   alignItems: 'center',
                   gap: 10,
-                  color: 'var(--emerald)',
+                  color: '#40792c',
                   fontWeight: 750,
                   fontSize: 13,
                   marginBottom: 20,
@@ -439,13 +428,11 @@ export const CreateRequestModal: React.FC = () => {
             ) : (
               <button
                 type="button"
+                className="btn dark"
                 style={{
                   width: '100%',
                   padding: 13,
                   borderRadius: 'var(--radius-full)',
-                  background: 'var(--surface-elevated)',
-                  color: '#ffffff',
-                  border: '1px solid var(--line)',
                   fontSize: 12.5,
                   fontWeight: 750,
                   cursor: 'pointer',
@@ -468,13 +455,11 @@ export const CreateRequestModal: React.FC = () => {
             <div style={{ display: 'flex', gap: 10 }}>
               <button
                 type="button"
+                className="btn"
                 style={{
                   flex: 1,
                   padding: 12,
                   borderRadius: 'var(--radius-full)',
-                  background: 'var(--surface-elevated)',
-                  color: 'var(--ink)',
-                  border: '1px solid var(--line)',
                   fontSize: 12.5,
                   fontWeight: 750,
                   cursor: 'pointer',
@@ -486,16 +471,15 @@ export const CreateRequestModal: React.FC = () => {
               </button>
               <button
                 type="button"
+                className="btn lime"
                 style={{
                   flex: 2,
                   padding: 12,
                   borderRadius: 'var(--radius-full)',
-                  background: !isVerifiedTransferred || isCreating ? 'var(--surface-elevated)' : 'var(--lime)',
-                  color: !isVerifiedTransferred || isCreating ? 'var(--muted)' : '#0e1113',
-                  border: 0,
                   fontSize: 12.5,
-                  fontWeight: 800,
+                  fontWeight: 850,
                   cursor: !isVerifiedTransferred || isCreating ? 'not-allowed' : 'pointer',
+                  opacity: !isVerifiedTransferred || isCreating ? 0.6 : 1,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',

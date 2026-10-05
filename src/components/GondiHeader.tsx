@@ -65,7 +65,8 @@ export const GondiHeader: React.FC = () => {
       style={{
         height: 'var(--header-height)',
         borderBottom: '1px solid var(--line)',
-        background: 'var(--bg)',
+        background: 'rgba(243, 241, 235, 0.88)',
+        backdropFilter: 'blur(14px)',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
@@ -77,10 +78,10 @@ export const GondiHeader: React.FC = () => {
     >
       {/* Left: Mobile Star Logo & Title */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, textDecoration: 'none' }}>
+        <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
           <span
             style={{
-              color: 'var(--lime)',
+              color: 'var(--ink)',
               fontSize: 18,
               fontWeight: 900,
               lineHeight: 1,
@@ -93,10 +94,10 @@ export const GondiHeader: React.FC = () => {
               fontSize: 16,
               fontWeight: 800,
               letterSpacing: '-0.02em',
-              color: '#ffffff',
+              color: 'var(--ink)',
             }}
           >
-            PONS
+            PONS MARKET
           </span>
         </Link>
       </div>
@@ -108,10 +109,11 @@ export const GondiHeader: React.FC = () => {
             position: 'relative',
             display: 'flex',
             alignItems: 'center',
-            background: 'var(--surface-input)',
-            border: `1px solid ${isSearchFocused ? 'var(--line-strong)' : 'var(--line)'}`,
+            background: '#ffffff',
+            border: `1px solid ${isSearchFocused ? 'var(--ink)' : 'var(--line)'}`,
             borderRadius: 'var(--radius-full)',
             padding: '7px 16px',
+            boxShadow: '0 2px 8px rgba(17, 18, 15, 0.03)',
             transition: 'border-color 0.15s ease',
           }}
         >
@@ -123,7 +125,7 @@ export const GondiHeader: React.FC = () => {
             onChange={(e) => setSearchQuery(e.target.value)}
             onFocus={() => setIsSearchFocused(true)}
             onBlur={() => setTimeout(() => setIsSearchFocused(false), 200)}
-            placeholder="Search collections, artists, users or items"
+            placeholder="Search pools, tokens, creators... [ / ]"
             style={{
               background: 'transparent',
               border: 0,
@@ -136,12 +138,12 @@ export const GondiHeader: React.FC = () => {
           />
           <span
             style={{
-              background: 'var(--surface-elevated)',
+              background: 'var(--soft)',
               border: '1px solid var(--line)',
               borderRadius: 4,
               color: 'var(--muted)',
               fontSize: 11,
-              fontWeight: 700,
+              fontWeight: 800,
               padding: '1px 6px',
               lineHeight: 1.4,
               marginLeft: 8,
@@ -160,11 +162,11 @@ export const GondiHeader: React.FC = () => {
               top: 'calc(100% + 8px)',
               left: 0,
               right: 0,
-              background: '#15181c',
-              border: '1px solid var(--line-strong)',
+              background: '#ffffff',
+              border: '1px solid var(--line)',
               borderRadius: 'var(--radius-md)',
               padding: '8px 0',
-              boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
+              boxShadow: '0 20px 48px rgba(17, 18, 15, 0.08)',
               zIndex: 100,
             }}
           >
@@ -188,7 +190,7 @@ export const GondiHeader: React.FC = () => {
                   cursor: 'pointer',
                   transition: 'background 0.15s',
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
+                onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--soft)')}
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -197,7 +199,7 @@ export const GondiHeader: React.FC = () => {
                       width: 28,
                       height: 28,
                       borderRadius: 8,
-                      background: '#1e242a',
+                      background: '#1a1b18',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
@@ -209,7 +211,7 @@ export const GondiHeader: React.FC = () => {
                     {deal.token.symbol.replace('$', '').slice(0, 3)}
                   </div>
                   <div>
-                    <div style={{ fontSize: 13, fontWeight: 750, color: '#fff' }}>{deal.token.name}</div>
+                    <div style={{ fontSize: 13, fontWeight: 750, color: 'var(--ink)' }}>{deal.token.name}</div>
                     <div style={{ fontSize: 11, color: 'var(--muted)' }}>
                       {deal.token.symbol} · by {deal.token.creatorAddress}
                     </div>
@@ -236,12 +238,13 @@ export const GondiHeader: React.FC = () => {
             alignItems: 'center',
             gap: 8,
             padding: '6px 12px',
-            background: 'var(--surface)',
+            background: '#ffffff',
             border: '1px solid var(--line)',
             borderRadius: 'var(--radius-full)',
             fontSize: 12,
             fontWeight: 700,
-            color: 'var(--ink-secondary)',
+            color: 'var(--ink)',
+            boxShadow: '0 1px 3px rgba(17, 18, 15, 0.04)',
           }}
           title="Robinhood Chain Testnet (ID 46630)"
         >
@@ -250,8 +253,8 @@ export const GondiHeader: React.FC = () => {
               width: 7,
               height: 7,
               borderRadius: '50%',
-              background: '#10b981',
-              boxShadow: '0 0 8px #10b981',
+              background: '#58c939',
+              boxShadow: '0 0 6px rgba(88, 201, 57, 0.6)',
             }}
           />
           <span style={{ fontSize: 12, fontWeight: 700 }}>Robinhood 46630</span>
@@ -265,30 +268,30 @@ export const GondiHeader: React.FC = () => {
             display: 'inline-flex',
             alignItems: 'center',
             gap: 6,
-            background: 'var(--surface-elevated)',
+            background: 'var(--soft)',
             border: '1px solid var(--line)',
             color: 'var(--ink)',
             borderRadius: 'var(--radius-full)',
             padding: '7px 14px',
             fontSize: 12.5,
-            fontWeight: 700,
+            fontWeight: 750,
             cursor: 'pointer',
             transition: 'all 0.15s ease',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--line-strong)';
-            e.currentTarget.style.background = 'var(--surface-hover)';
+            e.currentTarget.style.borderColor = 'var(--ink)';
+            e.currentTarget.style.background = '#ffffff';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = 'var(--line)';
-            e.currentTarget.style.background = 'var(--surface-elevated)';
+            e.currentTarget.style.background = 'var(--soft)';
           }}
         >
-          <PlusCircle size={14} style={{ color: 'var(--lime)' }} />
+          <PlusCircle size={14} style={{ color: 'var(--ink)' }} />
           <span>Launch Pool</span>
         </button>
 
-        {/* Gondi Connect Wallet Pill */}
+        {/* Connect Wallet Button */}
         {isWalletConnected ? (
           <div style={{ position: 'relative' }} ref={dropdownRef}>
             <button
@@ -298,18 +301,19 @@ export const GondiHeader: React.FC = () => {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: 8,
-                background: 'var(--surface-card)',
-                border: '1px solid var(--line-strong)',
+                background: '#ffffff',
+                border: '1px solid var(--line)',
                 color: 'var(--ink)',
                 borderRadius: 'var(--radius-full)',
                 padding: '6px 14px',
                 fontSize: 12.5,
                 fontWeight: 750,
                 cursor: 'pointer',
-                transition: 'background 0.15s ease',
+                boxShadow: '0 1px 4px rgba(17, 18, 15, 0.04)',
+                transition: 'border-color 0.15s ease',
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
-              onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--surface-card)')}
+              onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--ink)')}
+              onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--line)')}
             >
               <span style={{ color: 'var(--emerald)', fontWeight: 800 }}>{ethBalance.toFixed(2)} ETH</span>
               <span style={{ color: 'var(--muted)' }}>•</span>
@@ -324,11 +328,11 @@ export const GondiHeader: React.FC = () => {
                   top: 'calc(100% + 8px)',
                   right: 0,
                   width: 260,
-                  background: '#15181c',
-                  border: '1px solid var(--line-strong)',
+                  background: '#ffffff',
+                  border: '1px solid var(--line)',
                   borderRadius: 'var(--radius-md)',
                   padding: 14,
-                  boxShadow: '0 20px 48px rgba(0, 0, 0, 0.6)',
+                  boxShadow: '0 20px 48px rgba(17, 18, 15, 0.12)',
                   zIndex: 100,
                 }}
               >
@@ -367,7 +371,7 @@ export const GondiHeader: React.FC = () => {
                     fontWeight: 700,
                     color: 'var(--ink)',
                     fontFamily: 'var(--font-mono)',
-                    background: 'var(--surface-input)',
+                    background: 'var(--soft)',
                     padding: '8px 10px',
                     borderRadius: 8,
                     overflow: 'hidden',
@@ -391,10 +395,10 @@ export const GondiHeader: React.FC = () => {
                       borderRadius: 6,
                       fontSize: 12,
                       fontWeight: 700,
-                      color: 'var(--ink-secondary)',
+                      color: 'var(--ink)',
                       textDecoration: 'none',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--soft)')}
                     onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                   >
                     <Briefcase size={14} />
@@ -413,10 +417,10 @@ export const GondiHeader: React.FC = () => {
                       borderRadius: 6,
                       fontSize: 12,
                       fontWeight: 700,
-                      color: 'var(--ink-secondary)',
+                      color: 'var(--ink)',
                       textDecoration: 'none',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--soft)')}
                     onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                   >
                     <ExternalLink size={14} />
@@ -444,7 +448,7 @@ export const GondiHeader: React.FC = () => {
                       textAlign: 'left',
                       width: '100%',
                     }}
-                    onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
+                    onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--coral-bg)')}
                     onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
                   >
                     <LogOut size={14} />
@@ -457,7 +461,7 @@ export const GondiHeader: React.FC = () => {
         ) : (
           <button
             type="button"
-            className="btn primary"
+            className="btn dark"
             onClick={openWalletModal}
             style={{
               padding: '8px 18px',

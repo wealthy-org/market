@@ -28,27 +28,28 @@ export const GondiStatsBanner: React.FC = () => {
           alignItems: 'flex-start',
           flexWrap: 'wrap',
           gap: 16,
-          marginBottom: 24,
+          marginBottom: 20,
         }}
       >
         <div>
           <h1
             style={{
-              fontSize: '28px',
-              fontWeight: 800,
-              letterSpacing: '-0.03em',
-              color: '#ffffff',
-              marginBottom: 6,
+              fontFamily: 'var(--font-serif)',
+              fontSize: '34px',
+              fontWeight: 400,
+              letterSpacing: '-0.04em',
+              color: 'var(--ink)',
+              marginBottom: 4,
             }}
           >
             Lending Market
           </h1>
           <p
             style={{
-              fontSize: '13.5px',
+              fontSize: '14px',
               color: 'var(--muted)',
               fontWeight: 500,
-              maxWidth: 600,
+              maxWidth: 620,
             }}
           >
             Borrow campaign capital against future DEX fees, or earn 1.20x fixed yield backing token launches.
@@ -59,7 +60,7 @@ export const GondiStatsBanner: React.FC = () => {
         <div
           style={{
             display: 'flex',
-            background: 'var(--surface)',
+            background: 'var(--soft)',
             border: '1px solid var(--line)',
             borderRadius: 'var(--radius-full)',
             padding: 3,
@@ -72,7 +73,7 @@ export const GondiStatsBanner: React.FC = () => {
               type="button"
               onClick={() => setTimeframe(tf)}
               style={{
-                background: timeframe === tf ? 'var(--surface-elevated)' : 'transparent',
+                background: timeframe === tf ? 'var(--ink)' : 'transparent',
                 color: timeframe === tf ? '#ffffff' : 'var(--muted)',
                 border: 0,
                 borderRadius: 'var(--radius-full)',
@@ -89,7 +90,7 @@ export const GondiStatsBanner: React.FC = () => {
         </div>
       </div>
 
-      {/* Metrics Row (Gondi style 4-column layout) */}
+      {/* Metrics Row (Prototype Paper Card Layout) */}
       <div
         style={{
           display: 'grid',
@@ -100,40 +101,60 @@ export const GondiStatsBanner: React.FC = () => {
         {/* Metric 1: Capital Outstanding / Raised */}
         <div
           style={{
-            background: 'var(--surface-card)',
+            background: 'var(--paper)',
             border: '1px solid var(--line)',
-            borderRadius: 'var(--radius-md)',
-            padding: '16px 20px',
+            borderRadius: 'var(--radius-lg)',
+            padding: '18px 20px',
+            boxShadow: '0 8px 24px rgba(20, 20, 15, 0.04)',
           }}
         >
-          <div style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--muted)', marginBottom: 8, letterSpacing: '0.02em' }}>
+          <div style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--muted)', marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
             Capital deployed
           </div>
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em', marginBottom: 4 }}>
+          <div
+            style={{
+              fontSize: 28,
+              fontFamily: 'var(--font-serif)',
+              fontWeight: 400,
+              color: 'var(--ink)',
+              letterSpacing: '-0.03em',
+              marginBottom: 4,
+            }}
+          >
             ${totalFundedUsd.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
           </div>
-          <div style={{ fontSize: 11.5, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
             <span>{totalFundedEth.toFixed(4)} ETH</span>
-            <span style={{ color: 'var(--emerald)' }}>▲ 100% Onchain</span>
+            <span style={{ color: 'var(--emerald)', fontWeight: 700 }}>• 100% Onchain</span>
           </div>
         </div>
 
         {/* Metric 2: Fees Distributed 24H */}
         <div
           style={{
-            background: 'var(--surface-card)',
+            background: 'var(--paper)',
             border: '1px solid var(--line)',
-            borderRadius: 'var(--radius-md)',
-            padding: '16px 20px',
+            borderRadius: 'var(--radius-lg)',
+            padding: '18px 20px',
+            boxShadow: '0 8px 24px rgba(20, 20, 15, 0.04)',
           }}
         >
-          <div style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--muted)', marginBottom: 8, letterSpacing: '0.02em' }}>
+          <div style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--muted)', marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
             Fees accrued {timeframe}
           </div>
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em', marginBottom: 4 }}>
+          <div
+            style={{
+              fontSize: 28,
+              fontFamily: 'var(--font-serif)',
+              fontWeight: 400,
+              color: 'var(--ink)',
+              letterSpacing: '-0.03em',
+              marginBottom: 4,
+            }}
+          >
             ${totalFeesDistributedUsd.toFixed(2)}
           </div>
-          <div style={{ fontSize: 11.5, display: 'flex', alignItems: 'center', gap: 6 }}>
+          <div style={{ fontSize: 12, display: 'flex', alignItems: 'center', gap: 6 }}>
             <span
               style={{
                 display: 'inline-flex',
@@ -153,19 +174,29 @@ export const GondiStatsBanner: React.FC = () => {
         {/* Metric 3: Originated Pools */}
         <div
           style={{
-            background: 'var(--surface-card)',
+            background: 'var(--paper)',
             border: '1px solid var(--line)',
-            borderRadius: 'var(--radius-md)',
-            padding: '16px 20px',
+            borderRadius: 'var(--radius-lg)',
+            padding: '18px 20px',
+            boxShadow: '0 8px 24px rgba(20, 20, 15, 0.04)',
           }}
         >
-          <div style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--muted)', marginBottom: 8, letterSpacing: '0.02em' }}>
+          <div style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--muted)', marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
             Originated pools
           </div>
-          <div style={{ fontSize: 24, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em', marginBottom: 4 }}>
+          <div
+            style={{
+              fontSize: 28,
+              fontFamily: 'var(--font-serif)',
+              fontWeight: 400,
+              color: 'var(--ink)',
+              letterSpacing: '-0.03em',
+              marginBottom: 4,
+            }}
+          >
             {deals.length} Launches
           </div>
-          <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>
+          <div style={{ fontSize: 12, color: 'var(--muted)' }}>
             {activePoolsCount} active · {nearCapCount} repaying
           </div>
         </div>
@@ -173,22 +204,32 @@ export const GondiStatsBanner: React.FC = () => {
         {/* Metric 4: Median Return Cap & Split */}
         <div
           style={{
-            background: 'var(--surface-card)',
+            background: 'var(--paper)',
             border: '1px solid var(--line)',
-            borderRadius: 'var(--radius-md)',
-            padding: '16px 20px',
+            borderRadius: 'var(--radius-lg)',
+            padding: '18px 20px',
+            boxShadow: '0 8px 24px rgba(20, 20, 15, 0.04)',
           }}
         >
-          <div style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--muted)', marginBottom: 8, letterSpacing: '0.02em' }}>
+          <div style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--muted)', marginBottom: 6, letterSpacing: '0.08em', textTransform: 'uppercase' }}>
             Fixed return cap
           </div>
-          <div style={{ fontSize: 24, fontWeight: 800, color: 'var(--lime)', letterSpacing: '-0.02em', marginBottom: 4 }}>
+          <div
+            style={{
+              fontSize: 28,
+              fontFamily: 'var(--font-serif)',
+              fontWeight: 400,
+              color: 'var(--ink)',
+              letterSpacing: '-0.03em',
+              marginBottom: 4,
+            }}
+          >
             1.20x Cap
           </div>
-          <div style={{ fontSize: 11.5, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span>70% Lender Split</span>
+          <div style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ color: 'var(--ink)', fontWeight: 700 }}>70% Lender Split</span>
             <span>•</span>
-            <span>20.0% Fixed ROI</span>
+            <span style={{ color: 'var(--emerald)', fontWeight: 700 }}>20% ROI</span>
           </div>
         </div>
       </div>

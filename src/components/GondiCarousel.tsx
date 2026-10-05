@@ -42,8 +42,8 @@ export const GondiCarousel: React.FC = () => {
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 12, flexWrap: 'wrap' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ fontSize: 16, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em' }}>
-              PONS Featured Listings
+            <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em' }}>
+              Featured Launch Pools
             </span>
             <span
               title="Curated launch funding requests backed by Pons V2 creator fees"
@@ -61,10 +61,9 @@ export const GondiCarousel: React.FC = () => {
                 type="button"
                 onClick={() => setFilter(f)}
                 style={{
-                  background: filter === f ? '#ffffff' : 'var(--surface)',
-                  color: filter === f ? '#0e1113' : 'var(--muted)',
-                  border: '1px solid',
-                  borderColor: filter === f ? '#ffffff' : 'var(--line)',
+                  background: filter === f ? 'var(--ink)' : 'var(--soft)',
+                  color: filter === f ? '#ffffff' : 'var(--muted)',
+                  border: '1px solid var(--line)',
                   borderRadius: 'var(--radius-full)',
                   padding: '4px 12px',
                   fontSize: 11.5,
@@ -88,7 +87,7 @@ export const GondiCarousel: React.FC = () => {
               width: 32,
               height: 32,
               borderRadius: '50%',
-              background: 'var(--surface)',
+              background: '#ffffff',
               border: '1px solid var(--line)',
               color: 'var(--ink)',
               display: 'flex',
@@ -97,8 +96,8 @@ export const GondiCarousel: React.FC = () => {
               cursor: 'pointer',
               transition: 'background 0.15s ease',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--surface)')}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--soft)')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = '#ffffff')}
             aria-label="Scroll left"
           >
             <ChevronLeft size={16} />
@@ -110,7 +109,7 @@ export const GondiCarousel: React.FC = () => {
               width: 32,
               height: 32,
               borderRadius: '50%',
-              background: 'var(--surface)',
+              background: '#ffffff',
               border: '1px solid var(--line)',
               color: 'var(--ink)',
               display: 'flex',
@@ -119,8 +118,8 @@ export const GondiCarousel: React.FC = () => {
               cursor: 'pointer',
               transition: 'background 0.15s ease',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
-            onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--surface)')}
+            onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--soft)')}
+            onMouseLeave={(e) => (e.currentTarget.style.background = '#ffffff')}
             aria-label="Scroll right"
           >
             <ChevronRight size={16} />
@@ -153,13 +152,14 @@ export const GondiCarousel: React.FC = () => {
               style={{
                 flex: '0 0 230px',
                 scrollSnapAlign: 'start',
-                background: 'var(--surface-card)',
+                background: 'var(--paper)',
                 border: '1px solid var(--line)',
-                borderRadius: 'var(--radius-md)',
-                padding: '12px',
+                borderRadius: 'var(--radius-lg)',
+                padding: '14px',
                 display: 'flex',
                 flexDirection: 'column',
                 cursor: 'pointer',
+                boxShadow: '0 8px 24px rgba(20, 20, 15, 0.04)',
                 transition: 'transform 0.18s ease, border-color 0.18s ease',
               }}
               onClick={() => {
@@ -172,10 +172,10 @@ export const GondiCarousel: React.FC = () => {
               <div
                 style={{
                   width: '100%',
-                  height: 180,
-                  borderRadius: 10,
-                  background: 'linear-gradient(135deg, #18231c 0%, #111417 100%)',
-                  border: '1px solid var(--line)',
+                  height: 170,
+                  borderRadius: 12,
+                  background: '#1a1b18',
+                  border: '1px solid var(--line-soft)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
@@ -199,15 +199,15 @@ export const GondiCarousel: React.FC = () => {
                     fontWeight: 800,
                     background:
                       deal.status === 'REPAID'
-                        ? 'rgba(167, 255, 99, 0.2)'
+                        ? '#eef8e9'
                         : deal.status === 'REPAYING'
-                        ? 'rgba(16, 185, 129, 0.2)'
-                        : 'rgba(255, 255, 255, 0.15)',
+                        ? 'rgba(167, 255, 99, 0.2)'
+                        : 'rgba(255, 255, 255, 0.18)',
                     color:
                       deal.status === 'REPAID'
-                        ? 'var(--lime)'
+                        ? '#40792c'
                         : deal.status === 'REPAYING'
-                        ? 'var(--emerald)'
+                        ? 'var(--lime)'
                         : '#ffffff',
                     backdropFilter: 'blur(8px)',
                   }}
@@ -222,8 +222,8 @@ export const GondiCarousel: React.FC = () => {
                     fontWeight: 900,
                     letterSpacing: '-0.04em',
                     color: 'var(--lime)',
-                    opacity: 0.9,
-                    textShadow: '0 0 30px rgba(167, 255, 99, 0.25)',
+                    opacity: 0.95,
+                    textShadow: '0 0 24px rgba(167, 255, 99, 0.3)',
                   }}
                 >
                   {deal.token.symbol.replace('$', '').slice(0, 4)}
@@ -237,14 +237,14 @@ export const GondiCarousel: React.FC = () => {
                     left: 0,
                     right: 0,
                     height: 4,
-                    background: 'rgba(255,255,255,0.08)',
+                    background: 'rgba(255,255,255,0.12)',
                   }}
                 >
                   <div
                     style={{
                       height: '100%',
                       width: `${progressPercent}%`,
-                      background: deal.status === 'REPAID' ? 'var(--lime)' : 'var(--emerald)',
+                      background: deal.status === 'REPAID' ? '#58c939' : 'var(--lime)',
                       transition: 'width 0.3s ease',
                     }}
                   />
@@ -255,9 +255,9 @@ export const GondiCarousel: React.FC = () => {
               <div style={{ marginBottom: 12 }}>
                 <div
                   style={{
-                    fontSize: 13.5,
+                    fontSize: 14,
                     fontWeight: 800,
-                    color: '#ffffff',
+                    color: 'var(--ink)',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
@@ -268,7 +268,7 @@ export const GondiCarousel: React.FC = () => {
                 </div>
                 <div
                   style={{
-                    fontSize: 11,
+                    fontSize: 11.5,
                     color: 'var(--muted)',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
@@ -286,25 +286,26 @@ export const GondiCarousel: React.FC = () => {
                   gridTemplateColumns: '1fr 1fr',
                   gap: 8,
                   padding: '8px 10px',
-                  background: 'var(--surface-input)',
-                  borderRadius: 8,
-                  marginBottom: 10,
+                  background: 'var(--soft)',
+                  border: '1px solid var(--line-soft)',
+                  borderRadius: 10,
+                  marginBottom: 12,
                 }}
               >
                 <div>
-                  <div style={{ fontSize: 10, color: 'var(--muted)', fontWeight: 700, textTransform: 'uppercase' }}>
+                  <div style={{ fontSize: 9.5, color: 'var(--muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                     Target
                   </div>
-                  <div style={{ fontSize: 12, fontWeight: 800, color: '#ffffff' }}>
-                    {targetEth.toFixed(3)} <span style={{ fontSize: 9.5, color: 'var(--muted)' }}>ETH</span>
+                  <div style={{ fontSize: 12.5, fontWeight: 800, color: 'var(--ink)' }}>
+                    {targetEth.toFixed(3)} <span style={{ fontSize: 10, color: 'var(--muted)' }}>ETH</span>
                   </div>
                 </div>
                 <div style={{ textAlign: 'right' }}>
-                  <div style={{ fontSize: 10, color: 'var(--muted)', fontWeight: 700, textTransform: 'uppercase' }}>
+                  <div style={{ fontSize: 9.5, color: 'var(--muted)', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                     Raised
                   </div>
-                  <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--emerald)' }}>
-                    {raisedEth.toFixed(3)} <span style={{ fontSize: 9.5, color: 'var(--muted)' }}>ETH</span>
+                  <div style={{ fontSize: 12.5, fontWeight: 800, color: 'var(--emerald)' }}>
+                    {raisedEth.toFixed(3)} <span style={{ fontSize: 10, color: 'var(--muted)' }}>ETH</span>
                   </div>
                 </div>
               </div>
@@ -317,20 +318,14 @@ export const GondiCarousel: React.FC = () => {
                     e.stopPropagation();
                     openContributionModal(deal);
                   }}
+                  className="btn lime"
                   style={{
                     width: '100%',
-                    padding: '8px',
+                    padding: '9px',
                     borderRadius: 'var(--radius-full)',
-                    background: '#ffffff',
-                    color: '#0e1113',
-                    border: 0,
                     fontSize: 12,
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
+                    fontWeight: 850,
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#e5e7eb')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = '#ffffff')}
                 >
                   Fund Pool
                 </button>
@@ -343,20 +338,14 @@ export const GondiCarousel: React.FC = () => {
                     const el = document.getElementById('deal-detail');
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}
+                  className="btn"
                   style={{
                     width: '100%',
                     padding: '8px',
                     borderRadius: 'var(--radius-full)',
-                    background: 'var(--surface-elevated)',
-                    color: 'var(--ink)',
-                    border: '1px solid var(--line)',
                     fontSize: 12,
                     fontWeight: 750,
-                    cursor: 'pointer',
-                    transition: 'all 0.15s ease',
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--surface-elevated)')}
                 >
                   View Details
                 </button>

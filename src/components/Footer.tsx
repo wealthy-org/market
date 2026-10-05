@@ -26,11 +26,11 @@ export const Footer: React.FC = () => {
               width: 7,
               height: 7,
               borderRadius: '50%',
-              background: '#10b981',
-              boxShadow: '0 0 8px #10b981',
+              background: '#58c939',
+              boxShadow: '0 0 6px rgba(88, 201, 57, 0.6)',
             }}
           />
-          <span style={{ fontWeight: 700, color: 'var(--ink)' }}>In Sync</span>
+          <span style={{ fontWeight: 800, color: 'var(--ink)' }}>In Sync</span>
         </div>
         <span>•</span>
         <span>Robinhood Chain Testnet (46630)</span>
@@ -40,7 +40,7 @@ export const Footer: React.FC = () => {
           target="_blank"
           rel="noreferrer"
           style={{ color: 'var(--muted)', transition: 'color 0.15s' }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--ink)')}
           onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--muted)')}
         >
           Explorer
@@ -51,7 +51,7 @@ export const Footer: React.FC = () => {
           target="_blank"
           rel="noreferrer"
           style={{ color: 'var(--muted)', transition: 'color 0.15s' }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--ink)')}
           onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--muted)')}
         >
           GitHub
@@ -62,7 +62,7 @@ export const Footer: React.FC = () => {
         <Link
           href="/portfolio"
           style={{ color: 'var(--muted)', transition: 'color 0.15s' }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--ink)')}
           onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--muted)')}
         >
           Portfolio
@@ -70,12 +70,12 @@ export const Footer: React.FC = () => {
         <Link
           href="/creator"
           style={{ color: 'var(--muted)', transition: 'color 0.15s' }}
-          onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
+          onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--ink)')}
           onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--muted)')}
         >
           For Creators
         </Link>
-        <span style={{ color: 'var(--ink-secondary)', fontWeight: 700 }}>
+        <span style={{ color: 'var(--ink)', fontWeight: 700 }}>
           ETH $2,500 · 1.20x Cap
         </span>
       </div>

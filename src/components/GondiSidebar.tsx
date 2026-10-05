@@ -11,9 +11,6 @@ import {
   ArrowLeftRight, 
   HelpCircle,
   ExternalLink,
-  ChevronRight,
-  ShieldCheck,
-  Disc as DiscordIcon
 } from 'lucide-react';
 
 export const GondiSidebar: React.FC = () => {
@@ -35,9 +32,9 @@ export const GondiSidebar: React.FC = () => {
       onMouseLeave={() => setIsExpanded(false)}
       style={{
         width: isExpanded ? 'var(--sidebar-expanded)' : 'var(--sidebar-collapsed)',
-        background: isExpanded ? 'var(--bg-sidebar)' : '#101315',
-        borderRight: '1px solid var(--line)',
-        transition: 'width 0.22s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease',
+        background: 'var(--bg-sidebar)',
+        borderRight: '1px solid rgba(255, 255, 255, 0.08)',
+        transition: 'width 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -56,8 +53,8 @@ export const GondiSidebar: React.FC = () => {
             height: 'var(--header-height)',
             display: 'flex',
             alignItems: 'center',
-            padding: '0 20px',
-            borderBottom: '1px solid var(--line)',
+            padding: '0 18px',
+            borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
             gap: 12,
           }}
         >
@@ -66,7 +63,7 @@ export const GondiSidebar: React.FC = () => {
               width: 28,
               height: 28,
               borderRadius: 8,
-              background: '#163321',
+              background: '#1d201a',
               color: 'var(--lime)',
               display: 'flex',
               alignItems: 'center',
@@ -74,6 +71,7 @@ export const GondiSidebar: React.FC = () => {
               fontSize: 16,
               fontWeight: 900,
               flexShrink: 0,
+              boxShadow: '0 0 10px rgba(167, 255, 99, 0.2)',
             }}
           >
             ✦
@@ -81,7 +79,7 @@ export const GondiSidebar: React.FC = () => {
           {isExpanded && (
             <span
               style={{
-                fontSize: 16,
+                fontSize: 15,
                 fontWeight: 800,
                 letterSpacing: '-0.02em',
                 color: '#ffffff',
@@ -112,19 +110,19 @@ export const GondiSidebar: React.FC = () => {
                     gap: 14,
                     padding: '10px 14px',
                     borderRadius: 10,
-                    color: 'var(--muted)',
+                    color: '#8d8f87',
                     fontSize: 13,
                     fontWeight: 700,
                     transition: 'background 0.15s, color 0.15s',
                     whiteSpace: 'nowrap',
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.background = isExpanded ? 'var(--bg-sidebar-hover)' : 'var(--surface-hover)';
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
                     e.currentTarget.style.color = '#ffffff';
                   }}
                   onMouseLeave={(e) => {
                     e.currentTarget.style.background = 'transparent';
-                    e.currentTarget.style.color = 'var(--muted)';
+                    e.currentTarget.style.color = '#8d8f87';
                   }}
                 >
                   <Icon size={19} style={{ flexShrink: 0 }} />
@@ -143,24 +141,23 @@ export const GondiSidebar: React.FC = () => {
                   gap: 14,
                   padding: '10px 14px',
                   borderRadius: 10,
-                  background: isActive ? (isExpanded ? 'var(--bg-sidebar-hover)' : 'var(--surface-elevated)') : 'transparent',
-                  color: isActive ? '#ffffff' : 'var(--muted)',
+                  background: isActive ? 'rgba(255, 255, 255, 0.12)' : 'transparent',
+                  color: isActive ? '#ffffff' : '#8d8f87',
                   fontSize: 13,
                   fontWeight: 750,
                   transition: 'background 0.15s, color 0.15s',
                   whiteSpace: 'nowrap',
-                  boxShadow: isActive && !isExpanded ? 'inset 2px 0 0 var(--emerald)' : undefined,
                 }}
                 onMouseEnter={(e) => {
                   if (!isActive) {
-                    e.currentTarget.style.background = isExpanded ? 'var(--bg-sidebar-hover)' : 'var(--surface-hover)';
+                    e.currentTarget.style.background = 'rgba(255, 255, 255, 0.08)';
                     e.currentTarget.style.color = '#ffffff';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isActive) {
                     e.currentTarget.style.background = 'transparent';
-                    e.currentTarget.style.color = 'var(--muted)';
+                    e.currentTarget.style.color = '#8d8f87';
                   }
                 }}
               >
@@ -176,7 +173,7 @@ export const GondiSidebar: React.FC = () => {
       <div
         style={{
           padding: '16px 14px',
-          borderTop: '1px solid var(--line)',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
           display: 'flex',
           flexDirection: 'column',
           gap: 12,
@@ -188,27 +185,27 @@ export const GondiSidebar: React.FC = () => {
               width: 8,
               height: 8,
               borderRadius: '50%',
-              background: '#10b981',
-              boxShadow: '0 0 8px #10b981',
+              background: '#58c939',
+              boxShadow: '0 0 8px #58c939',
               flexShrink: 0,
             }}
           />
           {isExpanded && (
-            <span style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+            <span style={{ fontSize: 11, color: '#8d8f87', fontWeight: 700, whiteSpace: 'nowrap' }}>
               Robinhood 46630
             </span>
           )}
         </div>
 
         {isExpanded && (
-          <div style={{ display: 'flex', gap: 12, paddingTop: 6, color: 'var(--muted)' }}>
+          <div style={{ display: 'flex', gap: 12, paddingTop: 6, color: '#8d8f87' }}>
             <a
               href="https://github.com/wealthy-org/market"
               target="_blank"
               rel="noreferrer"
               style={{ fontSize: 11, fontWeight: 700 }}
               onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--muted)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#8d8f87')}
             >
               GitHub
             </a>
@@ -219,7 +216,7 @@ export const GondiSidebar: React.FC = () => {
               rel="noreferrer"
               style={{ fontSize: 11, fontWeight: 700 }}
               onMouseEnter={(e) => (e.currentTarget.style.color = '#fff')}
-              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--muted)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = '#8d8f87')}
             >
               Explorer
             </a>

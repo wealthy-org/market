@@ -1,20 +1,20 @@
 'use client';
 
 import React from 'react';
-import { ArrowRight, ShieldCheck, Zap, Layers, RefreshCw } from 'lucide-react';
+import { ArrowRight, ShieldCheck, Zap } from 'lucide-react';
 
 export const MechanismSection: React.FC = () => {
   return (
     <section style={{ marginBottom: 48 }} id="mechanism">
       <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
-          PROTOCOL MECHANICS
+        <div className="eyebrow" style={{ marginBottom: 6 }}>
+          02 / Mechanism
         </div>
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em' }}>
-          Capital Today · Automated Fees Tomorrow
+        <h2 className="serif-heading" style={{ fontSize: 28, color: 'var(--ink)' }}>
+          Capital today. Fees tomorrow.
         </h2>
-        <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4, maxWidth: 640 }}>
-          Launch funding is backed by DEX Screener fast-track requests. Future Pons V2 creator fees are programmatically routed through a FinanceSplitter until the 1.20x lender cap is reached.
+        <p style={{ fontSize: 14, color: 'var(--muted)', marginTop: 4, maxWidth: 640 }}>
+          Funding is tied to one launch expense, while future creator fees are routed through a splitter until lenders reach the agreed repayment cap.
         </p>
       </div>
 
@@ -25,126 +25,199 @@ export const MechanismSection: React.FC = () => {
           gap: 20,
         }}
       >
-        {/* Card 1: For Creators */}
+        {/* Card 1: For Creators (Light Paper Card) */}
         <article
           style={{
-            background: 'var(--surface-card)',
+            background: 'var(--paper)',
             border: '1px solid var(--line)',
-            borderRadius: 'var(--radius-lg)',
-            padding: 24,
+            borderRadius: 'var(--radius-xl)',
+            padding: 28,
+            boxShadow: '0 10px 30px rgba(20, 20, 15, 0.04)',
             display: 'flex',
             flexDirection: 'column',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              For Creators
-            </span>
-            <div
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: '50%',
-                background: 'rgba(255, 255, 255, 0.08)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: '#fff',
-              }}
-            >
-              <Zap size={14} />
-            </div>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <span className="eyebrow">For creators</span>
+            <Zap size={16} color="var(--ink)" />
           </div>
 
-          <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ffffff', marginBottom: 10 }}>
-            Turn Momentum Into Upfront Budget
+          <h3 className="serif-heading" style={{ fontSize: 26, color: 'var(--ink)', margin: '6px 0 10px' }}>
+            Turn traction into budget.
           </h3>
-          <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6, marginBottom: 20 }}>
-            Once a token demonstrates early trading activity, open a standardized $299 pool. Exchange a temporary 70% share of future creator fees to fund DEX Screener marketing and fast-track visibility.
+          <p style={{ fontSize: 13.5, color: 'var(--muted)', lineHeight: 1.6, marginBottom: 24 }}>
+            Once a token shows early activity, open a standardized request and exchange a temporary share of future creator fees for launch capital.
           </p>
 
           <div
             style={{
               marginTop: 'auto',
-              background: 'var(--surface-input)',
-              border: '1px solid var(--line-soft)',
-              borderRadius: 12,
-              padding: '14px 16px',
               display: 'grid',
               gap: 10,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, fontWeight: 700 }}>
-              <span style={{ color: 'var(--ink)' }}>1. Live Pons Token</span>
-              <ArrowRight size={13} style={{ color: 'var(--muted)' }} />
-              <span style={{ color: 'var(--lime)' }}>Launch Funding Request</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div
+                style={{
+                  flex: 1,
+                  padding: '10px 14px',
+                  border: '1px solid var(--line)',
+                  background: '#ffffff',
+                  borderRadius: 12,
+                  fontSize: 12,
+                  fontWeight: 800,
+                  color: 'var(--ink)',
+                }}
+              >
+                Live Pons token
+              </div>
+              <ArrowRight size={14} color="var(--muted)" />
+              <div
+                style={{
+                  flex: 1,
+                  padding: '10px 14px',
+                  border: '1px solid var(--line)',
+                  background: '#ffffff',
+                  borderRadius: 12,
+                  fontSize: 12,
+                  fontWeight: 800,
+                  color: 'var(--ink)',
+                }}
+              >
+                Funding request
+              </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, fontWeight: 700 }}>
-              <span style={{ color: 'var(--ink)' }}>2. 100% Target Met</span>
-              <ArrowRight size={13} style={{ color: 'var(--muted)' }} />
-              <span style={{ color: 'var(--emerald)' }}>Campaign Paid Upfront</span>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div
+                style={{
+                  flex: 1,
+                  padding: '10px 14px',
+                  border: '1px solid var(--line)',
+                  background: '#ffffff',
+                  borderRadius: 12,
+                  fontSize: 12,
+                  fontWeight: 800,
+                  color: 'var(--ink)',
+                }}
+              >
+                Pool fills
+              </div>
+              <ArrowRight size={14} color="var(--muted)" />
+              <div
+                style={{
+                  flex: 1,
+                  padding: '10px 14px',
+                  border: '1px solid var(--line)',
+                  background: '#ffffff',
+                  borderRadius: 12,
+                  fontSize: 12,
+                  fontWeight: 800,
+                  color: 'var(--emerald)',
+                }}
+              >
+                Campaign paid
+              </div>
             </div>
           </div>
         </article>
 
-        {/* Card 2: For Lenders */}
+        {/* Card 2: For Lenders (Dark Ink Card matching prototype .card.dark) */}
         <article
           style={{
-            background: 'var(--surface-card)',
-            border: '1px solid var(--line)',
-            borderRadius: 'var(--radius-lg)',
-            padding: 24,
+            background: 'var(--ink)',
+            color: '#ffffff',
+            border: '1px solid var(--ink)',
+            borderRadius: 'var(--radius-xl)',
+            padding: 28,
+            boxShadow: '0 14px 40px rgba(17, 18, 15, 0.16)',
             display: 'flex',
             flexDirection: 'column',
           }}
         >
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14 }}>
-            <span style={{ fontSize: 11, fontWeight: 800, color: 'var(--muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              For Lenders & Backers
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
+            <span className="eyebrow" style={{ color: '#aeb0a8' }}>
+              For lenders
             </span>
-            <div
-              style={{
-                width: 28,
-                height: 28,
-                borderRadius: '50%',
-                background: 'rgba(16, 185, 129, 0.15)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--emerald)',
-              }}
-            >
-              <ShieldCheck size={14} />
-            </div>
+            <ShieldCheck size={16} color="var(--lime)" />
           </div>
 
-          <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ffffff', marginBottom: 10 }}>
-            Earn 1.20x Yield From Trading Fees
+          <h3 className="serif-heading" style={{ fontSize: 26, color: '#ffffff', margin: '6px 0 10px' }}>
+            Own a slice of the fee stream.
           </h3>
-          <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6, marginBottom: 20 }}>
-            Enter with pooled ETH (starting at just $10). Receive automatic 70% pro-rata distributions on every trade until your 1.20x fixed cap is satisfied. Recycle capital into fresh launches.
+          <p style={{ fontSize: 13.5, color: '#bec0b9', lineHeight: 1.6, marginBottom: 24 }}>
+            Enter with a small allocation, receive pro-rata repayment from creator fees, then recycle capital into the next launch.
           </p>
 
           <div
             style={{
               marginTop: 'auto',
-              background: 'var(--surface-input)',
-              border: '1px solid var(--line-soft)',
-              borderRadius: 12,
-              padding: '14px 16px',
               display: 'grid',
               gap: 10,
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, fontWeight: 700 }}>
-              <span style={{ color: 'var(--ink)' }}>1. Fund Pool with ETH</span>
-              <ArrowRight size={13} style={{ color: 'var(--muted)' }} />
-              <span style={{ color: 'var(--emerald)' }}>70% Fee Streaming</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div
+                style={{
+                  flex: 1,
+                  padding: '10px 14px',
+                  border: '1px solid #3c3e38',
+                  background: '#20221e',
+                  borderRadius: 12,
+                  fontSize: 12,
+                  fontWeight: 800,
+                  color: '#ffffff',
+                }}
+              >
+                Fund pool
+              </div>
+              <ArrowRight size={14} color="#aeb0a8" />
+              <div
+                style={{
+                  flex: 1,
+                  padding: '10px 14px',
+                  border: '1px solid #3c3e38',
+                  background: '#20221e',
+                  borderRadius: 12,
+                  fontSize: 12,
+                  fontWeight: 800,
+                  color: '#ffffff',
+                }}
+              >
+                Creator fees
+              </div>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: 12, fontWeight: 700 }}>
-              <span style={{ color: 'var(--ink)' }}>2. 1.20x Cap Reached</span>
-              <ArrowRight size={13} style={{ color: 'var(--muted)' }} />
-              <span style={{ color: 'var(--lime)' }}>Fees Return to Creator</span>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <div
+                style={{
+                  flex: 1,
+                  padding: '10px 14px',
+                  border: '1px solid #3c3e38',
+                  background: '#20221e',
+                  borderRadius: 12,
+                  fontSize: 12,
+                  fontWeight: 800,
+                  color: '#ffffff',
+                }}
+              >
+                1.20x Repayment
+              </div>
+              <ArrowRight size={14} color="#aeb0a8" />
+              <div
+                style={{
+                  flex: 1,
+                  padding: '10px 14px',
+                  border: '1px solid var(--lime)',
+                  background: '#20221e',
+                  borderRadius: 12,
+                  fontSize: 12,
+                  fontWeight: 800,
+                  color: 'var(--lime)',
+                }}
+              >
+                Fund again
+              </div>
             </div>
           </div>
         </article>

@@ -135,7 +135,11 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
 
   return (
     <div className="modal-overlay" onClick={onClose}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()} style={{ maxWidth: 460 }}>
+      <div 
+        className="modal-content" 
+        onClick={(e) => e.stopPropagation()} 
+        style={{ maxWidth: 460, background: 'var(--paper)', border: '1px solid var(--line)' }}
+      >
         <button type="button" className="modal-close" onClick={onClose}>
           <X size={18} />
         </button>
@@ -143,12 +147,12 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
         <div className="eyebrow" style={{ fontSize: 9.5 }}>
           Web3 Authentication · Robinhood Chain
         </div>
-        <h3 className="serif-heading" style={{ fontSize: 26, margin: '4px 0 16px' }}>
+        <h3 className="serif-heading" style={{ fontSize: 26, margin: '4px 0 14px', color: 'var(--ink)' }}>
           Connect a Wallet
         </h3>
 
-        <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 20 }}>
-          Connect your wallet to deploy capital into live token pools, track repayments, or request launch funding.
+        <p style={{ fontSize: 13, color: 'var(--muted)', marginBottom: 20, lineHeight: 1.5 }}>
+          Connect your wallet to back live token launches with pooled ETH, track repayments, or request launch funding.
         </p>
 
         {/* Wallet Options */}
@@ -164,28 +168,26 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '12px 16px',
-                borderRadius: 12,
+                borderRadius: 14,
                 border: '1px solid var(--line)',
-                background: 'var(--surface-input)',
+                background: '#ffffff',
                 cursor: 'pointer',
                 textAlign: 'left',
                 transition: 'all 0.15s ease',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--line-strong)';
-                e.currentTarget.style.background = 'var(--surface-hover)';
+                e.currentTarget.style.borderColor = 'var(--ink)';
                 e.currentTarget.style.transform = 'translateY(-1px)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'var(--line)';
-                e.currentTarget.style.background = 'var(--surface-input)';
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                 {renderWalletIcon(w.id)}
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: 14, color: '#ffffff' }}>
+                  <div style={{ fontWeight: 800, fontSize: 14, color: 'var(--ink)' }}>
                     {w.name}
                   </div>
                   <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
@@ -198,11 +200,12 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
                 <span
                   style={{
                     fontSize: 10.5,
-                    fontWeight: 750,
-                    background: 'rgba(16, 185, 129, 0.15)',
-                    color: 'var(--emerald)',
+                    fontWeight: 800,
+                    background: 'var(--green-bg)',
+                    color: '#40792c',
                     padding: '3px 8px',
                     borderRadius: 999,
+                    border: '1px solid #d4ebd0',
                   }}
                 >
                   Detected
@@ -221,9 +224,9 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
         <div
           style={{
             padding: '12px 14px',
-            background: 'var(--surface-input)',
-            border: '1px solid var(--line-soft)',
-            borderRadius: 12,
+            background: 'var(--soft)',
+            border: '1px solid var(--line)',
+            borderRadius: 14,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -231,7 +234,7 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
           }}
         >
           <div>
-            <div style={{ fontWeight: 750, color: '#ffffff' }}>
+            <div style={{ fontWeight: 800, color: 'var(--ink)' }}>
               Quick Testnet Mode
             </div>
             <div style={{ color: 'var(--muted)', fontSize: 11 }}>
@@ -240,7 +243,7 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
           </div>
           <button
             type="button"
-            className="btn primary"
+            className="btn dark"
             style={{ padding: '6px 14px', fontSize: 11.5, fontWeight: 800 }}
             onClick={handleUseDemo}
           >
@@ -249,8 +252,8 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
           </button>
         </div>
 
-        <div className="risk-note" style={{ textAlign: 'center', marginTop: 14 }}>
-          <ShieldCheck size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
+        <div style={{ textAlign: 'center', marginTop: 14, fontSize: 11, color: 'var(--muted)' }}>
+          <ShieldCheck size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4, color: 'var(--emerald)' }} />
           By connecting, you agree to Robinhood Chain Testnet (ID 46630) terms.
         </div>
       </div>

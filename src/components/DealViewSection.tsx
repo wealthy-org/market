@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
 import confetti from 'canvas-confetti';
-import { ArrowUpRight, ArrowDownRight, Sparkles, CheckCircle2, ShieldAlert, Layers } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Sparkles, CheckCircle2, ShieldAlert } from 'lucide-react';
 
 export const DealViewSection: React.FC = () => {
   const { selectedDeal, contributeToPool } = useMarket();
@@ -28,7 +28,7 @@ export const DealViewSection: React.FC = () => {
           particleCount: 60,
           spread: 70,
           origin: { y: 0.8 },
-          colors: ['#a7ff63', '#10b981', '#ffffff'],
+          colors: ['#a7ff63', '#11120f', '#eef8e9', '#58c939'],
         });
       } catch {
         // optional confetti
@@ -49,14 +49,14 @@ export const DealViewSection: React.FC = () => {
   return (
     <section style={{ marginBottom: 48 }} id="deal-detail">
       <div style={{ marginBottom: 20 }}>
-        <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 6 }}>
-          DEAL EXECUTION & ANALYSIS
+        <div className="eyebrow" style={{ marginBottom: 6 }}>
+          03 / Deal view
         </div>
-        <h2 style={{ fontSize: 22, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em' }}>
-          Inspect Cash Flow & Terms
+        <h2 className="serif-heading" style={{ fontSize: 28, color: 'var(--ink)' }}>
+          See the cash flow, not just the market cap.
         </h2>
-        <p style={{ fontSize: 13, color: 'var(--muted)', marginTop: 4 }}>
-          Analyze real-time fee velocity, DEX volume, and 70/25/5% split mechanics before committing capital.
+        <p style={{ fontSize: 14, color: 'var(--muted)', marginTop: 4, maxWidth: 640 }}>
+          Market cap is context. Fee velocity, liquidity, trader activity, and repayment terms define the financing opportunity on Pons V2.
         </p>
       </div>
 
@@ -70,10 +70,11 @@ export const DealViewSection: React.FC = () => {
         {/* Left Panel: Token Details & Chart */}
         <div
           style={{
-            background: 'var(--surface-card)',
+            background: 'var(--paper)',
             border: '1px solid var(--line)',
-            borderRadius: 'var(--radius-lg)',
-            padding: 24,
+            borderRadius: 'var(--radius-xl)',
+            padding: 28,
+            boxShadow: '0 10px 30px rgba(20, 20, 15, 0.04)',
             display: 'flex',
             flexDirection: 'column',
           }}
@@ -85,23 +86,22 @@ export const DealViewSection: React.FC = () => {
                 style={{
                   width: 44,
                   height: 44,
-                  borderRadius: 12,
-                  background: 'linear-gradient(135deg, #18231c 0%, #15181c 100%)',
-                  border: '1px solid var(--line)',
+                  borderRadius: 13,
+                  background: '#1a1b18',
+                  color: '#ffffff',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  fontWeight: 900,
-                  fontSize: 16,
-                  color: 'var(--lime)',
+                  fontWeight: 800,
+                  fontSize: 13,
                 }}
               >
                 {selectedDeal.token.symbol.replace('$', '').slice(0, 3)}
               </div>
               <div>
-                <b style={{ fontSize: 18, color: '#ffffff', display: 'block' }}>{selectedDeal.token.name}</b>
+                <b style={{ fontSize: 18, color: 'var(--ink)', display: 'block' }}>{selectedDeal.token.name}</b>
                 <span style={{ color: 'var(--muted)', fontSize: 12 }}>
-                  {selectedDeal.token.symbol} · Pons V2 Pair · by {selectedDeal.token.creatorAddress}
+                  {selectedDeal.token.symbol} · {selectedDeal.token.age} old · by {selectedDeal.token.creatorAddress}
                 </span>
               </div>
             </div>
@@ -118,15 +118,15 @@ export const DealViewSection: React.FC = () => {
             </div>
           </div>
 
-          <div style={{ marginTop: 24, marginBottom: 8 }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', textTransform: 'uppercase' }}>
+          <div style={{ marginTop: 22, marginBottom: 6 }}>
+            <h3 className="serif-heading" style={{ fontSize: 24, color: 'var(--ink)', marginBottom: 4 }}>
               Fee velocity
-            </div>
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap', marginTop: 4 }}>
-              <b style={{ fontSize: 36, fontWeight: 900, color: '#ffffff', letterSpacing: '-0.03em' }}>
+            </h3>
+            <div style={{ display: 'flex', alignItems: 'baseline', gap: 10, flexWrap: 'wrap' }}>
+              <b style={{ fontSize: 42, fontWeight: 900, color: 'var(--ink)', letterSpacing: '-0.04em' }}>
                 ${selectedDeal.feeVelocity}
               </b>
-              <span style={{ color: 'var(--muted)', fontSize: 13 }}>
+              <span style={{ color: 'var(--muted)', fontSize: 14 }}>
                 / hour ·{' '}
                 <span
                   style={{
@@ -148,14 +148,14 @@ export const DealViewSection: React.FC = () => {
             </div>
           </div>
 
-          {/* Cash Flow SVG Chart */}
+          {/* Cash Flow SVG Chart matching prototype */}
           <div
             style={{
-              height: 120,
+              height: 140,
               width: '100%',
-              margin: '16px 0',
-              borderRadius: 12,
-              background: '#121518',
+              margin: '14px 0',
+              borderRadius: 16,
+              background: 'repeating-linear-gradient(to right, transparent 0 59px, rgba(0,0,0,.03) 60px), repeating-linear-gradient(to top, transparent 0 41px, rgba(0,0,0,.03) 42px), linear-gradient(to top, rgba(167,255,99,.15), transparent)',
               border: '1px solid var(--line-soft)',
               padding: 10,
               position: 'relative',
@@ -166,12 +166,12 @@ export const DealViewSection: React.FC = () => {
               <path
                 d="M0,100 C70,95 90,75 145,80 C205,85 225,60 290,65 C360,70 385,45 450,48 C510,50 540,30 600,22"
                 fill="none"
-                stroke="var(--emerald)"
-                strokeWidth="2.5"
+                stroke="#11120f"
+                strokeWidth="3"
               />
               <path
                 d="M0,100 C70,95 90,75 145,80 C205,85 225,60 290,65 C360,70 385,45 450,48 C510,50 540,30 600,22 L600,120 L0,120Z"
-                fill="rgba(16, 185, 129, 0.12)"
+                fill="rgba(167, 255, 99, 0.22)"
               />
             </svg>
           </div>
@@ -184,17 +184,17 @@ export const DealViewSection: React.FC = () => {
               gap: 10,
             }}
           >
-            <div style={{ background: 'var(--surface-input)', border: '1px solid var(--line-soft)', padding: '10px 12px', borderRadius: 8 }}>
-              <span style={{ fontSize: 10.5, color: 'var(--muted)', display: 'block', fontWeight: 700 }}>Fees Accrued</span>
-              <b style={{ fontSize: 14, color: '#ffffff' }}>${selectedDeal.creatorFeesAccruedUsd.toFixed(2)}</b>
+            <div style={{ background: '#f5f4ef', border: '1px solid var(--line-soft)', padding: '10px 12px', borderRadius: 12 }}>
+              <span style={{ fontSize: 9.5, color: 'var(--muted)', display: 'block', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Creator fees</span>
+              <b style={{ fontSize: 15, color: 'var(--ink)' }}>${selectedDeal.creatorFeesAccruedUsd.toFixed(2)}</b>
             </div>
-            <div style={{ background: 'var(--surface-input)', border: '1px solid var(--line-soft)', padding: '10px 12px', borderRadius: 8 }}>
-              <span style={{ fontSize: 10.5, color: 'var(--muted)', display: 'block', fontWeight: 700 }}>Liquidity</span>
-              <b style={{ fontSize: 14, color: '#ffffff' }}>${(selectedDeal.liquidityUsd / 1000).toFixed(1)}K</b>
+            <div style={{ background: '#f5f4ef', border: '1px solid var(--line-soft)', padding: '10px 12px', borderRadius: 12 }}>
+              <span style={{ fontSize: 9.5, color: 'var(--muted)', display: 'block', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Liquidity</span>
+              <b style={{ fontSize: 15, color: 'var(--ink)' }}>${(selectedDeal.liquidityUsd / 1000).toFixed(1)}K</b>
             </div>
-            <div style={{ background: 'var(--surface-input)', border: '1px solid var(--line-soft)', padding: '10px 12px', borderRadius: 8 }}>
-              <span style={{ fontSize: 10.5, color: 'var(--muted)', display: 'block', fontWeight: 700 }}>Market Cap</span>
-              <b style={{ fontSize: 14, color: '#ffffff' }}>${(selectedDeal.marketCapUsd / 1000).toFixed(1)}K</b>
+            <div style={{ background: '#f5f4ef', border: '1px solid var(--line-soft)', padding: '10px 12px', borderRadius: 12 }}>
+              <span style={{ fontSize: 9.5, color: 'var(--muted)', display: 'block', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em' }}>Market Cap</span>
+              <b style={{ fontSize: 15, color: 'var(--ink)' }}>${(selectedDeal.marketCapUsd / 1000).toFixed(1)}K</b>
             </div>
           </div>
         </div>
@@ -202,46 +202,51 @@ export const DealViewSection: React.FC = () => {
         {/* Right Panel: Funding Terms & Interactive Input */}
         <aside
           style={{
-            background: 'var(--surface-card)',
+            background: 'var(--paper)',
             border: '1px solid var(--line)',
-            borderRadius: 'var(--radius-lg)',
-            padding: 24,
+            borderRadius: 'var(--radius-xl)',
+            padding: 28,
+            boxShadow: '0 10px 30px rgba(20, 20, 15, 0.04)',
             display: 'flex',
             flexDirection: 'column',
           }}
         >
-          <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--muted)', textTransform: 'uppercase', marginBottom: 4 }}>
+          <div className="eyebrow" style={{ marginBottom: 4 }}>
             Funding Terms
           </div>
-          <h3 style={{ fontSize: 18, fontWeight: 800, color: '#ffffff', marginBottom: 16 }}>
+          <h3 className="serif-heading" style={{ fontSize: 24, color: 'var(--ink)', marginBottom: 16 }}>
             {selectedDeal.campaignName}
           </h3>
 
           <div style={{ display: 'grid', gap: 10, marginBottom: 20 }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, borderBottom: '1px solid var(--line-soft)', paddingBottom: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, borderBottom: '1px solid var(--line)', paddingBottom: 8 }}>
               <span style={{ color: 'var(--muted)' }}>Campaign target</span>
-              <b style={{ color: '#fff' }}>${selectedDeal.campaignTargetUsd}</b>
+              <b style={{ color: 'var(--ink)' }}>${selectedDeal.campaignTargetUsd}</b>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, borderBottom: '1px solid var(--line-soft)', paddingBottom: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, borderBottom: '1px solid var(--line)', paddingBottom: 8 }}>
               <span style={{ color: 'var(--muted)' }}>Already funded</span>
               <b style={{ color: 'var(--emerald)' }}>
                 ${selectedDeal.fundedUsd} ({Math.round((selectedDeal.fundedUsd / selectedDeal.campaignTargetUsd) * 100)}%)
               </b>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, borderBottom: '1px solid var(--line-soft)', paddingBottom: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, borderBottom: '1px solid var(--line)', paddingBottom: 8 }}>
               <span style={{ color: 'var(--muted)' }}>Lender fee share</span>
-              <b style={{ color: '#fff' }}>{selectedDeal.lenderFeeSharePct}%</b>
+              <b style={{ color: 'var(--ink)' }}>{selectedDeal.lenderFeeSharePct}%</b>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, borderBottom: '1px solid var(--line-soft)', paddingBottom: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, borderBottom: '1px solid var(--line)', paddingBottom: 8 }}>
               <span style={{ color: 'var(--muted)' }}>Repayment cap</span>
-              <b style={{ color: 'var(--lime)' }}>{selectedDeal.repayCapMultiplier.toFixed(2)}× (20% ROI)</b>
+              <b style={{ color: 'var(--ink)' }}>{selectedDeal.repayCapMultiplier.toFixed(2)}× (20% ROI)</b>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, borderBottom: '1px solid var(--line)', paddingBottom: 8 }}>
+              <span style={{ color: 'var(--muted)' }}>Projected payback*</span>
+              <b style={{ color: 'var(--ink)' }}>~{selectedDeal.projectedPaybackHours}h</b>
             </div>
           </div>
 
           {/* Allocation input */}
           <div style={{ marginTop: 'auto' }}>
-            <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', marginBottom: 8 }}>
-              CHOOSE ALLOCATION (USD)
+            <div style={{ fontSize: 11, fontWeight: 750, color: 'var(--muted)', marginBottom: 8 }}>
+              CONTRIBUTION ALLOCATION (USD)
             </div>
             <div className="allocation-presets" style={{ marginBottom: 12 }}>
               {[10, 25, 50, 100].map((val) => (
@@ -251,8 +256,8 @@ export const DealViewSection: React.FC = () => {
                   className={`preset-chip ${allocationAmount === val ? 'active' : ''}`}
                   onClick={() => setAllocationAmount(val)}
                   style={{
-                    background: allocationAmount === val ? '#ffffff' : 'var(--surface-input)',
-                    color: allocationAmount === val ? '#0e1113' : 'var(--ink)',
+                    background: allocationAmount === val ? 'var(--ink)' : '#ffffff',
+                    color: allocationAmount === val ? '#ffffff' : 'var(--ink)',
                     border: '1px solid var(--line)',
                     padding: '6px 10px',
                     borderRadius: 8,
@@ -270,8 +275,8 @@ export const DealViewSection: React.FC = () => {
                   className={`preset-chip ${allocationAmount === remainingFunding ? 'active' : ''}`}
                   onClick={() => setAllocationAmount(remainingFunding)}
                   style={{
-                    background: allocationAmount === remainingFunding ? '#ffffff' : 'var(--surface-input)',
-                    color: allocationAmount === remainingFunding ? '#0e1113' : 'var(--ink)',
+                    background: allocationAmount === remainingFunding ? 'var(--ink)' : '#ffffff',
+                    color: allocationAmount === remainingFunding ? '#ffffff' : 'var(--ink)',
                     border: '1px solid var(--line)',
                     padding: '6px 10px',
                     borderRadius: 8,
@@ -291,9 +296,9 @@ export const DealViewSection: React.FC = () => {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  background: 'var(--surface-input)',
+                  background: '#ffffff',
                   border: '1px solid var(--line)',
-                  borderRadius: 10,
+                  borderRadius: 12,
                   padding: '10px 14px',
                   marginBottom: 12,
                 }}
@@ -310,9 +315,9 @@ export const DealViewSection: React.FC = () => {
                       background: 'transparent',
                       border: 0,
                       outline: 'none',
-                      fontSize: 20,
+                      fontSize: 22,
                       fontWeight: 800,
-                      color: '#fff',
+                      color: 'var(--ink)',
                       width: 120,
                     }}
                   />
@@ -329,16 +334,16 @@ export const DealViewSection: React.FC = () => {
                   display: 'flex',
                   justifyContent: 'space-between',
                   padding: '10px 14px',
-                  background: 'rgba(16, 185, 129, 0.08)',
-                  border: '1px solid rgba(16, 185, 129, 0.2)',
+                  background: 'var(--green-bg)',
+                  border: '1px solid #d4ebd0',
                   borderRadius: 10,
                   marginBottom: 16,
                   fontSize: 12,
                   fontWeight: 750,
                 }}
               >
-                <span style={{ color: 'var(--ink-secondary)' }}>Maximum 1.20× Return:</span>
-                <span style={{ color: 'var(--lime)' }}>${maxRepaymentUsd}</span>
+                <span style={{ color: '#40792c' }}>Maximum 1.20× Return:</span>
+                <span style={{ color: '#40792c', fontWeight: 800 }}>${maxRepaymentUsd}</span>
               </div>
 
               {remainingFunding <= 0 ? (
@@ -348,9 +353,9 @@ export const DealViewSection: React.FC = () => {
                   disabled
                   style={{
                     width: '100%',
-                    padding: 12,
-                    borderRadius: 'var(--radius-full)',
-                    background: 'var(--surface-elevated)',
+                    padding: 14,
+                    borderRadius: 14,
+                    background: 'var(--soft)',
                     color: 'var(--muted)',
                     cursor: 'not-allowed',
                     border: 0,
@@ -365,12 +370,12 @@ export const DealViewSection: React.FC = () => {
                   className="bigfund-btn"
                   style={{
                     width: '100%',
-                    padding: 12,
-                    borderRadius: 'var(--radius-full)',
-                    background: 'var(--emerald)',
-                    color: '#0e1113',
+                    padding: 14,
+                    borderRadius: 14,
+                    background: '#58c939',
+                    color: '#ffffff',
                     border: 0,
-                    fontWeight: 800,
+                    fontWeight: 850,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -386,21 +391,19 @@ export const DealViewSection: React.FC = () => {
                   className="bigfund-btn"
                   style={{
                     width: '100%',
-                    padding: 12,
-                    borderRadius: 'var(--radius-full)',
-                    background: '#ffffff',
-                    color: '#0e1113',
+                    padding: 14,
+                    borderRadius: 14,
+                    background: 'var(--lime)',
+                    color: 'var(--lime-dark)',
                     border: 0,
-                    fontWeight: 800,
+                    fontWeight: 850,
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 6,
                     cursor: 'pointer',
-                    transition: 'all 0.15s ease',
+                    boxShadow: '0 4px 14px rgba(167, 255, 99, 0.4)',
                   }}
-                  onMouseEnter={(e) => (e.currentTarget.style.background = '#e5e7eb')}
-                  onMouseLeave={(e) => (e.currentTarget.style.background = '#ffffff')}
                 >
                   <Sparkles size={16} />
                   <span>Fund ${allocationAmount}</span>

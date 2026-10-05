@@ -44,7 +44,7 @@ export const GondiMarketTable: React.FC = () => {
     });
 
     const pathData = `M ${coords.join(' L ')}`;
-    const strokeColor = isPositive ? 'var(--emerald)' : '#ff6b81';
+    const strokeColor = isPositive ? 'var(--emerald)' : 'var(--coral)';
 
     return (
       <svg width={width} height={height} style={{ overflow: 'visible' }}>
@@ -52,7 +52,7 @@ export const GondiMarketTable: React.FC = () => {
           d={pathData}
           fill="none"
           stroke={strokeColor}
-          strokeWidth="1.8"
+          strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
         />
@@ -66,7 +66,7 @@ export const GondiMarketTable: React.FC = () => {
       <div className="gondi-table-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ fontSize: 16, fontWeight: 800, color: '#ffffff', letterSpacing: '-0.02em' }}>
+            <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em' }}>
               Market Overview
             </span>
             <span
@@ -85,8 +85,8 @@ export const GondiMarketTable: React.FC = () => {
                 type="button"
                 onClick={() => setFilterStatus(s)}
                 style={{
-                  background: filterStatus === s ? 'var(--surface-elevated)' : 'transparent',
-                  color: filterStatus === s ? 'var(--ink)' : 'var(--muted)',
+                  background: filterStatus === s ? 'var(--ink)' : 'transparent',
+                  color: filterStatus === s ? '#ffffff' : 'var(--muted)',
                   border: 0,
                   borderRadius: 'var(--radius-full)',
                   padding: '4px 10px',
@@ -176,7 +176,7 @@ export const GondiMarketTable: React.FC = () => {
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}
                   style={{
-                    background: isSelected ? 'rgba(16, 185, 129, 0.05)' : undefined,
+                    background: isSelected ? 'rgba(88, 201, 57, 0.08)' : undefined,
                   }}
                 >
                   {/* # */}
@@ -192,14 +192,13 @@ export const GondiMarketTable: React.FC = () => {
                           width: 38,
                           height: 38,
                           borderRadius: 10,
-                          background: 'linear-gradient(135deg, #18231c 0%, #15181c 100%)',
-                          border: '1px solid var(--line)',
+                          background: '#1a1b18',
+                          color: '#ffffff',
                           display: 'flex',
                           alignItems: 'center',
                           justifyContent: 'center',
-                          fontWeight: 900,
-                          fontSize: 13,
-                          color: 'var(--lime)',
+                          fontWeight: 800,
+                          fontSize: 12,
                           flexShrink: 0,
                         }}
                       >
@@ -207,7 +206,7 @@ export const GondiMarketTable: React.FC = () => {
                       </div>
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ fontWeight: 800, fontSize: 13.5, color: '#ffffff' }}>
+                          <span style={{ fontWeight: 800, fontSize: 13.5, color: 'var(--ink)' }}>
                             {deal.token.name}
                           </span>
                           <span
@@ -234,7 +233,7 @@ export const GondiMarketTable: React.FC = () => {
 
                   {/* Target (ETH) */}
                   <td style={{ textAlign: 'right' }}>
-                    <div style={{ fontWeight: 800, color: '#ffffff' }}>
+                    <div style={{ fontWeight: 800, color: 'var(--ink)' }}>
                       {targetEth.toFixed(4)}
                     </div>
                     <div style={{ fontSize: 11, color: 'var(--muted)' }}>
@@ -250,7 +249,7 @@ export const GondiMarketTable: React.FC = () => {
                         alignItems: 'center',
                         gap: 2,
                         fontWeight: 750,
-                        color: isPositiveChange ? 'var(--emerald)' : '#ff6b81',
+                        color: isPositiveChange ? 'var(--emerald)' : 'var(--coral)',
                         fontSize: 12.5,
                       }}
                     >
@@ -271,7 +270,7 @@ export const GondiMarketTable: React.FC = () => {
 
                   {/* Fees Accrued */}
                   <td style={{ textAlign: 'right' }}>
-                    <div style={{ fontWeight: 800, color: '#ffffff' }}>
+                    <div style={{ fontWeight: 800, color: 'var(--ink)' }}>
                       {feesEth.toFixed(4)} ETH
                     </div>
                     <div style={{ fontSize: 11, color: 'var(--muted)' }}>
@@ -286,7 +285,7 @@ export const GondiMarketTable: React.FC = () => {
                         display: 'inline-flex',
                         alignItems: 'center',
                         gap: 4,
-                        color: 'var(--ink-secondary)',
+                        color: 'var(--ink)',
                         fontWeight: 700,
                         fontSize: 12,
                       }}
@@ -310,19 +309,12 @@ export const GondiMarketTable: React.FC = () => {
                           e.stopPropagation();
                           openContributionModal(deal);
                         }}
+                        className="btn dark"
                         style={{
-                          background: '#ffffff',
-                          color: '#0e1113',
-                          border: 0,
-                          borderRadius: 'var(--radius-full)',
                           padding: '6px 14px',
                           fontSize: 11.5,
                           fontWeight: 800,
-                          cursor: 'pointer',
-                          transition: 'all 0.15s ease',
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = '#e5e7eb')}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = '#ffffff')}
                       >
                         Fund
                       </button>
@@ -335,19 +327,12 @@ export const GondiMarketTable: React.FC = () => {
                           const el = document.getElementById('deal-detail');
                           if (el) el.scrollIntoView({ behavior: 'smooth' });
                         }}
+                        className="btn"
                         style={{
-                          background: 'var(--surface-elevated)',
-                          color: 'var(--ink)',
-                          border: '1px solid var(--line)',
-                          borderRadius: 'var(--radius-full)',
                           padding: '6px 14px',
                           fontSize: 11.5,
                           fontWeight: 750,
-                          cursor: 'pointer',
-                          transition: 'all 0.15s ease',
                         }}
-                        onMouseEnter={(e) => (e.currentTarget.style.background = 'var(--surface-hover)')}
-                        onMouseLeave={(e) => (e.currentTarget.style.background = 'var(--surface-elevated)')}
                       >
                         View
                       </button>

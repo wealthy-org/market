@@ -7,11 +7,11 @@ import { useAccount, useChainId } from 'wagmi';
 import { useContributeToPool } from '@/hooks/useFundingProtocol';
 import { CONTRACT_ADDRESSES } from '@/lib/contracts';
 import confetti from 'canvas-confetti';
-import { X, Sparkles, CheckCircle2, ShieldCheck, ExternalLink, Loader2, AlertCircle } from 'lucide-react';
+import { X, Sparkles, CheckCircle2, ExternalLink, Loader2, AlertCircle } from 'lucide-react';
 
 export const ContributionModal: React.FC = () => {
   const { isContributionModalOpen, modalDeal, closeContributionModal, contributeToPool } = useMarket();
-  const { isConnected, address } = useAccount();
+  const { isConnected } = useAccount();
   const chainId = useChainId();
 
   const [amount, setAmount] = useState<number>(25);
@@ -29,7 +29,6 @@ export const ContributionModal: React.FC = () => {
     isPending: isContractPending, 
     isConfirming, 
     isSuccess: isContractSuccess, 
-    error: contractError,
     reset: resetContract 
   } = useContributeToPool(targetPoolAddress);
 
@@ -89,11 +88,9 @@ export const ContributionModal: React.FC = () => {
         await contribute(ethEquivalent.toString());
       } catch (err: any) {
         console.warn('Onchain contribute error or rejected:', err);
-        // If user rejected or on unsupported chain, offer fallback or show error
         if (err?.message?.includes('User rejected') || err?.message?.includes('denied')) {
           setCustomError('Transaction rejected in wallet.');
         } else {
-          // If contract call failed (e.g. mock testnet RPC not reachable), allow seamless local simulation
           setCustomError(err?.shortMessage || err?.message || 'Contract transaction failed');
         }
       }
@@ -136,18 +133,37 @@ export const ContributionModal: React.FC = () => {
 
   return (
     <div className="modal-overlay" onClick={closeContributionModal}>
-      <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+      <div 
+        className="modal-content" 
+        onClick={(e) => e.stopPropagation()}
+        style={{ background: 'var(--paper)', border: '1px solid var(--line)' }}
+      >
         <button type="button" className="modal-close" onClick={closeContributionModal}>
           <X size={18} />
         </button>
 
-        <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-          <div className="avatar">{modalDeal.token.avatar}</div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18 }}>
+          <div
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 13,
+              background: '#1a1b18',
+              color: '#ffffff',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: 12,
+              fontWeight: 800,
+            }}
+          >
+            {modalDeal.token.avatar}
+          </div>
           <div>
             <div className="eyebrow" style={{ fontSize: 9.5 }}>
               Launch Pool · {isConnected ? 'Onchain Mode' : 'Prototype Simulation'}
             </div>
-            <h3 className="serif-heading" style={{ fontSize: 24, margin: '2px 0 0' }}>
+            <h3 className="serif-heading" style={{ fontSize: 24, margin: '2px 0 0', color: 'var(--ink)' }}>
               Fund {modalDeal.token.symbol} Launch
             </h3>
           </div>
@@ -156,9 +172,9 @@ export const ContributionModal: React.FC = () => {
         {/* Pool Summary Box */}
         <div
           style={{
-            background: 'var(--surface-input)',
+            background: 'var(--soft)',
             border: '1px solid var(--line-soft)',
-            borderRadius: 12,
+            borderRadius: 14,
             padding: '12px 16px',
             marginBottom: 16,
             fontSize: 12.5,
@@ -166,11 +182,11 @@ export const ContributionModal: React.FC = () => {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
             <span style={{ color: 'var(--muted)' }}>Campaign</span>
-            <b style={{ color: '#ffffff' }}>{modalDeal.campaignName}</b>
+            <b style={{ color: 'var(--ink)' }}>{modalDeal.campaignName}</b>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
             <span style={{ color: 'var(--muted)' }}>Pool Progress</span>
-            <b style={{ color: '#ffffff' }}>
+            <b style={{ color: 'var(--ink)' }}>
               ${modalDeal.fundedUsd} / ${modalDeal.campaignTargetUsd} (
               {Math.round((modalDeal.fundedUsd / modalDeal.campaignTargetUsd) * 100)}%)
             </b>
@@ -194,6 +210,11 @@ export const ContributionModal: React.FC = () => {
                 className={`preset-chip ${amount === val ? 'active' : ''}`}
                 onClick={() => setAmount(val)}
                 disabled={isProcessing}
+                style={{
+                  background: amount === val ? 'var(--ink)' : '#ffffff',
+                  color: amount === val ? '#ffffff' : 'var(--ink)',
+                  border: '1px solid var(--line)',
+                }}
               >
                 ${val}
               </button>
@@ -204,13 +225,18 @@ export const ContributionModal: React.FC = () => {
                 className={`preset-chip ${amount === remaining ? 'active' : ''}`}
                 onClick={() => setAmount(remaining)}
                 disabled={isProcessing}
+                style={{
+                  background: amount === remaining ? 'var(--ink)' : '#ffffff',
+                  color: amount === remaining ? '#ffffff' : 'var(--ink)',
+                  border: '1px solid var(--line)',
+                }}
               >
                 Max (${remaining})
               </button>
             )}
           </div>
 
-          <div className="allocation-box" style={{ margin: '14px 0', background: 'var(--surface-input)' }}>
+          <div className="allocation-box" style={{ margin: '14px 0', background: '#ffffff', border: '1px solid var(--line)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
               <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--muted)' }}>$</span>
               <input
@@ -220,7 +246,7 @@ export const ContributionModal: React.FC = () => {
                 value={amount}
                 onChange={(e) => setAmount(Math.max(1, Number(e.target.value)))}
                 disabled={isProcessing}
-                style={{ color: '#ffffff' }}
+                style={{ color: 'var(--ink)' }}
               />
             </div>
             <div style={{ textAlign: 'right' }}>
@@ -232,26 +258,26 @@ export const ContributionModal: React.FC = () => {
           <div
             style={{
               border: '1px solid var(--line-soft)',
-              borderRadius: 12,
+              borderRadius: 14,
               padding: '12px 16px',
               display: 'grid',
               gap: 8,
               fontSize: 12.5,
               marginBottom: 16,
-              background: 'var(--surface-input)',
+              background: '#ffffff',
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: 'var(--muted)' }}>Pool ownership share</span>
-              <b style={{ color: '#ffffff' }}>{poolShare}%</b>
+              <b style={{ color: 'var(--ink)' }}>{poolShare}%</b>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: 'var(--muted)' }}>Lender fee share</span>
-              <b style={{ color: '#ffffff' }}>{modalDeal.lenderFeeSharePct}%</b>
+              <b style={{ color: 'var(--ink)' }}>{modalDeal.lenderFeeSharePct}%</b>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: 'var(--muted)' }}>Maximum repayment* ({modalDeal.repayCapMultiplier}× cap)</span>
-              <b style={{ color: 'var(--lime)' }}>${maxRepayment}</b>
+              <b style={{ color: 'var(--emerald)' }}>${maxRepayment}</b>
             </div>
           </div>
 
@@ -259,12 +285,12 @@ export const ContributionModal: React.FC = () => {
           {customError && (
             <div
               style={{
-                background: 'rgba(244, 63, 94, 0.12)',
-                border: '1px solid rgba(244, 63, 94, 0.3)',
+                background: 'rgba(178, 77, 68, 0.08)',
+                border: '1px solid rgba(178, 77, 68, 0.25)',
                 borderRadius: 12,
                 padding: '10px 14px',
                 fontSize: 12,
-                color: '#ff6b81',
+                color: 'var(--coral)',
                 marginBottom: 14,
                 display: 'flex',
                 alignItems: 'center',
@@ -286,7 +312,7 @@ export const ContributionModal: React.FC = () => {
                   textDecoration: 'underline',
                   fontWeight: 700,
                   cursor: 'pointer',
-                  color: '#cf1322',
+                  color: 'var(--coral)',
                   fontSize: 11.5,
                   flexShrink: 0,
                   marginLeft: 8,
@@ -303,7 +329,7 @@ export const ContributionModal: React.FC = () => {
               <button
                 type="button"
                 className="bigfund-btn"
-                style={{ background: '#58c939', color: '#fff' }}
+                style={{ background: '#58c939', color: '#ffffff' }}
                 disabled
               >
                 <CheckCircle2 size={18} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 6 }} />
@@ -340,21 +366,26 @@ export const ContributionModal: React.FC = () => {
                   Confirming onchain...
                 </>
               ) : localSubmitting ? (
-                'Processing...'
+                <>
+                  <Loader2 size={16} className="spin" style={{ display: 'inline', verticalAlign: 'middle', marginRight: 6 }} />
+                  Processing contribution...
+                </>
+              ) : remaining <= 0 ? (
+                'Pool Fully Funded'
               ) : (
                 <>
                   <Sparkles size={16} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 6 }} />
-                  Confirm Funding ${finalAmount} ({ethEquivalent} ETH)
+                  Fund ${finalAmount} ({ethEquivalent} ETH)
                 </>
               )}
             </button>
           )}
-
-          <div className="risk-note" style={{ textAlign: 'center', marginTop: 12 }}>
-            <ShieldCheck size={12} style={{ display: 'inline', verticalAlign: 'middle', marginRight: 4 }} />
-            *Maximum if the deal fully repays. Not guaranteed. Pro-rata repayment streamed from Pons creator fees.
-          </div>
         </form>
+
+        <div style={{ fontSize: 11, color: 'var(--muted)', lineHeight: 1.55, marginTop: 14 }}>
+          *Projection assumes recent fee activity continues. Returns are not guaranteed.
+          Capital may be partially or fully lost if trading activity falls.
+        </div>
       </div>
     </div>
   );

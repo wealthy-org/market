@@ -39,9 +39,9 @@ export const GondiActivityFeed: React.FC = () => {
             flex: 1,
             padding: '7px 0',
             borderRadius: 'var(--radius-full)',
-            background: activeTab === 'All Activity' ? 'var(--surface-elevated)' : 'transparent',
-            color: activeTab === 'All Activity' ? '#ffffff' : 'var(--muted)',
-            border: 0,
+            background: activeTab === 'All Activity' ? '#ffffff' : 'transparent',
+            color: activeTab === 'All Activity' ? 'var(--ink)' : 'var(--muted)',
+            border: activeTab === 'All Activity' ? '1px solid var(--line)' : '1px solid transparent',
             fontSize: 12,
             fontWeight: 750,
             cursor: 'pointer',
@@ -57,9 +57,9 @@ export const GondiActivityFeed: React.FC = () => {
             flex: 1,
             padding: '7px 0',
             borderRadius: 'var(--radius-full)',
-            background: activeTab === 'Following' ? 'var(--surface-elevated)' : 'transparent',
-            color: activeTab === 'Following' ? '#ffffff' : 'var(--muted)',
-            border: 0,
+            background: activeTab === 'Following' ? '#ffffff' : 'transparent',
+            color: activeTab === 'Following' ? 'var(--ink)' : 'var(--muted)',
+            border: activeTab === 'Following' ? '1px solid var(--line)' : '1px solid transparent',
             fontSize: 12,
             fontWeight: 750,
             cursor: 'pointer',
@@ -83,7 +83,7 @@ export const GondiActivityFeed: React.FC = () => {
           justifyContent: 'space-between',
           padding: '10px 14px',
           borderBottom: '1px solid var(--line)',
-          background: '#121518',
+          background: 'var(--soft)',
         }}
       >
         <div style={{ display: 'flex', gap: 4 }}>
@@ -95,8 +95,8 @@ export const GondiActivityFeed: React.FC = () => {
               style={{
                 padding: '4px 10px',
                 borderRadius: 'var(--radius-full)',
-                background: subTab === tab ? 'var(--surface-elevated)' : 'transparent',
-                color: subTab === tab ? 'var(--ink)' : 'var(--muted)',
+                background: subTab === tab ? 'var(--ink)' : 'transparent',
+                color: subTab === tab ? '#ffffff' : 'var(--muted)',
                 border: 0,
                 fontSize: 11,
                 fontWeight: 700,
@@ -117,13 +117,13 @@ export const GondiActivityFeed: React.FC = () => {
             display: 'flex',
             alignItems: 'center',
             gap: 4,
-            background: filterThreshold > 0 ? 'var(--surface-elevated)' : 'transparent',
+            background: filterThreshold > 0 ? '#ffffff' : 'transparent',
             border: '1px solid var(--line)',
             borderRadius: 'var(--radius-full)',
             padding: '3px 8px',
             fontSize: 10.5,
             fontWeight: 700,
-            color: filterThreshold > 0 ? 'var(--lime)' : 'var(--muted)',
+            color: filterThreshold > 0 ? 'var(--ink)' : 'var(--muted)',
             cursor: 'pointer',
           }}
         >
@@ -137,10 +137,10 @@ export const GondiActivityFeed: React.FC = () => {
         style={{
           flex: 1,
           overflowY: 'auto',
-          padding: '8px 10px',
+          padding: '10px',
           display: 'flex',
           flexDirection: 'column',
-          gap: 6,
+          gap: 8,
         }}
       >
         {filteredActivity.map((item) => {
@@ -151,18 +151,17 @@ export const GondiActivityFeed: React.FC = () => {
             ? (item.amountUsd / ETH_PRICE_USD).toFixed(4)
             : '0.0000';
 
-          // Type label & color
           let typeLabel = 'Funded';
           let typeColor = 'var(--emerald)';
           if (item.type === 'REPAYMENT') {
             typeLabel = 'Repaid';
-            typeColor = 'var(--lime)';
+            typeColor = '#40792c';
           } else if (item.type === 'POOL_FILLED') {
             typeLabel = 'Filled';
-            typeColor = '#60a5fa';
+            typeColor = 'var(--ink)';
           } else if (item.type === 'CAMPAIGN_EXECUTED') {
             typeLabel = 'Executed';
-            typeColor = '#f59e0b';
+            typeColor = '#b8860b';
           }
 
           return (
@@ -179,20 +178,21 @@ export const GondiActivityFeed: React.FC = () => {
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '10px 10px',
+                padding: '10px 12px',
                 borderRadius: 'var(--radius-sm)',
-                background: 'var(--surface-card)',
+                background: '#ffffff',
                 border: '1px solid var(--line-soft)',
+                boxShadow: '0 2px 6px rgba(20, 20, 15, 0.02)',
                 cursor: 'pointer',
-                transition: 'background 0.15s ease, border-color 0.15s ease',
+                transition: 'all 0.15s ease',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.background = 'var(--surface-hover)';
-                e.currentTarget.style.borderColor = 'var(--line-strong)';
+                e.currentTarget.style.borderColor = 'var(--ink)';
+                e.currentTarget.style.transform = 'translateY(-1px)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.background = 'var(--surface-card)';
                 e.currentTarget.style.borderColor = 'var(--line-soft)';
+                e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
               {/* Left: Avatar + Title & Addresses */}
@@ -202,14 +202,13 @@ export const GondiActivityFeed: React.FC = () => {
                     width: 32,
                     height: 32,
                     borderRadius: 8,
-                    background: '#161b20',
-                    border: '1px solid var(--line)',
+                    background: '#1a1b18',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     fontWeight: 800,
-                    fontSize: 11,
-                    color: typeColor,
+                    fontSize: 10.5,
+                    color: '#ffffff',
                     flexShrink: 0,
                   }}
                 >
@@ -221,7 +220,7 @@ export const GondiActivityFeed: React.FC = () => {
                     style={{
                       fontSize: 12.5,
                       fontWeight: 750,
-                      color: '#ffffff',
+                      color: 'var(--ink)',
                       whiteSpace: 'nowrap',
                       overflow: 'hidden',
                       textOverflow: 'ellipsis',
@@ -247,8 +246,8 @@ export const GondiActivityFeed: React.FC = () => {
 
               {/* Right: Amount & Badge */}
               <div style={{ textAlign: 'right', flexShrink: 0, paddingLeft: 8 }}>
-                <div style={{ fontSize: 12, fontWeight: 800, color: '#ffffff' }}>
-                  {ethAmount} <span style={{ fontSize: 9.5, color: 'var(--muted)' }}>ETH</span>
+                <div style={{ fontSize: 12.5, fontWeight: 800, color: 'var(--ink)' }}>
+                  {ethAmount} <span style={{ fontSize: 10, color: 'var(--muted)' }}>ETH</span>
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: 6 }}>
                   <span
@@ -268,12 +267,12 @@ export const GondiActivityFeed: React.FC = () => {
         })}
       </div>
 
-      {/* Bottom Footer Ticker matching Gondi */}
+      {/* Bottom Footer Ticker matching Prototype */}
       <div
         style={{
-          padding: '10px 14px',
+          padding: '12px 14px',
           borderTop: '1px solid var(--line)',
-          background: 'var(--bg)',
+          background: 'var(--soft)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -287,10 +286,11 @@ export const GondiActivityFeed: React.FC = () => {
               width: 6,
               height: 6,
               borderRadius: '50%',
-              background: '#10b981',
+              background: '#58c939',
+              boxShadow: '0 0 6px rgba(88, 201, 57, 0.6)',
             }}
           />
-          <span>Live WebSocket Feed</span>
+          <span style={{ fontWeight: 700, color: 'var(--ink)' }}>Live Activity</span>
         </div>
         <span style={{ fontWeight: 700, color: 'var(--ink)' }}>70% Fee Split</span>
       </div>
