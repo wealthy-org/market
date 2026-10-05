@@ -4,12 +4,14 @@ import React, { useState } from 'react';
 import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
 import confetti from 'canvas-confetti';
-import { ArrowUpRight, ArrowDownRight, Sparkles, CheckCircle2, ShieldAlert } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Sparkles, CheckCircle2, ShieldAlert, Calculator } from 'lucide-react';
+import { PaybackCalculatorModal } from '@/components/PaybackCalculatorModal';
 
 export const DealViewSection: React.FC = () => {
-  const { selectedDeal, contributeToPool } = useMarket();
+  const { selectedDeal, contributeToPool, openContributionModal } = useMarket();
   const [allocationAmount, setAllocationAmount] = useState<number>(25);
   const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [isCalcOpen, setIsCalcOpen] = useState<boolean>(false);
 
   const remainingFunding = Math.max(
     0,
@@ -252,9 +254,31 @@ export const DealViewSection: React.FC = () => {
               <span style={{ color: 'var(--muted)' }}>Repayment cap</span>
               <b style={{ color: 'var(--ink)' }}>{selectedDeal.repayCapMultiplier.toFixed(2)}× (20% ROI)</b>
             </div>
-            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13, borderBottom: '1px solid var(--line)', paddingBottom: 8 }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: 13, borderBottom: '1px solid var(--line)', paddingBottom: 8 }}>
               <span style={{ color: 'var(--muted)' }}>Projected payback*</span>
-              <b style={{ color: 'var(--ink)' }}>~{selectedDeal.projectedPaybackHours}h</b>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <b style={{ color: 'var(--ink)' }}>~{selectedDeal.projectedPaybackHours}h</b>
+                <button
+                  type="button"
+                  onClick={() => setIsCalcOpen(true)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 4,
+                    background: 'var(--soft)',
+                    border: '1px solid var(--line)',
+                    borderRadius: 6,
+                    padding: '2px 8px',
+                    fontSize: 10.5,
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    color: 'var(--ink)',
+                  }}
+                >
+                  <Calculator size={11} />
+                  <span>Simulate</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -428,6 +452,14 @@ export const DealViewSection: React.FC = () => {
           </div>
         </aside>
       </div>
+
+      {/* Payback Simulator Modal */}
+      <PaybackCalculatorModal
+        deal={selectedDeal}
+        isOpen={isCalcOpen}
+        onClose={() => setIsCalcOpen(false)}
+        onOpenFundModal={openContributionModal}
+      />
     </section>
   );
 };

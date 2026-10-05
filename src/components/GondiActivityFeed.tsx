@@ -6,7 +6,7 @@ import { ETH_PRICE_USD } from '@/data/mockDeals';
 import { Filter } from 'lucide-react';
 
 export const GondiActivityFeed: React.FC = () => {
-  const { activity, deals, setSelectedDealId } = useMarket();
+  const { activity, deals, setSelectedDealId, simulateFeeInflow } = useMarket();
   const [activeTab, setActiveTab] = useState<'All Activity' | 'Following'>('All Activity');
   const [subTab, setSubTab] = useState<'Feed' | 'Top Repayments' | 'Pool Fills'>('Feed');
   const [filterThreshold, setFilterThreshold] = useState<number>(0);
@@ -129,6 +129,51 @@ export const GondiActivityFeed: React.FC = () => {
         >
           <Filter size={10} />
           <span>{filterThreshold > 0 ? '> $50' : 'All'}</span>
+        </button>
+      </div>
+      {/* Live Stream Pulse Strip */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '6px 14px',
+          background: '#ffffff',
+          borderBottom: '1px solid var(--line-soft)',
+          fontSize: 11,
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontWeight: 800, color: 'var(--emerald)' }}>
+          <span
+            style={{
+              width: 7,
+              height: 7,
+              borderRadius: '50%',
+              background: 'var(--emerald)',
+              boxShadow: '0 0 8px var(--emerald)',
+            }}
+          />
+          <span>ROBINHOOD 46630 LIVE</span>
+        </div>
+        <button
+          type="button"
+          onClick={() => simulateFeeInflow('pny', 25)}
+          title="Simulate $25 Pons DEX trading fees streaming to lenders"
+          style={{
+            background: 'var(--soft)',
+            border: '1px solid var(--line)',
+            borderRadius: 6,
+            padding: '2px 8px',
+            fontSize: 10.5,
+            fontWeight: 750,
+            cursor: 'pointer',
+            color: 'var(--ink)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 4,
+          }}
+        >
+          <span>⚡ Stream $25</span>
         </button>
       </div>
 
