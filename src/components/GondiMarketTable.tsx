@@ -125,7 +125,7 @@ export const GondiMarketTable: React.FC = () => {
                 transition: 'all 0.15s ease',
               }}
             >
-              🌱 Pons Launch Pools
+              Pons Launch Pools
             </button>
             <button
               type="button"
@@ -146,7 +146,7 @@ export const GondiMarketTable: React.FC = () => {
                 transition: 'all 0.15s ease',
               }}
             >
-              <span>⚡ Live Gondi Collections</span>
+              <span>Live Gondi Collections</span>
               <span
                 style={{
                   fontSize: 9,

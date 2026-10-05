@@ -464,7 +464,7 @@ export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setActivity((prev) => [act, ...prev]);
 
     if (isNowFullyRepaid) {
-      showToast(`🎉 1.20x Cap reached on ${targetDeal.token.symbol}! Fee rights returned to creator.`);
+      showToast(`1.20x Cap reached on ${targetDeal.token.symbol}! Fee rights returned to creator.`);
     } else {
       showToast(`Streamed $${amountUsd} Pons fees: $${lenderShareUsd.toFixed(2)} routed to lenders`);
     }

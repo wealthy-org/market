@@ -70,7 +70,7 @@ export const TestnetPlayground: React.FC = () => {
             background: '#a7ff63',
             boxShadow: '0 0 10px #a7ff63',
           }} />
-          <span>⚡ Testnet Tools ({chainId === 46630 ? 'Robinhood 46630' : 'Testnet'})</span>
+          <span>Testnet Tools ({chainId === 46630 ? 'Robinhood 46630' : 'Testnet'})</span>
           <ChevronUp size={14} />
         </button>
       )}

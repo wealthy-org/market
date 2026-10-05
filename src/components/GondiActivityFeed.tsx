@@ -173,7 +173,7 @@ export const GondiActivityFeed: React.FC = () => {
             gap: 4,
           }}
         >
-          <span>⚡ Stream $25</span>
+          <span>Stream $25</span>
         </button>
       </div>
 
