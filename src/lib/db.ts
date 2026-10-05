@@ -138,8 +138,8 @@ export async function dbGetDeals(): Promise<FundingDeal[]> {
   if (!sql) return INITIAL_DEALS;
   try {
     const rows = await sql`SELECT * FROM deals ORDER BY created_at DESC`;
-    if (rows.length === 0) return INITIAL_DEALS;
-    return rows.map((r: any) => ({
+    
+    const dbDeals: FundingDeal[] = rows.map((r: any) => ({
       id: r.id,
       token: {
         name: r.name,
@@ -194,6 +194,38 @@ export async function dbGetDeals(): Promise<FundingDeal[]> {
       splitterAddress: r.splitter_address || '0x3cA85F49e0B8E1B9D79F9983A756Fe2b66236b28',
       poolContractAddress: r.pool_contract_address || undefined,
     }));
+
+    // Check for any missing initial deals and merge them so cards never vanish
+    const existingIds = new Set(dbDeals.map((d) => d.id));
+    const missingDeals = INITIAL_DEALS.filter((d) => !existingIds.has(d.id));
+
+    if (missingDeals.length > 0) {
+      // Seed missing deals to NeonDB
+      for (const d of missingDeals) {
+        sql`
+          INSERT INTO deals (
+            id, name, symbol, address, avatar, age, chain, pair_token, creator_address,
+            status, fee_velocity, fee_velocity_trend, trend_direction, liquidity_usd,
+            market_cap_usd, unique_traders, campaign_name, campaign_target_usd, funded_usd,
+            lender_fee_share_pct, creator_fee_share_pct, repay_cap_multiplier,
+            projected_payback_hours, creator_fees_accrued_usd, repaid_to_lenders_usd,
+            splitter_address, pool_contract_address
+          ) VALUES (
+            ${d.id}, ${d.token.name}, ${d.token.symbol}, ${d.token.address}, ${d.token.avatar},
+            ${d.token.age}, ${d.token.chain}, ${d.token.pairToken}, ${d.token.creatorAddress},
+            ${d.status}, ${d.feeVelocity}, ${d.feeVelocityTrend}, ${d.trendDirection},
+            ${d.liquidityUsd}, ${d.marketCapUsd}, ${d.uniqueTraders}, ${d.campaignName},
+            ${d.campaignTargetUsd}, ${d.fundedUsd}, ${d.lenderFeeSharePct}, ${d.creatorFeeSharePct},
+            ${d.repayCapMultiplier}, ${d.projectedPaybackHours}, ${d.creatorFeesAccruedUsd},
+            ${d.repaidToLendersUsd}, ${d.splitterAddress}, ${d.poolContractAddress || null}
+          ) ON CONFLICT (id) DO NOTHING;
+        `.catch((e) => console.warn('Background seed deal error:', e));
+      }
+
+      return [...dbDeals, ...missingDeals];
+    }
+
+    return dbDeals;
   } catch (err) {
     console.warn('NeonDB query failed, using fallback:', err);
     return INITIAL_DEALS;

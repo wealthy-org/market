@@ -71,7 +71,16 @@ export const MarketProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       .then((res) => res.json())
       .then((data) => {
         if (data.success && data.deals?.length > 0) {
-          setDeals(data.deals);
+          setDeals((prev: FundingDeal[]): FundingDeal[] => {
+            const apiMap = new Map<string, FundingDeal>(data.deals.map((d: FundingDeal) => [d.id, d]));
+            const merged: FundingDeal[] = prev.map((p) => (apiMap.has(p.id) ? apiMap.get(p.id)! : p));
+            data.deals.forEach((d: FundingDeal) => {
+              if (!prev.some((p) => p.id === d.id)) {
+                merged.push(d);
+              }
+            });
+            return merged;
+          });
         }
       })
       .catch((err) => {
