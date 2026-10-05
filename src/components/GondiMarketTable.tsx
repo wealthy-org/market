@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
 import { FundingDeal } from '@/types/market';
@@ -9,6 +10,7 @@ import { Info, ArrowUpRight, ArrowDownRight, Users, Calculator, ExternalLink, Re
 import { PaybackCalculatorModal } from '@/components/PaybackCalculatorModal';
 
 export const GondiMarketTable: React.FC = () => {
+  const router = useRouter();
   const { deals, selectedDeal, setSelectedDealId, openContributionModal } = useMarket();
 
   // Mode: Pons Pools vs Live Gondi NFT Collections
@@ -280,9 +282,7 @@ export const GondiMarketTable: React.FC = () => {
                   <tr
                     key={deal.id}
                     onClick={() => {
-                      setSelectedDealId(deal.id);
-                      const el = document.getElementById('deal-detail');
-                      if (el) el.scrollIntoView({ behavior: 'smooth' });
+                      router.push(`/request/${deal.id}`);
                     }}
                     style={{
                       cursor: 'pointer',
@@ -469,9 +469,7 @@ export const GondiMarketTable: React.FC = () => {
                             type="button"
                             onClick={(e) => {
                               e.stopPropagation();
-                              setSelectedDealId(deal.id);
-                              const el = document.getElementById('deal-detail');
-                              if (el) el.scrollIntoView({ behavior: 'smooth' });
+                              router.push(`/request/${deal.id}`);
                             }}
                             className="btn"
                             style={{

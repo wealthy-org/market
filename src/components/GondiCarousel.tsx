@@ -1,11 +1,13 @@
 'use client';
 
 import React, { useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
 import { ChevronLeft, ChevronRight, Info } from 'lucide-react';
 
 export const GondiCarousel: React.FC = () => {
+  const router = useRouter();
   const { deals, openContributionModal, setSelectedDealId } = useMarket();
   const [filter, setFilter] = useState<'All' | 'Hot' | 'Near Cap' | 'Repaying'>('All');
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -163,9 +165,7 @@ export const GondiCarousel: React.FC = () => {
                 transition: 'transform 0.18s ease, border-color 0.18s ease',
               }}
               onClick={() => {
-                setSelectedDealId(deal.id);
-                const el = document.getElementById('deal-detail');
-                if (el) el.scrollIntoView({ behavior: 'smooth' });
+                router.push(`/request/${deal.id}`);
               }}
             >
               {/* Visual preview */}
@@ -348,9 +348,7 @@ export const GondiCarousel: React.FC = () => {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
-                    setSelectedDealId(deal.id);
-                    const el = document.getElementById('deal-detail');
-                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                    router.push(`/request/${deal.id}`);
                   }}
                   className="btn"
                   style={{

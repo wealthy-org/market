@@ -1,10 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
 import confetti from 'canvas-confetti';
-import { ArrowUpRight, ArrowDownRight, Sparkles, CheckCircle2, ShieldAlert, Calculator } from 'lucide-react';
+import { ArrowUpRight, ArrowDownRight, Sparkles, CheckCircle2, ShieldAlert, Calculator, ExternalLink } from 'lucide-react';
 import { PaybackCalculatorModal } from '@/components/PaybackCalculatorModal';
 
 export const DealViewSection: React.FC = () => {
@@ -122,16 +123,37 @@ export const DealViewSection: React.FC = () => {
                 </span>
               </div>
             </div>
-            <div
-              className={`pill ${
-                selectedDeal.status === 'REPAID'
-                  ? 'repaid'
-                  : selectedDeal.status === 'REPAYING'
-                  ? 'momentum'
-                  : 'hot'
-              }`}
-            >
-              {selectedDeal.status}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Link
+                href={`/request/${selectedDeal.id}`}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  fontSize: 12,
+                  fontWeight: 750,
+                  color: 'var(--ink)',
+                  textDecoration: 'none',
+                  background: 'var(--soft)',
+                  border: '1px solid var(--line)',
+                  padding: '4px 10px',
+                  borderRadius: 'var(--radius-full)',
+                }}
+              >
+                <span>Full Item View</span>
+                <ExternalLink size={12} />
+              </Link>
+              <div
+                className={`pill ${
+                  selectedDeal.status === 'REPAID'
+                    ? 'repaid'
+                    : selectedDeal.status === 'REPAYING'
+                    ? 'momentum'
+                    : 'hot'
+                }`}
+              >
+                {selectedDeal.status}
+              </div>
             </div>
           </div>
 
