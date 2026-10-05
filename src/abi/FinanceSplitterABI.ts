@@ -40,16 +40,6 @@ export const FinanceSplitterABI = [
         "internalType": "uint256",
         "name": "_creatorShareBps",
         "type": "uint256"
-      },
-      {
-        "internalType": "address[]",
-        "name": "_lenders",
-        "type": "address[]"
-      },
-      {
-        "internalType": "uint256[]",
-        "name": "_shares",
-        "type": "uint256[]"
       }
     ],
     "stateMutability": "nonpayable",
@@ -59,6 +49,25 @@ export const FinanceSplitterABI = [
     "inputs": [],
     "name": "ReentrancyGuardReentrantCall",
     "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "totalShares",
+        "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "lenders",
+        "type": "uint256"
+      }
+    ],
+    "name": "Activated",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -168,6 +177,19 @@ export const FinanceSplitterABI = [
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "amount",
+        "type": "uint256"
+      }
+    ],
+    "name": "VendorRefundReceived",
+    "type": "event"
+  },
+  {
     "inputs": [],
     "name": "BPS_DENOMINATOR",
     "outputs": [
@@ -182,7 +204,77 @@ export const FinanceSplitterABI = [
   },
   {
     "inputs": [],
+    "name": "STALL_PERIOD",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "UNRECOVERED_PERIOD",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "accRepaymentPerShare",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address[]",
+        "name": "_lenders",
+        "type": "address[]"
+      },
+      {
+        "internalType": "uint256[]",
+        "name": "_shares",
+        "type": "uint256[]"
+      }
+    ],
+    "name": "activate",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "activated",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "activatedAt",
     "outputs": [
       {
         "internalType": "uint256",
@@ -261,6 +353,39 @@ export const FinanceSplitterABI = [
   {
     "inputs": [],
     "name": "creatorShareBps",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "depositVendorRefund",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "health",
+    "outputs": [
+      {
+        "internalType": "enum FinanceSplitter.Health",
+        "name": "",
+        "type": "uint8"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "lastFeeAt",
     "outputs": [
       {
         "internalType": "uint256",
@@ -369,6 +494,19 @@ export const FinanceSplitterABI = [
   },
   {
     "inputs": [],
+    "name": "pool",
+    "outputs": [
+      {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "principal",
     "outputs": [
       {
@@ -417,6 +555,13 @@ export const FinanceSplitterABI = [
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "releaseUnfunded",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

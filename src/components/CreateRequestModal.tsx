@@ -15,7 +15,7 @@ export const CreateRequestModal: React.FC = () => {
   const [symbol, setSymbol] = useState<string>('$ALPHA');
   const [tokenName, setTokenName] = useState<string>('Alpha Protocol');
   const [tokenAddress, setTokenAddress] = useState<string>('0x9a88B12c58eA12d48092789123481a8271b29a1');
-  const [lenderShare, setLenderShare] = useState<number>(70);
+  const [lenderShare, setLenderShare] = useState<number>(75);
 
   // Wagmi hooks for onchain actions
   const { 
@@ -64,7 +64,7 @@ export const CreateRequestModal: React.FC = () => {
   const handleFinish = async () => {
     if (isConnected) {
       try {
-        await createPool(tokenAddress as `0x${string}`, '0.12', 86400);
+        await createPool(tokenAddress as `0x${string}`, 1200);
       } catch (err) {
         console.warn('Factory creation onchain fallback:', err);
       }

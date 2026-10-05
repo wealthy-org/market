@@ -333,7 +333,7 @@ export const GondiCarousel: React.FC = () => {
                 {deal.token.imageUrl ? (
                   <img
                     src={deal.token.imageUrl}
-                    alt={deal.token.name}
+                    alt=""
                     style={{
                       width: '100%',
                       height: '100%',

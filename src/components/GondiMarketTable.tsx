@@ -251,13 +251,13 @@ export const GondiMarketTable: React.FC = () => {
               <tr>
                 <th style={{ width: 40, textAlign: 'center' }}>#</th>
                 <th>Token / Launch Pool</th>
-                <th style={{ textAlign: 'right' }}>Target (ETH)</th>
-                <th style={{ textAlign: 'right' }}>{timeframe} Change</th>
+                <th style={{ textAlign: 'right' }}>Target ($299)</th>
+                <th style={{ textAlign: 'right' }}>{timeframe} Fee trend</th>
                 <th style={{ textAlign: 'right' }}>Raised (ETH)</th>
                 <th style={{ textAlign: 'right' }}>Fees Accrued</th>
-                <th style={{ textAlign: 'center' }}>Lenders</th>
-                <th style={{ textAlign: 'center' }}>7D Fee Trend</th>
-                <th style={{ textAlign: 'right' }}>Action</th>
+                <th style={{ textAlign: 'center' }}>Traders</th>
+                <th style={{ textAlign: 'center' }}>Fee sparkline</th>
+                <th style={{ textAlign: 'right' }}>Fund</th>
               </tr>
             </thead>
             <tbody>
@@ -300,7 +300,7 @@ export const GondiMarketTable: React.FC = () => {
                         {deal.token.imageUrl ? (
                           <img
                             src={deal.token.imageUrl}
-                            alt={deal.token.name}
+                            alt=""
                             style={{
                               width: 38,
                               height: 38,
@@ -524,7 +524,7 @@ export const GondiMarketTable: React.FC = () => {
                         {col.imageUrl ? (
                           <img
                             src={col.imageUrl}
-                            alt={col.name}
+                            alt=""
                             style={{
                               width: 38,
                               height: 38,
@@ -567,13 +567,13 @@ export const GondiMarketTable: React.FC = () => {
                         {col.floorPriceEth > 0 ? `${col.floorPriceEth} ETH` : 'N/A'}
                       </div>
                       <div style={{ fontSize: 11, color: 'var(--muted)' }}>
-                        ${col.floorPriceUsd.toLocaleString()}
+                        ${col.floorPriceUsd.toLocaleString('en-US')}
                       </div>
                     </td>
 
                     <td style={{ textAlign: 'center' }}>
                       <span style={{ fontWeight: 700, color: 'var(--ink)', fontSize: 12.5 }}>
-                        {col.nftsCount ? col.nftsCount.toLocaleString() : '—'}
+                        {col.nftsCount ? col.nftsCount.toLocaleString('en-US') : '—'}
                       </span>
                     </td>
 

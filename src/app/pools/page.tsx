@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
 import { GondiStatsBanner } from '@/components/GondiStatsBanner';
-import { GondiActivityFeed } from '@/components/GondiActivityFeed';
 import { Search, Filter, ArrowUpRight, ArrowDownRight, Users, Sparkles, CheckCircle2, ChevronRight, Layers } from 'lucide-react';
 import Link from 'next/link';
 
@@ -17,12 +16,33 @@ export default function LaunchPoolsPage() {
   const [currencyFilter, setCurrencyFilter] = useState<'ALL' | 'ETH' | 'USDC'>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [minVelocity, setMinVelocity] = useState(0);
+  const [selectedTokens, setSelectedTokens] = useState<Set<string>>(new Set());
+  const [tokenSearch, setTokenSearch] = useState('');
+  const [repayingOnly, setRepayingOnly] = useState(false);
+
+  // Token list like Gondi Collection filter — top by liquidity
+  const tokenList = [...deals].sort((a, b) => b.liquidityUsd - a.liquidityUsd).slice(0, 6);
+  const filteredTokens = tokenSearch.trim()
+    ? tokenList.filter((d) => d.token.name.toLowerCase().includes(tokenSearch.toLowerCase()) || d.token.symbol.toLowerCase().includes(tokenSearch.toLowerCase()))
+    : tokenList;
+
+  const toggleToken = (id: string) => {
+    setSelectedTokens((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
 
   // Filter deals
   const filteredDeals = deals.filter((deal) => {
     if (activeTab === 'HOT' && deal.status !== 'HOT') return false;
     if (activeTab === 'REPAYING' && deal.status !== 'REPAYING') return false;
     if (activeTab === 'REPAID' && deal.status !== 'REPAID') return false;
+
+    if (selectedTokens.size > 0 && !selectedTokens.has(deal.id)) return false;
+    if (repayingOnly && !(deal.status === 'REPAYING' || deal.fundedUsd >= deal.campaignTargetUsd)) return false;
 
     if (searchQuery.trim()) {
       const q = searchQuery.toLowerCase();
@@ -189,7 +209,44 @@ export default function LaunchPoolsPage() {
 
             <div>
               <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
-                Fee Velocity Filter
+                Token
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', background: '#fff', border: '1px solid var(--line)', borderRadius: 8, padding: '6px 10px', marginBottom: 8 }}>
+                <Search size={12} style={{ color: 'var(--muted)', marginRight: 6 }} />
+                <input
+                  type="text"
+                  placeholder="Search"
+                  value={tokenSearch}
+                  onChange={(e) => setTokenSearch(e.target.value)}
+                  style={{ border: 0, outline: 'none', background: 'transparent', fontSize: 11.5, width: '100%', color: 'var(--ink)' }}
+                />
+              </div>
+              <button type="button" onClick={() => setSelectedTokens(new Set())} style={{ background: 'transparent', border: 0, fontSize: 11.5, fontWeight: 700, color: 'var(--muted)', cursor: 'pointer', padding: 0, marginBottom: 6 }}>
+                Select All
+              </button>
+              <div style={{ display: 'grid', gap: 4 }}>
+                {filteredTokens.map((d) => (
+                  <label key={d.id} style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, color: 'var(--ink)', cursor: 'pointer' }}>
+                    <input type="checkbox" checked={selectedTokens.size === 0 || selectedTokens.has(d.id)} onChange={() => toggleToken(d.id)} style={{ accentColor: 'var(--ink)', cursor: 'pointer' }} />
+                    <span style={{ flex: 1, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{d.token.name}</span>
+                    <span style={{ fontSize: 11, color: 'var(--muted)' }}>${(d.liquidityUsd / 1000).toFixed(1)}K</span>
+                  </label>
+                ))}
+              </div>
+            </div>
+
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+                Status
+              </div>
+              <label style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 12, fontWeight: 700, cursor: 'pointer' }}>
+                <input type="checkbox" checked={repayingOnly} onChange={() => setRepayingOnly((v) => !v)} style={{ accentColor: 'var(--ink)', cursor: 'pointer' }} />
+                <span>Repaying available</span>
+              </label>
+            </div>
+            <div>
+              <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--muted)', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: 8 }}>
+                Fee velocity
               </div>
               <div style={{ display: 'grid', gap: 6 }}>
                 {[
@@ -228,7 +285,7 @@ export default function LaunchPoolsPage() {
                 Split Guarantee
               </div>
               <p style={{ fontSize: 11.5, color: 'var(--muted)', lineHeight: 1.5 }}>
-                70% creator fees stream to lenders until 1.20x cap is met. Automatic smart contract return.
+                75% creator fees stream to lenders until 1.20x cap is met. Automatic smart contract return.
               </p>
             </div>
           </aside>
@@ -242,12 +299,10 @@ export default function LaunchPoolsPage() {
                     <tr>
                       <th style={{ width: 40, textAlign: 'center' }}>#</th>
                       <th>Token / Launch Pool</th>
-                      <th style={{ textAlign: 'right' }}>Target (ETH)</th>
-                      <th style={{ textAlign: 'right' }}>Raised (ETH)</th>
-                      <th style={{ textAlign: 'right' }}>Fee Velocity</th>
-                      <th style={{ textAlign: 'center' }}>Lender Share</th>
-                      <th style={{ textAlign: 'center' }}>Repay Cap</th>
-                      <th style={{ textAlign: 'center' }}>7D Trend</th>
+                      <th>Payback*</th>
+                      <th style={{ textAlign: 'right' }}>Raised</th>
+                      <th style={{ textAlign: 'right' }}>Fee trend</th>
+                      <th style={{ textAlign: 'right' }}>To cap</th>
                       <th style={{ textAlign: 'right' }}>Action</th>
                     </tr>
                   </thead>
@@ -286,7 +341,7 @@ export default function LaunchPoolsPage() {
                               {deal.token.imageUrl ? (
                                 <img
                                   src={deal.token.imageUrl}
-                                  alt={deal.token.name}
+                                  alt=""
                                   style={{
                                     width: 38,
                                     height: 38,
@@ -342,21 +397,17 @@ export default function LaunchPoolsPage() {
                             </div>
                           </td>
 
-                          <td style={{ textAlign: 'right' }}>
-                            <div style={{ fontWeight: 800, color: 'var(--ink)' }}>
-                              {targetEth.toFixed(4)}
-                            </div>
-                            <div style={{ fontSize: 11, color: 'var(--muted)' }}>
-                              ${deal.campaignTargetUsd}
-                            </div>
+                          <td>
+                            <div style={{ fontWeight: 800, fontSize: 12.5 }}>~{deal.projectedPaybackHours}h</div>
+                            <div style={{ fontSize: 11, color: 'var(--muted)' }}>payback*</div>
                           </td>
 
                           <td style={{ textAlign: 'right' }}>
                             <div style={{ fontWeight: 800, color: 'var(--emerald)' }}>
-                              {raisedEth.toFixed(4)}
+                              {raisedEth.toFixed(4)} ETH
                             </div>
                             <div style={{ fontSize: 11, color: 'var(--muted)' }}>
-                              {progressPercent}% target
+                              {progressPercent}% of ${deal.campaignTargetUsd}
                             </div>
                           </td>
 
@@ -365,22 +416,17 @@ export default function LaunchPoolsPage() {
                               ${deal.feeVelocity}/hr
                             </div>
                             <div style={{ fontSize: 11, color: isPositiveChange ? 'var(--emerald)' : 'var(--coral)' }}>
-                              +{deal.feeVelocityTrend}%
+                              {deal.feeVelocityTrend > 0 ? '+' : ''}{deal.feeVelocityTrend}%
                             </div>
                           </td>
 
-                          <td style={{ textAlign: 'center' }}>
-                            <span style={{ fontWeight: 800, color: 'var(--ink)' }}>{deal.lenderFeeSharePct}%</span>
-                          </td>
-
-                          <td style={{ textAlign: 'center' }}>
-                            <span className="pill momentum" style={{ fontSize: 10 }}>
-                              {deal.repayCapMultiplier.toFixed(2)}x
-                            </span>
-                          </td>
-
-                          <td style={{ textAlign: 'center' }}>
-                            {renderSparkline(sparklinePoints, isPositiveChange)}
+                          <td style={{ textAlign: 'right' }}>
+                            <div style={{ fontWeight: 800, color: 'var(--ink)' }}>
+                              ${Math.max(0, deal.campaignTargetUsd * deal.repayCapMultiplier - deal.repaidToLendersUsd).toFixed(2)}
+                            </div>
+                            <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+                              to 1.20x cap
+                            </div>
                           </td>
 
                           <td style={{ textAlign: 'right' }}>
@@ -430,7 +476,6 @@ export default function LaunchPoolsPage() {
       </div>
 
       {/* Right Column: All Activity Live Feed */}
-      <GondiActivityFeed />
     </div>
   );
 }

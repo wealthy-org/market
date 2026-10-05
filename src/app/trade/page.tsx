@@ -4,7 +4,6 @@ import React, { useState } from 'react';
 import Link from 'next/link';
 import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
-import { GondiActivityFeed } from '@/components/GondiActivityFeed';
 import { 
   ArrowLeft, 
   ArrowDownUp, 
@@ -32,7 +31,7 @@ export default function TradePage() {
   const selectedDeal = deals.find((d) => d.id === selectedTokenId) || deals[0];
   const tokenRatePerEth = 34500 + (selectedDeal ? selectedDeal.campaignTargetUsd * 20 : 10000);
   const parsedFrom = parseFloat(fromAmount) || 0;
-  const tokenOutput = (parsedFrom * tokenRatePerEth).toLocaleString(undefined, { maximumFractionDigits: 2 });
+  const tokenOutput = (parsedFrom * tokenRatePerEth).toLocaleString('en-US', { maximumFractionDigits: 2 });
   const usdValue = (parsedFrom * ETH_PRICE_USD).toFixed(2);
   const estimatedSplitterFeeUsd = (parsedFrom * ETH_PRICE_USD * 0.01).toFixed(2);
   const lenderFeeShareUsd = (parseFloat(estimatedSplitterFeeUsd) * 0.7).toFixed(2);
@@ -133,7 +132,7 @@ export default function TradePage() {
                 $1,849.20
               </span>
             </div>
-            <span className="sub">70% directly streaming to lenders</span>
+            <span className="sub">75% directly streaming to lenders</span>
           </div>
 
           <div className="gondi-stat-card">
@@ -201,11 +200,13 @@ export default function TradePage() {
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <input
-                    type="number"
-                    step="0.001"
+                    type="text"
+                    inputMode="decimal"
+                    lang="en-US"
+                    step="any"
                     min="0"
                     value={fromAmount}
-                    onChange={(e) => setFromAmount(e.target.value)}
+                    onChange={(e) => setFromAmount(e.target.value.replace(',', '.'))}
                     style={{
                       border: 0,
                       outline: 'none',
@@ -279,7 +280,7 @@ export default function TradePage() {
                   </select>
                 </div>
                 <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 4 }}>
-                  1 ETH ≈ {tokenRatePerEth.toLocaleString()} {selectedDeal.token.symbol}
+                  1 ETH ≈ {tokenRatePerEth.toLocaleString('en-US')} {selectedDeal.token.symbol}
                 </div>
               </div>
 
@@ -306,7 +307,7 @@ export default function TradePage() {
                   <span style={{ fontWeight: 750 }}>${estimatedSplitterFeeUsd}</span>
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                  <span style={{ color: 'var(--emerald)' }}>→ 70% to Launch Lenders:</span>
+                  <span style={{ color: 'var(--emerald)' }}>→ 75% to Launch Lenders:</span>
                   <span style={{ fontWeight: 800, color: 'var(--emerald)' }}>+${lenderFeeShareUsd}</span>
                 </div>
               </div>
@@ -362,7 +363,7 @@ export default function TradePage() {
                   {selectedDeal.token.imageUrl ? (
                     <img
                       src={selectedDeal.token.imageUrl}
-                      alt={selectedDeal.token.name}
+                      alt=""
                       style={{
                         width: 32,
                         height: 32,
@@ -422,10 +423,10 @@ export default function TradePage() {
               {/* Price Metric */}
               <div style={{ marginBottom: 16 }}>
                 <div style={{ fontSize: 26, fontWeight: 900, color: 'var(--ink)' }}>
-                  $0.00{selectedDeal.fundedUsd}24
+                  ${(selectedDeal.fundedUsd / 10000).toFixed(4)}
                 </div>
-                <div style={{ fontSize: 12, fontWeight: 800, color: 'var(--emerald)' }}>
-                  +{selectedDeal.feeVelocityTrend}% ({timeframe})
+                <div style={{ fontSize: 12, fontWeight: 800, color: selectedDeal.feeVelocityTrend >= 0 ? 'var(--emerald)' : 'var(--coral)' }}>
+                  {selectedDeal.feeVelocityTrend >= 0 ? '+' : ''}{selectedDeal.feeVelocityTrend}% ({timeframe})
                 </div>
               </div>
 
@@ -497,7 +498,7 @@ export default function TradePage() {
                   <th style={{ textAlign: 'right' }}>Price (USD)</th>
                   <th style={{ textAlign: 'right' }}>24H Change</th>
                   <th style={{ textAlign: 'right' }}>24H Fee Velocity</th>
-                  <th style={{ textAlign: 'right' }}>70% Lender Stream</th>
+                  <th style={{ textAlign: 'right' }}>75% Lender Stream</th>
                   <th style={{ textAlign: 'right' }}>Action</th>
                 </tr>
               </thead>
@@ -513,7 +514,7 @@ export default function TradePage() {
                         {deal.token.imageUrl ? (
                           <img
                             src={deal.token.imageUrl}
-                            alt={deal.token.name}
+                            alt=""
                             style={{
                               width: 32,
                               height: 32,
@@ -555,8 +556,8 @@ export default function TradePage() {
                     </td>
 
                     <td style={{ textAlign: 'right' }}>
-                      <div style={{ fontWeight: 800, color: 'var(--emerald)' }}>
-                        +{deal.feeVelocityTrend}%
+                      <div style={{ fontWeight: 800, color: deal.feeVelocityTrend >= 0 ? 'var(--emerald)' : 'var(--coral)' }}>
+                        {deal.feeVelocityTrend >= 0 ? '+' : ''}{deal.feeVelocityTrend}%
                       </div>
                     </td>
 
@@ -591,7 +592,6 @@ export default function TradePage() {
       </div>
 
       {/* Right Column: Live Activity Stream */}
-      <GondiActivityFeed />
     </div>
   );
 }

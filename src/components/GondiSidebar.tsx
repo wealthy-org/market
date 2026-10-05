@@ -10,6 +10,7 @@ import {
   Sparkles, 
   ArrowLeftRight, 
   HelpCircle,
+  Activity as ActivityIcon,
   ExternalLink,
 } from 'lucide-react';
 
@@ -29,6 +30,7 @@ export const GondiSidebar: React.FC = () => {
     { label: 'Launch Pools', href: '/pools', icon: Layers },
     { label: 'Lender Portfolio', href: '/portfolio', icon: Briefcase },
     { label: 'Artists & Creators', href: '/creator', icon: Sparkles },
+    { label: 'Live Activity', href: '/activity', icon: ActivityIcon },
     { label: 'Pons V2 Trade', href: '/trade', icon: ArrowLeftRight },
     { label: 'Mechanism & Docs', href: '/mechanism', icon: HelpCircle },
   ];

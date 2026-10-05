@@ -389,7 +389,92 @@ export const INITIAL_DEALS: FundingDeal[] = [
     createdAt: '1h 14m ago',
     splitterAddress: '0x7bB2910F8E19B21481a542b10998Acf61b098192',
   },
+  ...buildExtraDeals(),
 ];
+
+function buildExtraDeals(): FundingDeal[] {
+  type Seed = [string, string, string, FundingDeal['status'], number, number, number, number];
+  // [id, name, symbol, status, feeVelocity, trend, fundedUsd, ageMinutes]
+  const seeds: Seed[] = [
+    ['nct', 'Nocturne Cats', '$NCT', 'LIVE', 31, 9, 120, 55],
+    ['gld', 'Gold Rush', '$GOLD', 'HOT', 77, 38, 262, 88],
+    ['mnk', 'Moonkey', '$MNK', 'MOMENTUM', 44, 17, 190, 36],
+    ['bpl', 'Blue Punks', '$BPUNK', 'LIVE', 26, -6, 75, 29],
+    ['zen', 'Zen Frogs', '$ZEN', 'HOT', 69, 31, 245, 71],
+    ['ape', 'Ape Syndicate', '$APES', 'MOMENTUM', 52, 21, 205, 64],
+    ['dgn', 'Dragon Fi', '$DRGN', 'LIVE', 35, 12, 140, 47],
+    ['rkt', 'Rocket Dogs', '$RKT', 'REPAYING', 58, 14, 299, 130],
+    ['ghs', 'Ghost Society', '$GHOST', 'LIVE', 23, -4, 60, 22],
+    ['neo', 'Neo Tokyo', '$NEO', 'HOT', 81, 41, 280, 95],
+    ['sol', 'Solar Cult', '$SOLAR', 'MOMENTUM', 40, 15, 168, 52],
+    ['bnk', 'Bunker Club', '$BNKR', 'LIVE', 29, 7, 98, 33],
+    ['aur', 'Aurora Labs', '$AURA', 'REPAYING', 63, 18, 299, 150],
+    ['kmo', 'Kaiju Mob', '$KAIJU', 'LIVE', 33, 10, 110, 41],
+  ];
+  const pics = ['pixel-art', 'bottts', 'fun-emoji', 'adventurer'];
+  return seeds.map(([id, name, symbol, status, velocity, trend, funded, age], i) => {
+    const target = 299;
+    const lenderPct = 70 + (i % 3) * 5;
+    const ageLabel = age >= 60 ? `${Math.floor(age / 60)}h ${age % 60}m` : `${age}m`;
+    const accrued = Math.round(velocity * 0.9 * 100) / 100;
+    const repaid = Math.round(accrued * (lenderPct / 100) * 100) / 100;
+    return {
+      id,
+      token: {
+        name,
+        symbol,
+        address: `0x${(0x4a1c0000 + i * 7919).toString(16)}${'ab12cd34ef56'.slice(0, 12)}`,
+        avatar: symbol.replace('$', '').slice(0, 3).toUpperCase(),
+        imageUrl: `https://api.dicebear.com/9.x/${pics[i % pics.length]}/svg?seed=${encodeURIComponent(name)}`,
+        age: ageLabel,
+        chain: 'Robinhood Chain',
+        pairToken: 'WETH',
+        creatorAddress: `0x${(0x9a10 + i * 311).toString(16)}...${(0xb200 + i * 97).toString(16)}`,
+      },
+      status,
+      feeVelocity: velocity,
+      feeVelocityTrend: Math.abs(trend),
+      trendDirection: trend >= 0 ? 'up' : 'down',
+      rollingFees: {
+        m5: Math.round(velocity * 0.1 * 10) / 10,
+        m15: Math.round(velocity * 0.3 * 10) / 10,
+        h1: velocity,
+        h6: Math.round(velocity * 3.8 * 10) / 10,
+        h24: Math.round(velocity * 8.7 * 10) / 10,
+      },
+      liquidityUsd: 3000 + velocity * 120,
+      marketCapUsd: 8000 + velocity * 450,
+      uniqueTraders: 20 + velocity,
+      campaignName: 'DEX Screener Paid',
+      campaignTargetUsd: target,
+      fundedUsd: funded,
+      lenderFeeSharePct: lenderPct,
+      creatorFeeSharePct: 100 - lenderPct,
+      repayCapMultiplier: 1.2,
+      projectedPaybackHours: Math.round((target * 1.2 - repaid) / Math.max(velocity, 1) * 10) / 10,
+      creatorFeesAccruedUsd: accrued,
+      repaidToLendersUsd: repaid,
+      chartData: [
+        { time: '30m ago', velocity: Math.round(velocity * 0.6) },
+        { time: '20m ago', velocity: Math.round(velocity * 0.75) },
+        { time: '10m ago', velocity: Math.round(velocity * 0.9) },
+        { time: 'Now', velocity },
+      ],
+      eligibility: {
+        ageMinutes: age,
+        ageOk: true,
+        uniqueTraders: 20 + velocity,
+        tradersOk: true,
+        creatorFeesUsd: accrued,
+        feesOk: true,
+        recipientTransferable: true,
+        isEligible: true,
+      },
+      createdAt: `${ageLabel} ago`,
+      splitterAddress: `0x${(0x7bb29100 + i * 104729).toString(16)}${'8E19B21481a542b10998'.slice(0, 20)}`,
+    } as FundingDeal;
+  });
+}
 
 export const INITIAL_POSITIONS: LenderPosition[] = [
   {

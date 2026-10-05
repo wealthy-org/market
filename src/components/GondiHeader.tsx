@@ -197,7 +197,7 @@ export const GondiHeader: React.FC = () => {
                   {deal.token.imageUrl ? (
                     <img
                       src={deal.token.imageUrl}
-                      alt={deal.token.name}
+                      alt=""
                       style={{
                         width: 28,
                         height: 28,
@@ -244,8 +244,21 @@ export const GondiHeader: React.FC = () => {
         )}
       </div>
 
-      {/* Right: Network, Create Pool, Connect Wallet */}
+      {/* Right: Network, Balances, Create Pool, Connect Wallet */}
       <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+        {/* Balances ala Gondi: ETH / WETH / USDC */}
+        {isWalletConnected && (
+          <div
+            title={`ETH ${ethBalance.toFixed(4)} ≈ $${(ethBalance * 2721.79).toFixed(2)}`}
+            style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '6px 12px', background: 'var(--soft)', border: '1px solid var(--line)', borderRadius: 'var(--radius-full)', fontSize: 11.5, fontWeight: 800, color: 'var(--ink)', whiteSpace: 'nowrap' }}
+          >
+            <span>ETH {ethBalance.toFixed(4)}</span>
+            <span style={{ color: 'var(--muted)' }}>·</span>
+            <span>WETH {ethBalance.toFixed(4)}</span>
+            <span style={{ color: 'var(--muted)' }}>·</span>
+            <span>${(ethBalance * 2721.79).toFixed(2)}</span>
+          </div>
+        )}
         {/* Robinhood Chain Badge */}
         <div
           style={{

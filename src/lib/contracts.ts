@@ -1,12 +1,14 @@
 import { FundingPoolABI } from '@/abi/FundingPoolABI';
 import { FinanceSplitterABI } from '@/abi/FinanceSplitterABI';
 import { FundingPoolFactoryABI } from '@/abi/FundingPoolFactoryABI';
+import { CampaignEscrowABI } from '@/abi/CampaignEscrowABI';
 import { IPonsV2ABI } from '@/abi/IPonsV2ABI';
 
 export {
   FundingPoolABI,
   FinanceSplitterABI,
   FundingPoolFactoryABI,
+  CampaignEscrowABI,
   IPonsV2ABI,
 };
 

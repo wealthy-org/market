@@ -10,6 +10,7 @@ import { CreateRequestModal } from '@/components/CreateRequestModal';
 import { WalletModalContainer } from '@/components/WalletModalContainer';
 import { Toast } from '@/components/Toast';
 import { TestnetPlayground } from '@/components/TestnetPlayground';
+import { ImgFallbackFix } from '@/components/ImgFallbackFix';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -41,6 +42,7 @@ export default function RootLayout({
       <body>
         <Web3Provider>
           <MarketProvider>
+            <ImgFallbackFix />
             <div className="gondi-shell">
               <GondiSidebar />
               <div className="gondi-main-area">

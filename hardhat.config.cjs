@@ -1,5 +1,9 @@
-require("dotenv").config({ path: ".env.local" });
-require("dotenv").config();
+try {
+  require("dotenv").config({ path: ".env.local" });
+  require("dotenv").config();
+} catch (e) {
+  // dotenv is optional for local compile/test; env vars fall back to defaults below
+}
 require("@nomicfoundation/hardhat-toolbox");
 
 
@@ -10,12 +14,15 @@ module.exports = {
     settings: {
       optimizer: {
         enabled: true,
-        runs: 200,
+        runs: 50,
       },
+      viaIR: true,
     },
   },
   networks: {
-    hardhat: {},
+    hardhat: {
+      allowUnlimitedContractSize: true,
+    },
     robinhoodTestnet: {
       url: process.env.ROBINHOOD_TESTNET_RPC_URL || "https://rpc.testnet.chain.robinhood.com",
       chainId: 46630,

@@ -82,7 +82,7 @@ export const HeroSection: React.FC = () => {
               {ponyDeal.token.imageUrl ? (
                 <img
                   src={ponyDeal.token.imageUrl}
-                  alt={ponyDeal.token.name}
+                  alt=""
                   style={{
                     width: 40,
                     height: 40,

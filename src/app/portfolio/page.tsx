@@ -6,7 +6,6 @@ import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
 import { useAccount, useWriteContract } from 'wagmi';
 import { FinanceSplitterABI } from '@/lib/contracts';
-import { GondiActivityFeed } from '@/components/GondiActivityFeed';
 import { 
   ArrowLeft, 
   Sparkles, 
@@ -170,7 +169,7 @@ export default function PortfolioPage() {
             <div className="value-row">
               <span className="val">{activeCount}</span>
               <span style={{ fontSize: 14, color: 'var(--muted)', marginLeft: 8 }}>
-                / {repaidCount} Repaid
+                active / {repaidCount} repaid
               </span>
             </div>
             <span className="sub">1.20× automatic return</span>
@@ -252,7 +251,7 @@ export default function PortfolioPage() {
                           {pos.imageUrl ? (
                             <img
                               src={pos.imageUrl}
-                              alt={pos.tokenSymbol}
+                              alt=""
                               style={{
                                 width: 36,
                                 height: 36,
@@ -314,7 +313,7 @@ export default function PortfolioPage() {
                           ${pos.repaidUsd.toFixed(2)}
                         </div>
                         <div style={{ fontSize: 11, color: 'var(--muted)' }}>
-                          Target: ${maxCapUsd.toFixed(2)}
+                          Cap: ${maxCapUsd.toFixed(2)}
                         </div>
                       </td>
 
@@ -409,7 +408,7 @@ export default function PortfolioPage() {
                 No allocations found
               </div>
               <p style={{ fontSize: 13.5, color: 'var(--muted)', maxWidth: 440, margin: '0 auto 16px' }}>
-                You have not contributed to any live launch pools yet. Back an active token to start earning 70% automated fee streams.
+                You have not contributed to any live launch pools yet. Back an active token to start earning 75% automated fee streams.
               </p>
               <Link href="/pools" className="btn lime" style={{ textDecoration: 'none' }}>
                 Browse Active Pools
@@ -420,7 +419,6 @@ export default function PortfolioPage() {
       </div>
 
       {/* Right Column: Live Activity Stream */}
-      <GondiActivityFeed />
     </div>
   );
 }

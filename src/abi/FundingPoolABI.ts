@@ -38,7 +38,12 @@ export const FundingPoolABI = [
       },
       {
         "internalType": "uint256",
-        "name": "_durationSeconds",
+        "name": "_maxContribution",
+        "type": "uint256"
+      },
+      {
+        "internalType": "uint256",
+        "name": "_fundingWindow",
         "type": "uint256"
       },
       {
@@ -119,6 +124,25 @@ export const FundingPoolABI = [
         "type": "address"
       },
       {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "deadline",
+        "type": "uint256"
+      }
+    ],
+    "name": "FeeTransferVerified",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "splitter",
+        "type": "address"
+      },
+      {
         "indexed": true,
         "internalType": "address",
         "name": "escrow",
@@ -154,6 +178,77 @@ export const FundingPoolABI = [
     "type": "event"
   },
   {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "enum FundingPool.PoolStatus",
+        "name": "from",
+        "type": "uint8"
+      },
+      {
+        "indexed": true,
+        "internalType": "enum FundingPool.PoolStatus",
+        "name": "to",
+        "type": "uint8"
+      }
+    ],
+    "name": "StatusChanged",
+    "type": "event"
+  },
+  {
+    "inputs": [],
+    "name": "EXECUTION_WINDOW",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "FEE_TRANSFER_WINDOW",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MAX_FUNDING_WINDOW",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "MIN_FUNDING_WINDOW",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [],
     "name": "campaignTargetEth",
     "outputs": [
@@ -164,6 +259,26 @@ export const FundingPoolABI = [
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "canReleaseToOperator",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "cancel",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -182,6 +297,19 @@ export const FundingPoolABI = [
       }
     ],
     "name": "contributions",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "createdAt",
     "outputs": [
       {
         "internalType": "uint256",
@@ -239,6 +367,32 @@ export const FundingPoolABI = [
         "internalType": "contract CampaignEscrow",
         "name": "",
         "type": "address"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "feeTransferVerified",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "fundingWindow",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -323,6 +477,19 @@ export const FundingPoolABI = [
   },
   {
     "inputs": [],
+    "name": "maxContribution",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "minContribution",
     "outputs": [
       {
@@ -332,6 +499,13 @@ export const FundingPoolABI = [
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "onCampaignExecuted",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {
@@ -395,6 +569,13 @@ export const FundingPoolABI = [
   },
   {
     "inputs": [],
+    "name": "reportRecipientChange",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "splitter",
     "outputs": [
       {
@@ -421,6 +602,13 @@ export const FundingPoolABI = [
   },
   {
     "inputs": [],
+    "name": "syncRepaid",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "token",
     "outputs": [
       {
@@ -443,6 +631,13 @@ export const FundingPoolABI = [
       }
     ],
     "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "verifyFeeTransfer",
+    "outputs": [],
+    "stateMutability": "nonpayable",
     "type": "function"
   },
   {

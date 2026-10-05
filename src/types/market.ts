@@ -1,4 +1,23 @@
-export type DealStatus = 'LIVE' | 'MOMENTUM' | 'HOT' | 'RECENTLY_FUNDED' | 'REPAYING' | 'REPAID';
+export type DealStatus =
+  | 'LIVE'
+  | 'MOMENTUM'
+  | 'HOT'
+  | 'RECENTLY_FUNDED'
+  | 'AWAITING_FEE_TRANSFER'
+  | 'OPEN'
+  | 'FILLED'
+  | 'CAMPAIGN_PENDING'
+  | 'ACTIVE_REPAYMENT'
+  | 'REPAYING'
+  | 'REPAID'
+  | 'STALLED'
+  | 'PARTIAL'
+  | 'UNRECOVERED'
+  | 'EXPIRED'
+  | 'CANCELLED'
+  | 'REFUNDABLE';
+
+export type FinancingHealth = 'PENDING' | 'ACTIVE' | 'STALLED' | 'PARTIAL' | 'UNRECOVERED' | 'REPAID';
 
 export interface TokenInfo {
   name: string;
@@ -32,6 +51,7 @@ export interface FundingDeal {
   id: string;
   token: TokenInfo;
   status: DealStatus;
+  health?: FinancingHealth;
   feeVelocity: number; // e.g. $48/hr
   feeVelocityTrend: number; // e.g. +22%
   trendDirection: 'up' | 'down';
@@ -48,8 +68,9 @@ export interface FundingDeal {
   campaignName: string; // e.g. "DEX Screener Paid"
   campaignTargetUsd: number; // 299
   fundedUsd: number; // e.g. 215
-  lenderFeeSharePct: number; // e.g. 70
-  creatorFeeSharePct: number; // e.g. 30
+  lenderFeeSharePct: number; // 75
+  creatorFeeSharePct: number; // 23
+  protocolFeeSharePct?: number; // 2
   repayCapMultiplier: number; // e.g. 1.20
   projectedPaybackHours: number; // e.g. 10.7
   creatorFeesAccruedUsd: number; // e.g. 47.82
@@ -57,8 +78,13 @@ export interface FundingDeal {
   chartData: ChartPoint[];
   eligibility: EligibilityStatus;
   createdAt: string;
+  fundingWindowMinutes?: number; // 10-30m window
+  minContributionUsd?: number; // $10
+  maxContributionUsd?: number; // $100
   splitterAddress: string;
   poolContractAddress?: string;
+  escrowAddress?: string;
+  proofUri?: string;
 }
 
 export interface LenderPosition {

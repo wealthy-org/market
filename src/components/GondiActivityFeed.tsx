@@ -10,9 +10,29 @@ export const GondiActivityFeed: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'All Activity' | 'Following'>('All Activity');
   const [subTab, setSubTab] = useState<'Feed' | 'Top Repayments' | 'Pool Fills'>('Feed');
   const [filterThreshold, setFilterThreshold] = useState<number>(0);
+  const [followed, setFollowed] = useState<Set<string>>(new Set());
+
+  const suggestedCreators = [...deals]
+    .sort((a, b) => b.feeVelocity - a.feeVelocity)
+    .slice(0, 5);
+
+  const toggleFollow = (id: string) => {
+    setFollowed((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const followingActivity =
+    followed.size === 0
+      ? []
+      : activity.filter((a) => followed.has(a.dealId));
 
   // Filter activities
-  const filteredActivity = activity.filter((item) => {
+  const baseList = activeTab === 'Following' ? followingActivity : activity;
+  const filteredActivity = baseList.filter((item) => {
     const usd = item.amountUsd ?? (item.amountEth ? item.amountEth * ETH_PRICE_USD : 0);
     if (filterThreshold > 0 && usd < filterThreshold) return false;
     if (subTab === 'Top Repayments') return item.type === 'REPAYMENT';
@@ -87,26 +107,30 @@ export const GondiActivityFeed: React.FC = () => {
         }}
       >
         <div style={{ display: 'flex', gap: 4 }}>
-          {(['Feed', 'Top Repayments', 'Pool Fills'] as const).map((tab) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => setSubTab(tab)}
-              style={{
-                padding: '4px 10px',
-                borderRadius: 'var(--radius-full)',
-                background: subTab === tab ? 'var(--ink)' : 'transparent',
-                color: subTab === tab ? '#ffffff' : 'var(--muted)',
-                border: 0,
-                fontSize: 11,
-                fontWeight: 700,
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              {tab === 'Top Repayments' ? 'Repayments' : tab === 'Pool Fills' ? 'Fills' : 'Feed'}
-            </button>
-          ))}
+          {(['Feed', 'Top Repayments', 'Pool Fills'] as const).map((tab) => {
+            const label = tab === 'Top Repayments' ? 'Repayments' : tab === 'Pool Fills' ? 'Fills' : 'Feed';
+            return (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setSubTab(tab)}
+                style={{
+                  padding: '4px 10px',
+                  borderRadius: 'var(--radius-full)',
+                  background: subTab === tab ? 'var(--ink)' : 'transparent',
+                  color: subTab === tab ? '#ffffff' : 'var(--muted)',
+                  border: 0,
+                  fontSize: 11,
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                {label}
+              </button>
+            );
+          })}
         </div>
 
         {/* Filter threshold badge */}
@@ -245,7 +269,7 @@ export const GondiActivityFeed: React.FC = () => {
                 {item.imageUrl || matchingDeal?.token.imageUrl ? (
                   <img
                     src={item.imageUrl || matchingDeal?.token.imageUrl}
-                    alt={item.tokenSymbol}
+                    alt=""
                     style={{
                       width: 32,
                       height: 32,
@@ -333,6 +357,51 @@ export const GondiActivityFeed: React.FC = () => {
           padding: '12px 14px',
           borderTop: '1px solid var(--line)',
           background: 'var(--soft)',
+        }}
+      >
+        <div style={{ fontSize: 11, fontWeight: 800, color: 'var(--ink)', marginBottom: 8, letterSpacing: '0.04em' }}>
+          SUGGESTED CREATORS
+        </div>
+        <div style={{ display: 'grid', gap: 8 }}>
+          {suggestedCreators.map((d) => {
+            const isF = followed.has(d.id);
+            return (
+              <div key={d.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', gap: 8, alignItems: 'center', minWidth: 0 }}>
+                  {d.token.imageUrl ? (
+                    <img src={d.token.imageUrl} alt="" style={{ width: 26, height: 26, borderRadius: 8, objectFit: 'cover', border: '1px solid var(--line-soft)' }} />
+                  ) : (
+                    <div style={{ width: 26, height: 26, borderRadius: 8, background: '#1a1b18', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 10, fontWeight: 800 }}>
+                      {d.token.symbol.replace('$', '').slice(0, 3)}
+                    </div>
+                  )}
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ fontSize: 12, fontWeight: 800, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{d.token.symbol}</div>
+                    <div style={{ fontSize: 10.5, color: 'var(--muted)' }}>${d.feeVelocity}/hr fee velocity</div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => toggleFollow(d.id)}
+                  style={{ padding: '4px 10px', borderRadius: 999, border: '1px solid var(--line)', background: isF ? 'var(--ink)' : '#fff', color: isF ? '#fff' : 'var(--ink)', fontSize: 10.5, fontWeight: 800, cursor: 'pointer' }}
+                >
+                  {isF ? 'Following' : 'Follow'}
+                </button>
+              </div>
+            );
+          })}
+        </div>
+        {activeTab === 'Following' && followed.size === 0 && (
+          <div style={{ marginTop: 8, fontSize: 11, color: 'var(--muted)' }}>Follow a creator to filter activity here. Connect wallet for full feed.</div>
+        )}
+      </div>
+
+      {/* Bottom Footer Ticker matching Prototype */}
+      <div
+        style={{
+          padding: '12px 14px',
+          borderTop: '1px solid var(--line)',
+          background: 'var(--soft)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -352,7 +421,7 @@ export const GondiActivityFeed: React.FC = () => {
           />
           <span style={{ fontWeight: 700, color: 'var(--ink)' }}>Live Activity</span>
         </div>
-        <span style={{ fontWeight: 700, color: 'var(--ink)' }}>70% Fee Split</span>
+        <span style={{ fontWeight: 700, color: 'var(--ink)' }}>75% Fee Split</span>
       </div>
     </aside>
   );

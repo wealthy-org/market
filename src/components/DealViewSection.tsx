@@ -88,7 +88,7 @@ export const DealViewSection: React.FC = () => {
               {selectedDeal.token.imageUrl ? (
                 <img
                   src={selectedDeal.token.imageUrl}
-                  alt={selectedDeal.token.name}
+                  alt=""
                   style={{
                     width: 44,
                     height: 44,

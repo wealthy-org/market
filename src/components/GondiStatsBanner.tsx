@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
 import { ArrowUpRight } from 'lucide-react';
@@ -8,6 +8,20 @@ import { ArrowUpRight } from 'lucide-react';
 export const GondiStatsBanner: React.FC = () => {
   const { deals } = useMarket();
   const [timeframe, setTimeframe] = useState<'24H' | '7D' | '30D'>('24H');
+  const [collapsed, setCollapsed] = useState(false);
+  const metricsRef = useRef<HTMLDivElement>(null);
+
+  // Show the compact bar once the full metric cards have scrolled under the header
+  useEffect(() => {
+    const el = metricsRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setCollapsed(!entry.isIntersecting && entry.boundingClientRect.top < 0),
+      { rootMargin: '-64px 0px 0px 0px', threshold: 0 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   const totalFundedUsd = deals.reduce((acc, d) => acc + d.fundedUsd, 0);
   const totalFundedEth = totalFundedUsd / ETH_PRICE_USD;
@@ -18,8 +32,76 @@ export const GondiStatsBanner: React.FC = () => {
   const activePoolsCount = deals.filter((d) => d.status === 'LIVE' || d.status === 'MOMENTUM' || d.status === 'HOT' || d.status === 'REPAYING').length;
   const nearCapCount = deals.filter((d) => d.status === 'REPAYING').length;
 
+  const compactStats = [
+    { label: 'Deployed', value: `$${totalFundedUsd.toLocaleString('en-US', { maximumFractionDigits: 0 })}` },
+    { label: `Fees ${timeframe}`, value: `$${totalFeesDistributedUsd.toFixed(2)}`, accent: true },
+    { label: 'Pools', value: `${deals.length}` },
+    { label: 'Return cap', value: '1.20x' },
+  ];
+
   return (
-    <div style={{ marginBottom: 32 }}>
+    <div style={{ display: 'contents' }}>
+      {/* Compact sticky bar (zero-height anchor so it sticks across the whole page) */}
+      <div style={{ position: 'sticky', top: 'var(--header-height)', height: 0, zIndex: 80 }}>
+        <div
+          aria-hidden={!collapsed}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: -28,
+            right: -28,
+            height: 48,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 16,
+            padding: '0 28px',
+            background: 'rgba(251, 250, 246, 0.94)',
+            backdropFilter: 'blur(14px)',
+            borderBottom: '1px solid var(--line)',
+            opacity: collapsed ? 1 : 0,
+            transform: collapsed ? 'translateY(0)' : 'translateY(-8px)',
+            pointerEvents: collapsed ? 'auto' : 'none',
+            transition: 'opacity 0.18s ease, transform 0.18s ease',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 22, minWidth: 0, overflow: 'hidden' }}>
+            <span style={{ fontSize: 13.5, fontWeight: 800, color: 'var(--ink)', whiteSpace: 'nowrap' }}>
+              Lending Market
+            </span>
+            {compactStats.map((s) => (
+              <span key={s.label} style={{ display: 'inline-flex', alignItems: 'baseline', gap: 6, whiteSpace: 'nowrap' }}>
+                <span style={{ fontSize: 11, color: 'var(--muted)', fontWeight: 600 }}>{s.label}</span>
+                <span style={{ fontSize: 13, fontWeight: 800, color: s.accent ? 'var(--emerald)' : 'var(--ink)' }}>
+                  {s.value}
+                </span>
+              </span>
+            ))}
+          </div>
+          <div style={{ display: 'flex', background: 'var(--soft)', border: '1px solid var(--line)', borderRadius: 'var(--radius-full)', padding: 2, gap: 2, flexShrink: 0 }}>
+            {(['24H', '7D', '30D'] as const).map((tf) => (
+              <button
+                key={tf}
+                type="button"
+                onClick={() => setTimeframe(tf)}
+                style={{
+                  background: timeframe === tf ? 'var(--ink)' : 'transparent',
+                  color: timeframe === tf ? '#ffffff' : 'var(--muted)',
+                  border: 0,
+                  borderRadius: 'var(--radius-full)',
+                  padding: '3px 11px',
+                  fontSize: 11,
+                  fontWeight: 750,
+                  cursor: 'pointer',
+                }}
+              >
+                {tf}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Top Title & Timeframe Selector */}
       <div
         style={{
@@ -92,7 +174,9 @@ export const GondiStatsBanner: React.FC = () => {
 
       {/* Metrics Row (Prototype Paper Card Layout) */}
       <div
+        ref={metricsRef}
         style={{
+          marginBottom: 32,
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
           gap: 16,
@@ -121,7 +205,7 @@ export const GondiStatsBanner: React.FC = () => {
               marginBottom: 4,
             }}
           >
-            ${totalFundedUsd.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
+            ${totalFundedUsd.toLocaleString('en-US', { minimumFractionDigits: 0, maximumFractionDigits: 0 })}
           </div>
           <div style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
             <span>{totalFundedEth.toFixed(4)} ETH</span>
@@ -227,7 +311,7 @@ export const GondiStatsBanner: React.FC = () => {
             1.20x Cap
           </div>
           <div style={{ fontSize: 12, color: 'var(--muted)', display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ color: 'var(--ink)', fontWeight: 700 }}>70% Lender Split</span>
+            <span style={{ color: 'var(--ink)', fontWeight: 700 }}>75% Lender Split</span>
             <span>•</span>
             <span style={{ color: 'var(--emerald)', fontWeight: 700 }}>20% ROI</span>
           </div>

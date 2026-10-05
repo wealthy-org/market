@@ -19,24 +19,30 @@ import {
 
 export const TestnetPlayground: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const { 
-    selectedDeal, 
-    simulateFeeInflow, 
-    simulatePoolFill, 
-    simulateExpireAndRefund, 
-    resetAllDemoState 
+  const {
+    selectedDeal,
+    simulateFeeInflow,
+    simulatePoolFill,
+    simulateExpireAndRefund,
+    resetAllDemoState
   } = useMarket();
   const { isConnected, address } = useAccount();
   const chainId = useChainId();
 
+  // DEMO only: hide on Robinhood mainnet (4663) unless ?debug=1.
+  // Keeps prod clean like Gondi; playground is a Phase-5 testnet aid (brief #37).
+  const showDebug =
+    typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('debug') === '1';
+  if (chainId === 4663 && !showDebug) return null;
+
   return (
     <aside
-      aria-label="Testnet Developer Tools"
+      aria-label="Testnet Developer Tools (demo, no real ETH moves)"
       style={{
         position: 'fixed',
-        bottom: 24,
-        right: 24,
-        zIndex: 999,
+        bottom: 12,
+        right: 12,
+        zIndex: 60,
         fontFamily: 'var(--sans, system-ui, sans-serif)',
       }}
     >
@@ -70,7 +76,7 @@ export const TestnetPlayground: React.FC = () => {
             background: '#a7ff63',
             boxShadow: '0 0 10px #a7ff63',
           }} />
-          <span>Testnet Tools ({chainId === 46630 ? 'Robinhood 46630' : 'Testnet'})</span>
+          <span>Testnet Tools · DEMO</span>
           <ChevronUp size={14} />
         </button>
       )}
@@ -101,9 +107,9 @@ export const TestnetPlayground: React.FC = () => {
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <Zap size={16} color="#a7ff63" />
               <div>
-                <b style={{ fontSize: 13, display: 'block', color: '#ffffff' }}>Testnet Playground</b>
+                <b style={{ fontSize: 13, display: 'block', color: '#ffffff' }}>Testnet Playground · DEMO</b>
                 <span style={{ fontSize: 10, color: 'rgba(255,255,255,0.6)' }}>
-                  Robinhood Chain Testnet (ID 46630)
+                  Local simulation — no real ETH moves. Onchain actions live in Fund / Claim buttons.
                 </span>
               </div>
             </div>
@@ -147,7 +153,7 @@ export const TestnetPlayground: React.FC = () => {
             {/* Quick Simulation Actions */}
             <div>
               <div style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--muted, #6f6e69)', marginBottom: 8, letterSpacing: '0.06em' }}>
-                PONS V2 FEE ROUTING SIMULATION
+                SIMULATE (LOCAL) — PONS FEE ROUTING
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8, marginBottom: 8 }}>
@@ -169,7 +175,7 @@ export const TestnetPlayground: React.FC = () => {
                   onMouseLeave={(e) => (e.currentTarget.style.background = '#ffffff')}
                 >
                   <Coins size={13} style={{ marginBottom: 4, color: 'var(--green-accent)' }} />
-                  <div>Stream +$25 Fees</div>
+                  <div>Simulate +$25 (local)</div>
                   <small style={{ color: 'var(--muted)', fontSize: 10 }}>70% to lenders</small>
                 </button>
 
@@ -191,7 +197,7 @@ export const TestnetPlayground: React.FC = () => {
                   onMouseLeave={(e) => (e.currentTarget.style.background = '#ffffff')}
                 >
                   <Flame size={13} style={{ marginBottom: 4, color: '#ff6b4a' }} />
-                  <div>Stream +$100 Fees</div>
+                  <div>Simulate +$100 (local)</div>
                   <small style={{ color: 'var(--muted)', fontSize: 10 }}>Big trading volume</small>
                 </button>
               </div>
@@ -216,14 +222,14 @@ export const TestnetPlayground: React.FC = () => {
                 }}
               >
                 <CheckCircle size={13} />
-                <span>Trigger 1.20× Cap (Auto Return Recipient)</span>
+                <span>Simulate 1.20× cap (local)</span>
               </button>
             </div>
 
             {/* Pool Lifecycle Actions */}
             <div>
               <div style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--muted, #6f6e69)', marginBottom: 8, letterSpacing: '0.06em' }}>
-                POOL LIFECYCLE
+                SIMULATE (LOCAL) — POOL LIFECYCLE
               </div>
 
               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 8 }}>
@@ -240,7 +246,7 @@ export const TestnetPlayground: React.FC = () => {
                     cursor: 'pointer',
                   }}
                 >
-                  Fill Pool 100%
+                  Simulate fill 100% (local)
                 </button>
 
                 <button
@@ -256,7 +262,7 @@ export const TestnetPlayground: React.FC = () => {
                     cursor: 'pointer',
                   }}
                 >
-                  Expire Pool (Refund)
+                  Simulate expire (local)
                 </button>
               </div>
             </div>

@@ -4,7 +4,6 @@ import React from 'react';
 import Link from 'next/link';
 import { ArrowLeft, ArrowRight, ShieldCheck, Zap, Code, ExternalLink, CheckCircle2, Lock } from 'lucide-react';
 import { CONTRACT_ADDRESSES } from '@/lib/contracts';
-import { GondiActivityFeed } from '@/components/GondiActivityFeed';
 
 export const dynamic = 'force-static';
 
@@ -119,7 +118,7 @@ export default function MechanismPage() {
               Own a slice of the fee stream.
             </h3>
             <p style={{ fontSize: 14, color: '#bec0b9', lineHeight: 1.6, marginBottom: 24 }}>
-              Enter with small pooled contributions (from $10 in ETH). Receive automatic 70% pro-rata distributions on each swap until your 1.20x fixed cap is met.
+              Enter with small pooled contributions (from $10 in ETH). Receive automatic 75% pro-rata distributions on each swap until your 1.20x fixed cap is met.
             </p>
 
             <div style={{ marginTop: 'auto', display: 'grid', gap: 10 }}>
@@ -129,7 +128,7 @@ export default function MechanismPage() {
                 </div>
                 <ArrowRight size={14} color="#aeb0a8" />
                 <div style={{ flex: 1, padding: '10px 14px', border: '1px solid #3c3e38', background: '#20221e', borderRadius: 12, fontSize: 12, fontWeight: 800, color: '#ffffff' }}>
-                  2. 70% creator fees
+                  2. 75% creator fees
                 </div>
               </div>
 
@@ -229,7 +228,7 @@ export default function MechanismPage() {
               },
               {
                 name: 'FinanceSplitter.sol',
-                purpose: 'Pons V2 fee receiver. Splits 70% to lenders, 25% to creator, 5% to protocol. Enforces strict 1.20x cap return.',
+                purpose: 'Pons V2 fee receiver. Splits 75% to lenders, 23% to creator, 2% to protocol. Enforces strict 1.20x cap return.',
                 address: CONTRACT_ADDRESSES.splitter,
               },
               {
@@ -288,7 +287,6 @@ export default function MechanismPage() {
         </div>
       </div>
 
-      <GondiActivityFeed />
     </div>
   );
 }

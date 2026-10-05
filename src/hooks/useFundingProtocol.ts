@@ -3,12 +3,13 @@
 import { useState } from 'react';
 import { useWriteContract, useWaitForTransactionReceipt, useReadContract } from 'wagmi';
 import { parseEther, formatEther } from 'viem';
-import { 
-  FundingPoolABI, 
-  FinanceSplitterABI, 
-  FundingPoolFactoryABI, 
-  IPonsV2ABI, 
-  CONTRACT_ADDRESSES 
+import {
+  FundingPoolABI,
+  FinanceSplitterABI,
+  FundingPoolFactoryABI,
+  CampaignEscrowABI,
+  IPonsV2ABI,
+  CONTRACT_ADDRESSES
 } from '@/lib/contracts';
 
 /**
@@ -119,12 +120,12 @@ export function useCreateFundingPool() {
     hash,
   });
 
-  const createPool = async (tokenAddress: `0x${string}`, targetEth: string = '0.12', durationSeconds: number = 86400) => {
+  const createPool = async (tokenAddress: `0x${string}`, fundingWindowSeconds: number = 1200) => {
     return await writeContractAsync({
       address: CONTRACT_ADDRESSES.factory,
       abi: FundingPoolFactoryABI,
       functionName: 'createPool',
-      args: [tokenAddress, parseEther(targetEth), BigInt(durationSeconds)],
+      args: [tokenAddress, BigInt(fundingWindowSeconds)],
     });
   };
 
@@ -136,6 +137,74 @@ export function useCreateFundingPool() {
     isSuccess,
     error,
     reset,
+  };
+}
+
+/**
+ * Hook to verify Pons fee transfer to the splitter (brief #16 guard).
+ * Must be called after pool fills and creator transfers recipient.
+ */
+export function useVerifyFeeTransfer(poolAddress?: `0x${string}`) {
+  const { writeContractAsync, data: hash, isPending, error, reset } = useWriteContract();
+
+  const { isLoading: isConfirming, isSuccess } = useWaitForTransactionReceipt({
+    hash,
+  });
+
+  const verify = async () => {
+    if (!poolAddress) throw new Error('Pool address is required');
+    return await writeContractAsync({
+      address: poolAddress,
+      abi: FundingPoolABI,
+      functionName: 'verifyFeeTransfer',
+    });
+  };
+
+  return {
+    verify,
+    hash,
+    isPending,
+    isConfirming,
+    isSuccess,
+    error,
+    reset,
+  };
+}
+
+/**
+ * Hook to read fee-transfer verification + escrow deadline state.
+ */
+export function usePoolSecurity(poolAddress?: `0x${string}`, escrowAddress?: `0x${string}`) {
+  const verifiedQuery = useReadContract({
+    address: poolAddress,
+    abi: FundingPoolABI,
+    functionName: 'feeTransferVerified',
+    query: { enabled: !!poolAddress },
+  });
+
+  const canReleaseQuery = useReadContract({
+    address: poolAddress,
+    abi: FundingPoolABI,
+    functionName: 'canReleaseToOperator',
+    query: { enabled: !!poolAddress },
+  });
+
+  const deadlineQuery = useReadContract({
+    address: escrowAddress,
+    abi: CampaignEscrowABI,
+    functionName: 'executionDeadline',
+    query: { enabled: !!escrowAddress },
+  });
+
+  return {
+    feeTransferVerified: (verifiedQuery.data as boolean | undefined) ?? null,
+    canRelease: (canReleaseQuery.data as boolean | undefined) ?? null,
+    executionDeadline: deadlineQuery.data !== undefined ? Number(deadlineQuery.data) : null,
+    refetch: () => {
+      verifiedQuery.refetch();
+      canReleaseQuery.refetch();
+      deadlineQuery.refetch();
+    },
   };
 }
 

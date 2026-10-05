@@ -14,6 +14,11 @@ contract MockPonsV2 is IPonsV2 {
         creatorFeeRecipients[token] = creator;
     }
 
+    /// @dev Test-only: simulates an unexpected recipient change
+    function forceRecipient(address token, address recipient) external {
+        creatorFeeRecipients[token] = recipient;
+    }
+
     function transferCreatorFeeRecipient(address token, address newRecipient) external override {
         address current = creatorFeeRecipients[token];
         require(msg.sender == current, "Only current recipient can transfer");

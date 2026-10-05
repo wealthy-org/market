@@ -6,7 +6,6 @@ import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
 import { useAccount, useWriteContract } from 'wagmi';
 import { FinanceSplitterABI } from '@/lib/contracts';
-import { GondiActivityFeed } from '@/components/GondiActivityFeed';
 import { 
   ArrowLeft, 
   PlusCircle, 
@@ -213,7 +212,7 @@ export default function CreatorPage() {
           </div>
 
           <div style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 700 }}>
-            Active Split: <span style={{ color: 'var(--ink)' }}>70% Lenders / 25% Creator / 5% Protocol</span>
+            Active Split: <span style={{ color: 'var(--ink)' }}>75% Lenders / 23% Creator / 2% Protocol</span>
           </div>
         </div>
 
@@ -254,7 +253,7 @@ export default function CreatorPage() {
                           {deal.token.imageUrl ? (
                             <img
                               src={deal.token.imageUrl}
-                              alt={deal.token.name}
+                              alt=""
                               style={{
                                 width: 36,
                                 height: 36,
@@ -325,8 +324,8 @@ export default function CreatorPage() {
                         <div style={{ fontWeight: 800, color: 'var(--ink)' }}>
                           ${deal.feeVelocity}/hr
                         </div>
-                        <div style={{ fontSize: 11, color: 'var(--emerald)' }}>
-                          +{deal.feeVelocityTrend}%
+                        <div style={{ fontSize: 11, fontWeight: 800, color: deal.feeVelocityTrend >= 0 ? 'var(--emerald)' : 'var(--coral)' }}>
+                          {deal.feeVelocityTrend >= 0 ? '+' : ''}{deal.feeVelocityTrend}%
                         </div>
                       </td>
 
@@ -439,7 +438,6 @@ export default function CreatorPage() {
       </div>
 
       {/* Right Column: Live Activity Stream */}
-      <GondiActivityFeed />
     </div>
   );
 }

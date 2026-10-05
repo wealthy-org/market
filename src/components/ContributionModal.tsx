@@ -146,7 +146,7 @@ export const ContributionModal: React.FC = () => {
         {modalDeal.token.imageUrl ? (
           <img
             src={modalDeal.token.imageUrl}
-            alt={modalDeal.token.name}
+            alt=""
             style={{
               width: 44,
               height: 44,

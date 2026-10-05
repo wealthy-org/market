@@ -23,6 +23,7 @@ import {
   Calculator
 } from 'lucide-react';
 import { PaybackCalculatorModal } from '@/components/PaybackCalculatorModal';
+import { PoolSecurityCard } from '@/components/PoolSecurityCard';
 
 export default function RequestDetailPage({
   params,
@@ -361,7 +362,7 @@ export default function RequestDetailPage({
             {deal.token.imageUrl ? (
               <img
                 src={deal.token.imageUrl}
-                alt={deal.token.name}
+                alt=""
                 style={{
                   width: '100%',
                   height: '100%',
@@ -504,7 +505,7 @@ export default function RequestDetailPage({
                     {d.token.imageUrl ? (
                       <img
                         src={d.token.imageUrl}
-                        alt={d.token.name}
+                        alt=""
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />
                     ) : (
@@ -646,6 +647,9 @@ export default function RequestDetailPage({
               </div>
             </div>
 
+            {/* Onchain security: fee-transfer guard + escrow deadline (brief #16/#18) */}
+            <PoolSecurityCard deal={deal} />
+
             {/* Dual Action Cards matching prototype color harmony */}
             <div
               style={{
@@ -719,10 +723,10 @@ export default function RequestDetailPage({
                   <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                     <div style={{ display: 'flex', alignItems: 'baseline', gap: 6 }}>
                       <span style={{ fontSize: 24, fontWeight: 900, color: '#18310a' }}>
-                        {(25 / ETH_PRICE_USD).toFixed(4)} ETH
+                        {(10 / ETH_PRICE_USD).toFixed(4)} ETH
                       </span>
                       <span style={{ fontSize: 12, color: '#40792c', fontWeight: 650 }}>
-                        $25 Min
+                        $10 Min
                       </span>
                     </div>
 
@@ -745,7 +749,7 @@ export default function RequestDetailPage({
                   </div>
 
                   <div style={{ fontSize: 11, color: '#40792c', marginTop: 4 }}>
-                    70% DEX Fee Stream · Auto-repaid by Router
+                    75% DEX Fee Stream · Auto-repaid by Router
                   </div>
                 </div>
 
@@ -815,7 +819,7 @@ export default function RequestDetailPage({
                     { label: 'Lender Split', value: `${deal.lenderFeeSharePct}%` },
                     { label: 'Creator Share', value: `${deal.creatorFeeSharePct}%` },
                     { label: 'Fixed Cap', value: `${deal.repayCapMultiplier.toFixed(2)}x` },
-                    { label: 'Liquidity', value: `$${deal.liquidityUsd.toLocaleString()}` },
+                    { label: 'Liquidity', value: `${deal.liquidityUsd.toLocaleString('en-US')}` },
                     { label: 'Traders', value: `${deal.uniqueTraders} Unique` },
                     { label: 'Campaign Target', value: `$${deal.campaignTargetUsd}` },
                     { label: 'Campaign Goal', value: 'DEX Screener Paid' },
@@ -1501,7 +1505,7 @@ export default function RequestDetailPage({
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'space-between', paddingBottom: 2 }}>
                           <span style={{ color: 'var(--muted)' }}>DEX Liquidity</span>
-                          <span style={{ color: 'var(--ink)', fontWeight: 700 }}>${deal.liquidityUsd.toLocaleString()}</span>
+                          <span style={{ color: 'var(--ink)', fontWeight: 700 }}>${deal.liquidityUsd.toLocaleString('en-US')}</span>
                         </div>
                       </div>
                     </div>

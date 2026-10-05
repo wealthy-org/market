@@ -145,7 +145,7 @@ export const PaybackCalculatorModal: React.FC<PaybackCalculatorModalProps> = ({
             {deal.token.imageUrl && (
               <img
                 src={deal.token.imageUrl}
-                alt={deal.token.name}
+                alt=""
                 style={{ width: 24, height: 24, borderRadius: 6, objectFit: 'cover' }}
               />
             )}
@@ -162,7 +162,7 @@ export const PaybackCalculatorModal: React.FC<PaybackCalculatorModalProps> = ({
           <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12.5, marginBottom: 6 }}>
               <span style={{ fontWeight: 700, color: 'var(--ink)' }}>Expected Daily DEX Volume</span>
-              <b style={{ color: 'var(--ink)' }}>${dailyVolumeUsd.toLocaleString()} / day</b>
+              <b style={{ color: 'var(--ink)' }}>${dailyVolumeUsd.toLocaleString('en-US')} / day</b>
             </div>
             <input
               type="range"
