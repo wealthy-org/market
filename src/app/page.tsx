@@ -1,24 +1,24 @@
 'use client';
 
 import React from 'react';
-import { HeroSection } from '@/components/HeroSection';
-import { MarketSection } from '@/components/MarketSection';
-import { MechanismSection } from '@/components/MechanismSection';
+import { GondiStatsBanner } from '@/components/GondiStatsBanner';
+import { GondiCarousel } from '@/components/GondiCarousel';
+import { GondiMarketTable } from '@/components/GondiMarketTable';
 import { DealViewSection } from '@/components/DealViewSection';
-import { ActivitySection } from '@/components/ActivitySection';
-import { FinalCtaSection } from '@/components/FinalCtaSection';
+import { MechanismSection } from '@/components/MechanismSection';
+import { GondiActivityFeed } from '@/components/GondiActivityFeed';
 
 export default function HomePage() {
   return (
-    <>
-      <div className="wrap">
-        <HeroSection />
+    <div className="gondi-content-wrapper">
+      <div className="gondi-center-feed">
+        <GondiStatsBanner />
+        <GondiCarousel />
+        <GondiMarketTable />
+        <DealViewSection />
+        <MechanismSection />
       </div>
-      <MarketSection />
-      <MechanismSection />
-      <DealViewSection />
-      <ActivitySection />
-      <FinalCtaSection />
-    </>
+      <GondiActivityFeed />
+    </div>
   );
 }

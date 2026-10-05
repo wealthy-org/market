@@ -3,7 +3,8 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 import { Web3Provider } from '@/components/Web3Provider';
 import { MarketProvider } from '@/context/MarketContext';
-import { Navbar } from '@/components/Navbar';
+import { GondiSidebar } from '@/components/GondiSidebar';
+import { GondiHeader } from '@/components/GondiHeader';
 import { Footer } from '@/components/Footer';
 import { ContributionModal } from '@/components/ContributionModal';
 import { CreateRequestModal } from '@/components/CreateRequestModal';
@@ -18,16 +19,16 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Launch Funding Market · Pons V2 Creator Fee Financing',
+  title: 'Pons Market · NFT & Token Creator Fee Financing on Robinhood Chain',
   description:
-    'Back live token launches on Robinhood Chain with pooled ETH contributions. Campaign costs funded upfront, repaid automatically from future Pons creator fees.',
+    'Back live token launches and NFT creators on Robinhood Chain with pooled ETH contributions. Upfront liquidity repaid automatically from future Pons V2 creator fee splits.',
   keywords: [
     'Pons V2',
+    'Gondi UI',
     'Creator Fee Financing',
     'Robinhood Chain',
     'DEX Screener',
-    'DeFi',
-    'Launch Market',
+    'DeFi Lending',
   ],
 };
 
@@ -41,9 +42,14 @@ export default function RootLayout({
       <body>
         <Web3Provider>
           <MarketProvider>
-            <Navbar />
-            <main>{children}</main>
-            <Footer />
+            <div className="gondi-shell">
+              <GondiSidebar />
+              <div className="gondi-main-area">
+                <GondiHeader />
+                <main style={{ flex: 1, minWidth: 0 }}>{children}</main>
+                <Footer />
+              </div>
+            </div>
             <ContributionModal />
             <CreateRequestModal />
             <WalletModalContainer />
@@ -55,4 +61,3 @@ export default function RootLayout({
     </html>
   );
 }
-

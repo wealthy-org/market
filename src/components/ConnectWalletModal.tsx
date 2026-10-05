@@ -164,26 +164,28 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
                 alignItems: 'center',
                 justifyContent: 'space-between',
                 padding: '12px 16px',
-                borderRadius: 14,
+                borderRadius: 12,
                 border: '1px solid var(--line)',
-                background: '#ffffff',
+                background: 'var(--surface-input)',
                 cursor: 'pointer',
                 textAlign: 'left',
-                transition: 'all 0.15s',
+                transition: 'all 0.15s ease',
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = 'var(--ink)';
+                e.currentTarget.style.borderColor = 'var(--line-strong)';
+                e.currentTarget.style.background = 'var(--surface-hover)';
                 e.currentTarget.style.transform = 'translateY(-1px)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.borderColor = 'var(--line)';
+                e.currentTarget.style.background = 'var(--surface-input)';
                 e.currentTarget.style.transform = 'translateY(0)';
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
                 {renderWalletIcon(w.id)}
                 <div>
-                  <div style={{ fontWeight: 800, fontSize: 14, color: 'var(--ink)' }}>
+                  <div style={{ fontWeight: 800, fontSize: 14, color: '#ffffff' }}>
                     {w.name}
                   </div>
                   <div style={{ fontSize: 11, color: 'var(--muted)', marginTop: 2 }}>
@@ -197,8 +199,8 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
                   style={{
                     fontSize: 10.5,
                     fontWeight: 750,
-                    background: 'var(--green-bg)',
-                    color: 'var(--green-accent)',
+                    background: 'rgba(16, 185, 129, 0.15)',
+                    color: 'var(--emerald)',
                     padding: '3px 8px',
                     borderRadius: 999,
                   }}
@@ -219,8 +221,9 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
         <div
           style={{
             padding: '12px 14px',
-            background: 'var(--soft)',
-            borderRadius: 14,
+            background: 'var(--surface-input)',
+            border: '1px solid var(--line-soft)',
+            borderRadius: 12,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
@@ -228,7 +231,7 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
           }}
         >
           <div>
-            <div style={{ fontWeight: 750, color: 'var(--ink)' }}>
+            <div style={{ fontWeight: 750, color: '#ffffff' }}>
               Quick Testnet Mode
             </div>
             <div style={{ color: 'var(--muted)', fontSize: 11 }}>
@@ -237,8 +240,8 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = ({ isOpen, 
           </div>
           <button
             type="button"
-            className="btn dark"
-            style={{ padding: '6px 12px', fontSize: 11 }}
+            className="btn primary"
+            style={{ padding: '6px 14px', fontSize: 11.5, fontWeight: 800 }}
             onClick={handleUseDemo}
           >
             <Sparkles size={12} />

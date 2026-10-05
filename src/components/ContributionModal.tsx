@@ -156,8 +156,9 @@ export const ContributionModal: React.FC = () => {
         {/* Pool Summary Box */}
         <div
           style={{
-            background: 'var(--soft)',
-            borderRadius: 14,
+            background: 'var(--surface-input)',
+            border: '1px solid var(--line-soft)',
+            borderRadius: 12,
             padding: '12px 16px',
             marginBottom: 16,
             fontSize: 12.5,
@@ -165,23 +166,23 @@ export const ContributionModal: React.FC = () => {
         >
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
             <span style={{ color: 'var(--muted)' }}>Campaign</span>
-            <b>{modalDeal.campaignName}</b>
+            <b style={{ color: '#ffffff' }}>{modalDeal.campaignName}</b>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 4 }}>
             <span style={{ color: 'var(--muted)' }}>Pool Progress</span>
-            <b>
+            <b style={{ color: '#ffffff' }}>
               ${modalDeal.fundedUsd} / ${modalDeal.campaignTargetUsd} (
               {Math.round((modalDeal.fundedUsd / modalDeal.campaignTargetUsd) * 100)}%)
             </b>
           </div>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <span style={{ color: 'var(--muted)' }}>Fee Velocity</span>
-            <b style={{ color: 'var(--green-accent)' }}>${modalDeal.feeVelocity}/hr</b>
+            <b style={{ color: 'var(--emerald)' }}>${modalDeal.feeVelocity}/hr</b>
           </div>
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--muted)', marginBottom: 6 }}>
+          <div style={{ fontSize: 11, fontWeight: 750, color: 'var(--muted)', marginBottom: 6 }}>
             CHOOSE ALLOCATION AMOUNT
           </div>
 
@@ -209,7 +210,7 @@ export const ContributionModal: React.FC = () => {
             )}
           </div>
 
-          <div className="allocation-box" style={{ margin: '14px 0' }}>
+          <div className="allocation-box" style={{ margin: '14px 0', background: 'var(--surface-input)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
               <span style={{ fontSize: 22, fontWeight: 800, color: 'var(--muted)' }}>$</span>
               <input
@@ -219,6 +220,7 @@ export const ContributionModal: React.FC = () => {
                 value={amount}
                 onChange={(e) => setAmount(Math.max(1, Number(e.target.value)))}
                 disabled={isProcessing}
+                style={{ color: '#ffffff' }}
               />
             </div>
             <div style={{ textAlign: 'right' }}>
@@ -230,26 +232,26 @@ export const ContributionModal: React.FC = () => {
           <div
             style={{
               border: '1px solid var(--line-soft)',
-              borderRadius: 14,
+              borderRadius: 12,
               padding: '12px 16px',
               display: 'grid',
               gap: 8,
               fontSize: 12.5,
               marginBottom: 16,
-              background: '#ffffff',
+              background: 'var(--surface-input)',
             }}
           >
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: 'var(--muted)' }}>Pool ownership share</span>
-              <b>{poolShare}%</b>
+              <b style={{ color: '#ffffff' }}>{poolShare}%</b>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: 'var(--muted)' }}>Lender fee share</span>
-              <b>{modalDeal.lenderFeeSharePct}%</b>
+              <b style={{ color: '#ffffff' }}>{modalDeal.lenderFeeSharePct}%</b>
             </div>
             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <span style={{ color: 'var(--muted)' }}>Maximum repayment* ({modalDeal.repayCapMultiplier}× cap)</span>
-              <b style={{ color: 'var(--green-accent)' }}>${maxRepayment}</b>
+              <b style={{ color: 'var(--lime)' }}>${maxRepayment}</b>
             </div>
           </div>
 
@@ -257,12 +259,12 @@ export const ContributionModal: React.FC = () => {
           {customError && (
             <div
               style={{
-                background: '#fff2f0',
-                border: '1px solid #ffccc7',
+                background: 'rgba(244, 63, 94, 0.12)',
+                border: '1px solid rgba(244, 63, 94, 0.3)',
                 borderRadius: 12,
                 padding: '10px 14px',
                 fontSize: 12,
-                color: '#cf1322',
+                color: '#ff6b81',
                 marginBottom: 14,
                 display: 'flex',
                 alignItems: 'center',
