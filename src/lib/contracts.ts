@@ -18,5 +18,7 @@ export const CONTRACT_ADDRESSES = {
   ponsV2: (process.env.NEXT_PUBLIC_PONS_ADDRESS || deployments.ponsV2) as `0x${string}`,
   protocolTreasury: (process.env.NEXT_PUBLIC_TREASURY_ADDRESS || '0x9178B573219C55586BbAf51Ecb24ACfb27BB7681') as `0x${string}`,
   samplePool: (process.env.NEXT_PUBLIC_SAMPLE_POOL || deployments.samplePool) as `0x${string}`,
+  splitter: '0x9965507D1a55bcC2695C58ba16FB37d819B0A4df' as `0x${string}`,
+  mockPons: (process.env.NEXT_PUBLIC_PONS_ADDRESS || deployments.ponsV2) as `0x${string}`,
 };
 

@@ -6,6 +6,7 @@ import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
 import { useAccount, useWriteContract } from 'wagmi';
 import { FinanceSplitterABI } from '@/lib/contracts';
+import { GondiActivityFeed } from '@/components/GondiActivityFeed';
 import { 
   ArrowLeft, 
   PlusCircle, 
@@ -17,7 +18,8 @@ import {
   Sparkles, 
   Loader2,
   Clock,
-  ArrowUpRight
+  ArrowUpRight,
+  UserCheck
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
@@ -26,18 +28,12 @@ export default function CreatorPage() {
   const { isConnected } = useAccount();
   const { writeContractAsync } = useWriteContract();
 
+  const [activeTab, setActiveTab] = useState<'ALL' | 'ACTIVE' | 'REPAID'>('ALL');
   const [claimingDealId, setClaimingDealId] = useState<string | null>(null);
   const [claimedAmounts, setClaimedAmounts] = useState<Record<string, boolean>>({});
 
-  // Find deals belonging to creator or mock creator
-  const creatorDeals = deals.filter(
-    (d) =>
-      d.token.creatorAddress.toLowerCase().includes('7e81') ||
-      d.token.creatorAddress === walletAddress ||
-      walletAddress.toLowerCase().includes('7681') ||
-      d.id === 'pny' ||
-      d.id === 'whl'
-  );
+  // Group or list deals with creator information
+  const creatorDeals = deals;
 
   const totalRaisedUsd = creatorDeals.reduce((acc, d) => acc + d.fundedUsd, 0);
   const totalFeesGeneratedUsd = creatorDeals.reduce((acc, d) => acc + d.creatorFeesAccruedUsd, 0);
@@ -46,6 +42,12 @@ export default function CreatorPage() {
     (acc, d) => acc + (d.creatorFeesAccruedUsd * (d.creatorFeeSharePct / 100)),
     0
   );
+
+  const filteredDeals = creatorDeals.filter((deal) => {
+    if (activeTab === 'ACTIVE' && deal.status === 'REPAID') return false;
+    if (activeTab === 'REPAID' && deal.status !== 'REPAID') return false;
+    return true;
+  });
 
   const handleClaimCreatorShare = async (deal: (typeof creatorDeals)[0]) => {
     setClaimingDealId(deal.id);
@@ -76,244 +78,353 @@ export default function CreatorPage() {
   };
 
   return (
-    <div className="wrap" style={{ padding: '60px 24px 100px' }}>
-      <div style={{ marginBottom: 32 }}>
-        <Link
-          href="/"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            fontSize: 13,
-            fontWeight: 700,
-            color: 'var(--muted)',
-            marginBottom: 16,
-          }}
-        >
-          <ArrowLeft size={14} />
-          <span>Back to Live Market</span>
-        </Link>
-        <div className="eyebrow">Creator Dashboard · Pons V2 Revenue Financing</div>
+    <div className="gondi-content-wrapper">
+      <div className="gondi-center-feed">
+        {/* Header Section */}
+        <div style={{ marginBottom: 28 }}>
+          <Link
+            href="/"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              fontSize: 12.5,
+              fontWeight: 750,
+              color: 'var(--muted)',
+              marginBottom: 12,
+              textDecoration: 'none',
+            }}
+          >
+            <ArrowLeft size={13} />
+            <span>Back to Home</span>
+          </Link>
+          <div className="eyebrow">
+            Artists &amp; Creators · Pons V2 Revenue Financing
+          </div>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              flexWrap: 'wrap',
+              gap: 16,
+              marginTop: 6,
+            }}
+          >
+            <div>
+              <h1 className="serif-heading" style={{ fontSize: 36, margin: '0 0 8px', color: 'var(--ink)' }}>
+                Artists &amp; Creators
+              </h1>
+              <p style={{ color: 'var(--muted)', maxWidth: 640, fontSize: 14.5, lineHeight: 1.5, margin: 0 }}>
+                Turn early Pons token momentum into upfront marketing budget. Raise $299 for verified
+                DEX Screener Fast-Track, automatically repaid from future trading fees via the FinanceSplitter contract.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              className="btn lime"
+              style={{ padding: '10px 18px', fontSize: 13, fontWeight: 850 }}
+              onClick={() => setIsCreateModalOpen(true)}
+            >
+              <PlusCircle size={15} />
+              <span>Create Funding Request</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Gondi Style Stats Banner for Creators */}
+        <div className="gondi-stats-banner" style={{ marginBottom: 28 }}>
+          <div className="gondi-stat-card">
+            <span className="label">Total Capital Raised</span>
+            <div className="value-row">
+              <span className="val">${totalRaisedUsd.toFixed(2)}</span>
+            </div>
+            <span className="sub">
+              Across {creatorDeals.length} launch campaigns
+            </span>
+          </div>
+
+          <div className="gondi-stat-card">
+            <span className="label">Creator Fees Generated</span>
+            <div className="value-row">
+              <span className="val" style={{ color: 'var(--emerald)' }}>
+                ${totalFeesGeneratedUsd.toFixed(2)}
+              </span>
+            </div>
+            <span className="sub">Pons V2 swap fee accrual</span>
+          </div>
+
+          <div className="gondi-stat-card">
+            <span className="label">Repaid to Lenders</span>
+            <div className="value-row">
+              <span className="val">${totalRepaidToLendersUsd.toFixed(2)}</span>
+            </div>
+            <span className="sub">Streamed automatically via Splitter</span>
+          </div>
+
+          <div className="gondi-stat-card">
+            <span className="label">Creator Retained Share</span>
+            <div className="value-row">
+              <span className="val" style={{ color: 'var(--lime-dark)' }}>
+                ${totalCreatorEarnedUsd.toFixed(2)}
+              </span>
+            </div>
+            <span className="sub">25%-30% perpetual cash flow</span>
+          </div>
+        </div>
+
+        {/* Tabs Filter matching Gondi screenshot 5 */}
         <div
           style={{
             display: 'flex',
             justifyContent: 'space-between',
-            alignItems: 'flex-start',
+            alignItems: 'center',
+            marginBottom: 16,
             flexWrap: 'wrap',
-            gap: 16,
-            marginTop: 8,
+            gap: 12,
           }}
         >
-          <div>
-            <h1 className="serif-heading" style={{ fontSize: 52, margin: '0 0 12px' }}>
-              Creator Launch Pools
-            </h1>
-            <p style={{ color: 'var(--muted)', maxWidth: 640, fontSize: 16 }}>
-              Turn your Pons token&apos;s early momentum into upfront marketing budget.
-              Lenders fund your DEX Screener campaign upfront ($299), repaid automatically
-              from future creator fees through the FinanceSplitter contract.
+          <div style={{ display: 'flex', gap: 6 }}>
+            {[
+              { id: 'ALL', label: `All Creators (${creatorDeals.length})` },
+              { id: 'ACTIVE', label: `Active Campaigns (${creatorDeals.filter((d) => d.status !== 'REPAID').length})` },
+              { id: 'REPAID', label: `Completed Repayments (${creatorDeals.filter((d) => d.status === 'REPAID').length})` },
+            ].map((tab) => (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id as any)}
+                style={{
+                  padding: '6px 14px',
+                  borderRadius: 'var(--radius-full)',
+                  background: activeTab === tab.id ? 'var(--ink)' : 'var(--soft)',
+                  color: activeTab === tab.id ? '#ffffff' : 'var(--ink)',
+                  border: '1px solid var(--line)',
+                  fontSize: 12,
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease',
+                }}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          <div style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 700 }}>
+            Active Split: <span style={{ color: 'var(--ink)' }}>70% Lenders / 25% Creator / 5% Protocol</span>
+          </div>
+        </div>
+
+        {/* High Density Table matching Gondi Artists view */}
+        <div className="gondi-table-box" style={{ marginBottom: 40 }}>
+          <div style={{ overflowX: 'auto' }}>
+            <table className="gondi-table">
+              <thead>
+                <tr>
+                  <th style={{ width: 40, textAlign: 'center' }}>#</th>
+                  <th>Creator &amp; Launch Token</th>
+                  <th style={{ textAlign: 'right' }}>Target ($299)</th>
+                  <th style={{ textAlign: 'right' }}>Raised (ETH)</th>
+                  <th style={{ textAlign: 'right' }}>24H Fee Velocity</th>
+                  <th style={{ textAlign: 'right' }}>Lender Repayment</th>
+                  <th style={{ textAlign: 'right' }}>Creator Share</th>
+                  <th style={{ textAlign: 'right' }}>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {filteredDeals.map((deal, index) => {
+                  const fillPct = Math.min(100, Math.round((deal.fundedUsd / deal.campaignTargetUsd) * 100));
+                  const maxCapUsd = deal.campaignTargetUsd * deal.repayCapMultiplier;
+                  const remainingToRepayUsd = Math.max(0, maxCapUsd - deal.repaidToLendersUsd);
+                  const creatorShareEarned = +(deal.creatorFeesAccruedUsd * (deal.creatorFeeSharePct / 100)).toFixed(2);
+                  const isClaimed = claimedAmounts[deal.id];
+                  const isClaiming = claimingDealId === deal.id;
+                  const isRepaid = deal.status === 'REPAID' || remainingToRepayUsd <= 0;
+
+                  return (
+                    <tr key={deal.id}>
+                      <td style={{ textAlign: 'center', color: 'var(--muted)', fontWeight: 700, fontSize: 12 }}>
+                        {index + 1}
+                      </td>
+
+                      <td>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                          <div
+                            style={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: 10,
+                              background: '#1a1b18',
+                              color: '#ffffff',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: 800,
+                              fontSize: 12,
+                              flexShrink: 0,
+                            }}
+                          >
+                            {deal.token.symbol.replace('$', '').slice(0, 3)}
+                          </div>
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                              <span style={{ fontWeight: 800, fontSize: 13.5, color: 'var(--ink)' }}>
+                                {deal.token.name} ({deal.token.symbol})
+                              </span>
+                              <Link
+                                href={`/request/${deal.id}`}
+                                style={{ color: 'var(--muted)', display: 'inline-flex' }}
+                                title="View Deal Page"
+                              >
+                                <ExternalLink size={12} />
+                              </Link>
+                            </div>
+                            <div style={{ fontSize: 11.5, color: 'var(--muted)' }}>
+                              by {deal.token.creatorAddress} · {deal.token.age} old
+                            </div>
+                          </div>
+                        </div>
+                      </td>
+
+                      <td style={{ textAlign: 'right' }}>
+                        <div style={{ fontWeight: 800, color: 'var(--ink)' }}>
+                          ${deal.campaignTargetUsd}
+                        </div>
+                        <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+                          ≈ {(deal.campaignTargetUsd / ETH_PRICE_USD).toFixed(4)} ETH
+                        </div>
+                      </td>
+
+                      <td style={{ textAlign: 'right' }}>
+                        <div style={{ fontWeight: 800, color: 'var(--emerald)' }}>
+                          ${deal.fundedUsd}
+                        </div>
+                        <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+                          {fillPct}% funded
+                        </div>
+                      </td>
+
+                      <td style={{ textAlign: 'right' }}>
+                        <div style={{ fontWeight: 800, color: 'var(--ink)' }}>
+                          ${deal.feeVelocity}/hr
+                        </div>
+                        <div style={{ fontSize: 11, color: 'var(--emerald)' }}>
+                          +{deal.feeVelocityTrend}%
+                        </div>
+                      </td>
+
+                      <td style={{ textAlign: 'right' }}>
+                        <div style={{ fontWeight: 800, color: isRepaid ? 'var(--emerald)' : 'var(--ink)' }}>
+                          ${deal.repaidToLendersUsd.toFixed(2)}
+                        </div>
+                        <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+                          {isRepaid ? '1.20× Satisfied' : `$${remainingToRepayUsd.toFixed(2)} to go`}
+                        </div>
+                      </td>
+
+                      <td style={{ textAlign: 'right' }}>
+                        <div style={{ fontWeight: 800, color: 'var(--lime-dark)' }}>
+                          ${creatorShareEarned}
+                        </div>
+                        <div style={{ fontSize: 11, color: 'var(--muted)' }}>
+                          {deal.creatorFeeSharePct}% flow
+                        </div>
+                      </td>
+
+                      <td style={{ textAlign: 'right' }}>
+                        {creatorShareEarned > 0 && !isClaimed ? (
+                          <button
+                            type="button"
+                            className="btn lime"
+                            style={{ padding: '6px 14px', fontSize: 11.5, fontWeight: 850 }}
+                            onClick={() => handleClaimCreatorShare(deal)}
+                            disabled={isClaiming}
+                          >
+                            {isClaiming ? (
+                              <>
+                                <Loader2 size={12} className="spin" />
+                                <span>Claiming...</span>
+                              </>
+                            ) : (
+                              <>
+                                <Sparkles size={12} />
+                                <span>Claim Share</span>
+                              </>
+                            )}
+                          </button>
+                        ) : isRepaid ? (
+                          <span className="pill repaid" style={{ fontSize: 10.5 }} title="Fee rights returned back to creator wallet">
+                            Fee Rights Returned
+                          </span>
+                        ) : (
+                          <Link
+                            href={`/request/${deal.id}`}
+                            className="btn"
+                            style={{ padding: '6px 14px', fontSize: 11.5, textDecoration: 'none' }}
+                          >
+                            View
+                          </Link>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Informational Guidance Cards matching Prototype */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: 20,
+            marginBottom: 48,
+          }}
+        >
+          <div
+            style={{
+              background: 'var(--paper)',
+              border: '1px solid var(--line)',
+              borderRadius: 'var(--radius-xl)',
+              padding: 24,
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+              <Zap size={18} color="var(--ink)" />
+              <b style={{ fontSize: 15 }}>Standardized DEX Screener Campaign</b>
+            </div>
+            <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6, margin: 0 }}>
+              Raise the exact $299 required for DEX Screener Enhanced Token Info in pooled ETH.
+              Zero debt, no liquidation thresholds, and no manual repayment invoices.
             </p>
           </div>
 
-          <button
-            type="button"
-            className="btn dark"
-            style={{ padding: '12px 20px', fontSize: 14 }}
-            onClick={() => setIsCreateModalOpen(true)}
+          <div
+            style={{
+              background: 'var(--paper)',
+              border: '1px solid var(--line)',
+              borderRadius: 'var(--radius-xl)',
+              padding: 24,
+            }}
           >
-            <PlusCircle size={16} />
-            <span>Create New Funding Request</span>
-          </button>
-        </div>
-      </div>
-
-      {/* Creator Top Metrics */}
-      <div className="metrics-grid" style={{ marginBottom: 36 }}>
-        <div className="metric-cell">
-          <small>Total Capital Raised</small>
-          <b>${totalRaisedUsd.toFixed(2)}</b>
-          <span style={{ fontSize: 12, color: 'var(--muted)' }}>
-            Across {creatorDeals.length} launch campaigns
-          </span>
-        </div>
-        <div className="metric-cell">
-          <small>Creator Fees Generated</small>
-          <b style={{ color: 'var(--green-accent)' }}>${totalFeesGeneratedUsd.toFixed(2)}</b>
-          <span style={{ fontSize: 12, color: 'var(--muted)' }}>
-            Total volume fee accrual
-          </span>
-        </div>
-        <div className="metric-cell">
-          <small>Repaid to Lenders</small>
-          <b>${totalRepaidToLendersUsd.toFixed(2)}</b>
-          <span style={{ fontSize: 12, color: 'var(--muted)' }}>
-            Automated stream via Splitter
-          </span>
-        </div>
-        <div className="metric-cell">
-          <small>Creator Retained Share</small>
-          <b style={{ color: 'var(--lime-dark)' }}>${totalCreatorEarnedUsd.toFixed(2)}</b>
-          <span style={{ fontSize: 12, color: 'var(--muted)' }}>
-            25%-30% retained operating flow
-          </span>
-        </div>
-      </div>
-
-      {/* Creator Value Proposition Cards */}
-      <div className="cards-grid" style={{ marginBottom: 40 }}>
-        <div
-          className="card-item"
-          style={{ minHeight: 'auto', padding: '24px 28px', background: '#fff' }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <Zap size={18} color="var(--ink)" />
-            <b style={{ fontSize: 16 }}>Standardized DEX Screener Campaign</b>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
+              <ShieldCheck size={18} color="#3d7d28" />
+              <b style={{ fontSize: 15 }}>Automatic Fee Rights Return</b>
+            </div>
+            <p style={{ fontSize: 13, color: 'var(--muted)', lineHeight: 1.6, margin: 0 }}>
+              The FinanceSplitter contract intercepts creator fee rights strictly until the 1.20× cap is satisfied.
+              Once reached, 100% of perpetual trading fees automatically flow back to your wallet.
+            </p>
           </div>
-          <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6 }}>
-            Raise the exact $299 needed for DEX Screener Enhanced Token Info in pooled ETH.
-            No personal debt or manual collection schedules.
-          </p>
-        </div>
-
-        <div
-          className="card-item"
-          style={{ minHeight: 'auto', padding: '24px 28px', background: '#fff' }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 10 }}>
-            <ShieldCheck size={18} color="#3d7d28" />
-            <b style={{ fontSize: 16 }}>Automatic Recipient Return</b>
-          </div>
-          <p style={{ fontSize: 14, color: 'var(--muted)', lineHeight: 1.6 }}>
-            The FinanceSplitter contract holds fee rights only until the 1.20× cap is repaid.
-            Once reached, 100% of future fees are automatically redirected back to your wallet.
-          </p>
         </div>
       </div>
 
-      {/* Active Creator Deals List */}
-      <div className="market-box">
-        <div
-          style={{
-            padding: '18px 24px',
-            borderBottom: '1px solid var(--line)',
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          }}
-        >
-          <b style={{ fontSize: 15 }}>YOUR TOKEN LAUNCH DEALS ({creatorDeals.length})</b>
-          <span style={{ fontSize: 12, color: 'var(--muted)' }}>
-            Creator wallet: {walletAddress}
-          </span>
-        </div>
-
-        <div style={{ display: 'flex', flexDirection: 'column' }}>
-          {creatorDeals.map((deal) => {
-            const fillPct = Math.min(
-              100,
-              Math.round((deal.fundedUsd / deal.campaignTargetUsd) * 100)
-            );
-            const maxCapUsd = deal.campaignTargetUsd * deal.repayCapMultiplier;
-            const remainingToRepayUsd = Math.max(0, maxCapUsd - deal.repaidToLendersUsd);
-            const creatorShareEarned = +(deal.creatorFeesAccruedUsd * (deal.creatorFeeSharePct / 100)).toFixed(2);
-            const isClaimed = claimedAmounts[deal.id];
-            const isClaiming = claimingDealId === deal.id;
-            const isRepaid = deal.status === 'REPAID' || remainingToRepayUsd <= 0;
-
-            return (
-              <div
-                key={deal.id}
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: '1.4fr 1fr 1fr 1fr auto',
-                  gap: 16,
-                  alignItems: 'center',
-                  padding: '22px 24px',
-                  borderTop: '1px solid var(--line-soft)',
-                  background: '#ffffff',
-                }}
-              >
-                <div className="mini-token">
-                  <div className="mini-avatar">{deal.token.avatar}</div>
-                  <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                      <b style={{ fontSize: 16 }}>{deal.token.symbol}</b>
-                      <Link
-                        href={`/request/${deal.id}`}
-                        style={{ color: 'var(--muted)', display: 'inline-flex' }}
-                        title="View Public Deal Page"
-                      >
-                        <ExternalLink size={12} />
-                      </Link>
-                    </div>
-                    <small style={{ display: 'block', color: 'var(--muted)', fontSize: 11, marginTop: 2 }}>
-                      {deal.campaignName} · {deal.token.age} old
-                    </small>
-                  </div>
-                </div>
-
-                <div>
-                  <span className="label">Funding Progress</span>
-                  <span className="value">
-                    ${deal.fundedUsd} / ${deal.campaignTargetUsd} ({fillPct}%)
-                  </span>
-                </div>
-
-                <div>
-                  <span className="label">Lender Repayment</span>
-                  <span className="value">
-                    ${deal.repaidToLendersUsd.toFixed(2)} / ${maxCapUsd.toFixed(2)}
-                  </span>
-                  <small style={{ display: 'block', fontSize: 11, color: isRepaid ? 'var(--green-accent)' : 'var(--muted)' }}>
-                    {isRepaid ? '1.20× Cap Satisfied!' : `$${remainingToRepayUsd.toFixed(2)} remaining`}
-                  </small>
-                </div>
-
-                <div>
-                  <span className="label">Your Retained Share</span>
-                  <span className="value" style={{ color: 'var(--lime-dark)' }}>
-                    ${creatorShareEarned}
-                  </span>
-                  <small style={{ display: 'block', fontSize: 11, color: 'var(--muted)' }}>
-                    {deal.creatorFeeSharePct}% operating flow
-                  </small>
-                </div>
-
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  {creatorShareEarned > 0 && !isClaimed ? (
-                    <button
-                      type="button"
-                      className="btn lime sm"
-                      onClick={() => handleClaimCreatorShare(deal)}
-                      disabled={isClaiming}
-                    >
-                      {isClaiming ? (
-                        <>
-                          <Loader2 size={13} className="spin" />
-                          <span>Claiming...</span>
-                        </>
-                      ) : (
-                        <>
-                          <Sparkles size={13} />
-                          <span>Claim Share</span>
-                        </>
-                      )}
-                    </button>
-                  ) : isRepaid ? (
-                    <span className="pill repaid" title="100% of future trading fees are now directed to you">
-                      Fee Rights Returned
-                    </span>
-                  ) : (
-                    <span className="pill">
-                      {deal.fundedUsd >= deal.campaignTargetUsd ? 'Repaying Lenders' : 'Pool Open'}
-                    </span>
-                  )}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </div>
+      {/* Right Column: Live Activity Stream */}
+      <GondiActivityFeed />
     </div>
   );
 }

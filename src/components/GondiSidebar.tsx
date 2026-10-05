@@ -17,13 +17,20 @@ export const GondiSidebar: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const pathname = usePathname();
 
-  const NAV_ITEMS = [
+  interface NavItem {
+    label: string;
+    href: string;
+    icon: React.ComponentType<{ size?: number; style?: React.CSSProperties }>;
+    external?: boolean;
+  }
+
+  const NAV_ITEMS: NavItem[] = [
     { label: 'Home', href: '/', icon: Home },
-    { label: 'Launch Pools', href: '/#market', icon: Layers },
+    { label: 'Launch Pools', href: '/pools', icon: Layers },
     { label: 'Lender Portfolio', href: '/portfolio', icon: Briefcase },
     { label: 'Artists & Creators', href: '/creator', icon: Sparkles },
-    { label: 'Pons V2 Trade', href: 'https://robinhoodchain.blockscout.com', icon: ArrowLeftRight, external: true },
-    { label: 'Mechanism & Docs', href: '/#mechanism', icon: HelpCircle },
+    { label: 'Pons V2 Trade', href: '/trade', icon: ArrowLeftRight },
+    { label: 'Mechanism & Docs', href: '/mechanism', icon: HelpCircle },
   ];
 
   return (

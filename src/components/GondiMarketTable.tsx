@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import Link from 'next/link';
 import { useMarket } from '@/context/MarketContext';
 import { ETH_PRICE_USD } from '@/data/mockDeals';
 import { Info, ArrowUpRight, ArrowDownRight, Users } from 'lucide-react';
@@ -10,16 +11,9 @@ export const GondiMarketTable: React.FC = () => {
 
   const [activeTab, setActiveTab] = useState<'Top' | 'Volume' | 'Movers'>('Top');
   const [timeframe, setTimeframe] = useState<'24H' | '7D' | '30D'>('24H');
-  const [filterStatus, setFilterStatus] = useState<'ALL' | 'LIVE' | 'HOT' | 'REPAYING' | 'REPAID'>('ALL');
-
-  // Filter deals
-  const filteredDeals = deals.filter((deal) => {
-    if (filterStatus !== 'ALL' && deal.status !== filterStatus) return false;
-    return true;
-  });
 
   // Sort deals based on activeTab
-  const sortedDeals = [...filteredDeals].sort((a, b) => {
+  const sortedDeals = [...deals].sort((a, b) => {
     if (activeTab === 'Volume') {
       return b.creatorFeesAccruedUsd - a.creatorFeesAccruedUsd;
     }
@@ -64,42 +58,16 @@ export const GondiMarketTable: React.FC = () => {
     <div className="gondi-table-box" style={{ marginBottom: 40 }} id="market">
       {/* Table Header Controls */}
       <div className="gondi-table-header">
-        <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em' }}>
-              Market Overview
-            </span>
-            <span
-              title="Real-time DEX Screener Fast-Track pools backed by Pons V2 creator fee splits"
-              style={{ cursor: 'pointer', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}
-            >
-              <Info size={14} />
-            </span>
-          </div>
-
-          {/* Status filters */}
-          <div style={{ display: 'flex', gap: 6 }}>
-            {(['ALL', 'LIVE', 'HOT', 'REPAYING', 'REPAID'] as const).map((s) => (
-              <button
-                key={s}
-                type="button"
-                onClick={() => setFilterStatus(s)}
-                style={{
-                  background: filterStatus === s ? 'var(--ink)' : 'transparent',
-                  color: filterStatus === s ? '#ffffff' : 'var(--muted)',
-                  border: 0,
-                  borderRadius: 'var(--radius-full)',
-                  padding: '4px 10px',
-                  fontSize: 11,
-                  fontWeight: 750,
-                  cursor: 'pointer',
-                  transition: 'all 0.15s ease',
-                }}
-              >
-                {s}
-              </button>
-            ))}
-          </div>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+          <span style={{ fontSize: 16, fontWeight: 800, color: 'var(--ink)', letterSpacing: '-0.02em' }}>
+            Market Overview
+          </span>
+          <span
+            title="Real-time DEX Screener Fast-Track pools backed by Pons V2 creator fee splits"
+            style={{ cursor: 'pointer', color: 'var(--muted)', display: 'flex', alignItems: 'center' }}
+          >
+            <Info size={14} />
+          </span>
         </div>
 
         {/* Right Tab Selectors [Top | Volume | Movers] + [24H | 7D | 30D] */}
@@ -129,6 +97,28 @@ export const GondiMarketTable: React.FC = () => {
               </button>
             ))}
           </div>
+
+          <Link
+            href="/pools"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: 6,
+              padding: '6px 14px',
+              borderRadius: 'var(--radius-full)',
+              background: 'var(--soft)',
+              color: 'var(--ink)',
+              fontSize: 12,
+              fontWeight: 800,
+              textDecoration: 'none',
+              border: '1px solid var(--line)',
+              transition: 'all 0.15s ease',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            <span>All Launch Pools</span>
+            <span>→</span>
+          </Link>
         </div>
       </div>
 
