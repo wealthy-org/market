@@ -283,23 +283,38 @@ export default function LaunchPoolsPage() {
 
                           <td>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                              <div
-                                style={{
-                                  width: 38,
-                                  height: 38,
-                                  borderRadius: 10,
-                                  background: '#1a1b18',
-                                  color: '#ffffff',
-                                  display: 'flex',
-                                  alignItems: 'center',
-                                  justifyContent: 'center',
-                                  fontWeight: 800,
-                                  fontSize: 12,
-                                  flexShrink: 0,
-                                }}
-                              >
-                                {deal.token.symbol.replace('$', '').slice(0, 3)}
-                              </div>
+                              {deal.token.imageUrl ? (
+                                <img
+                                  src={deal.token.imageUrl}
+                                  alt={deal.token.name}
+                                  style={{
+                                    width: 38,
+                                    height: 38,
+                                    borderRadius: 10,
+                                    objectFit: 'cover',
+                                    border: '1px solid var(--line-soft)',
+                                    flexShrink: 0,
+                                  }}
+                                />
+                              ) : (
+                                <div
+                                  style={{
+                                    width: 38,
+                                    height: 38,
+                                    borderRadius: 10,
+                                    background: '#1a1b18',
+                                    color: '#ffffff',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    fontWeight: 800,
+                                    fontSize: 12,
+                                    flexShrink: 0,
+                                  }}
+                                >
+                                  {deal.token.symbol.replace('$', '').slice(0, 3)}
+                                </div>
+                              )}
                               <div>
                                 <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                                   <span style={{ fontWeight: 800, fontSize: 13.5, color: 'var(--ink)' }}>

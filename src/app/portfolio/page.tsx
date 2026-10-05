@@ -249,23 +249,38 @@ export default function PortfolioPage() {
 
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                          <div
-                            style={{
-                              width: 36,
-                              height: 36,
-                              borderRadius: 10,
-                              background: '#1a1b18',
-                              color: '#ffffff',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                              fontWeight: 800,
-                              fontSize: 12,
-                              flexShrink: 0,
-                            }}
-                          >
-                            {pos.tokenSymbol.replace('$', '').slice(0, 3)}
-                          </div>
+                          {pos.imageUrl ? (
+                            <img
+                              src={pos.imageUrl}
+                              alt={pos.tokenSymbol}
+                              style={{
+                                width: 36,
+                                height: 36,
+                                borderRadius: 10,
+                                objectFit: 'cover',
+                                border: '1px solid var(--line-soft)',
+                                flexShrink: 0,
+                              }}
+                            />
+                          ) : (
+                            <div
+                              style={{
+                                width: 36,
+                                height: 36,
+                                borderRadius: 10,
+                                background: '#1a1b18',
+                                color: '#ffffff',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontWeight: 800,
+                                fontSize: 12,
+                                flexShrink: 0,
+                              }}
+                            >
+                              {pos.tokenSymbol.replace('$', '').slice(0, 3)}
+                            </div>
+                          )}
                           <div>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                               <span style={{ fontWeight: 800, fontSize: 13.5, color: 'var(--ink)' }}>

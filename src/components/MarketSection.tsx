@@ -134,7 +134,22 @@ export const MarketSection: React.FC = () => {
                   }}
                 >
                   <div className="mini-token">
-                    <div className="mini-avatar">{deal.token.avatar}</div>
+                    {deal.token.imageUrl ? (
+                      <img
+                        src={deal.token.imageUrl}
+                        alt={deal.token.name}
+                        style={{
+                          width: 28,
+                          height: 28,
+                          borderRadius: 7,
+                          objectFit: 'cover',
+                          background: '#1a1b18',
+                          border: '1px solid var(--line)',
+                        }}
+                      />
+                    ) : (
+                      <div className="mini-avatar">{deal.token.avatar}</div>
+                    )}
                     <div>
                       <b style={{ fontSize: 14 }}>{deal.token.symbol}</b>
                       <small style={{ display: 'block', color: 'var(--muted)', fontSize: 11 }}>

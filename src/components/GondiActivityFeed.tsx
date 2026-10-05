@@ -197,23 +197,38 @@ export const GondiActivityFeed: React.FC = () => {
             >
               {/* Left: Avatar + Title & Addresses */}
               <div style={{ display: 'flex', alignItems: 'center', gap: 10, minWidth: 0 }}>
-                <div
-                  style={{
-                    width: 32,
-                    height: 32,
-                    borderRadius: 8,
-                    background: '#1a1b18',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    fontWeight: 800,
-                    fontSize: 10.5,
-                    color: '#ffffff',
-                    flexShrink: 0,
-                  }}
-                >
-                  {item.tokenSymbol ? item.tokenSymbol.replace('$', '').slice(0, 3) : '✦'}
-                </div>
+                {item.imageUrl || matchingDeal?.token.imageUrl ? (
+                  <img
+                    src={item.imageUrl || matchingDeal?.token.imageUrl}
+                    alt={item.tokenSymbol}
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 8,
+                      objectFit: 'cover',
+                      border: '1px solid var(--line-soft)',
+                      flexShrink: 0,
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: 32,
+                      height: 32,
+                      borderRadius: 8,
+                      background: '#1a1b18',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 800,
+                      fontSize: 10.5,
+                      color: '#ffffff',
+                      flexShrink: 0,
+                    }}
+                  >
+                    {item.tokenSymbol ? item.tokenSymbol.replace('$', '').slice(0, 3) : '✦'}
+                  </div>
+                )}
 
                 <div style={{ minWidth: 0 }}>
                   <div

@@ -95,9 +95,24 @@ export default function RequestDetailPage({
         {/* Token Title Bar */}
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: 16 }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div className="avatar" style={{ width: 56, height: 56, fontSize: 18 }}>
-              {deal.token.avatar}
-            </div>
+            {deal.token.imageUrl ? (
+              <img
+                src={deal.token.imageUrl}
+                alt={deal.token.name}
+                style={{
+                  width: 56,
+                  height: 56,
+                  borderRadius: 14,
+                  objectFit: 'cover',
+                  background: '#1a1b18',
+                  border: '1px solid var(--line)',
+                }}
+              />
+            ) : (
+              <div className="avatar" style={{ width: 56, height: 56, fontSize: 18 }}>
+                {deal.token.avatar}
+              </div>
+            )}
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
                 <h1 className="serif-heading" style={{ fontSize: 36, margin: 0 }}>

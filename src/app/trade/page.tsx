@@ -359,22 +359,37 @@ export default function TradePage() {
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 12 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div
-                    style={{
-                      width: 32,
-                      height: 32,
-                      borderRadius: 8,
-                      background: '#1a1b18',
-                      color: '#ffffff',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 800,
-                      fontSize: 11,
-                    }}
-                  >
-                    {selectedDeal.token.symbol.replace('$', '').slice(0, 3)}
-                  </div>
+                  {selectedDeal.token.imageUrl ? (
+                    <img
+                      src={selectedDeal.token.imageUrl}
+                      alt={selectedDeal.token.name}
+                      style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: 8,
+                        objectFit: 'cover',
+                        border: '1px solid var(--line-soft)',
+                        flexShrink: 0,
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: 32,
+                        height: 32,
+                        borderRadius: 8,
+                        background: '#1a1b18',
+                        color: '#ffffff',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 800,
+                        fontSize: 11,
+                      }}
+                    >
+                      {selectedDeal.token.symbol.replace('$', '').slice(0, 3)}
+                    </div>
+                  )}
                   <div>
                     <b style={{ fontSize: 15, color: 'var(--ink)' }}>{selectedDeal.token.symbol} / ETH</b>
                     <div style={{ fontSize: 11, color: 'var(--muted)' }}>Robinhood Testnet Pool</div>
@@ -495,22 +510,37 @@ export default function TradePage() {
 
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                        <div
-                          style={{
-                            width: 32,
-                            height: 32,
-                            borderRadius: 8,
-                            background: '#1a1b18',
-                            color: '#ffffff',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            fontWeight: 800,
-                            fontSize: 11,
-                          }}
-                        >
-                          {deal.token.symbol.replace('$', '').slice(0, 3)}
-                        </div>
+                        {deal.token.imageUrl ? (
+                          <img
+                            src={deal.token.imageUrl}
+                            alt={deal.token.name}
+                            style={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: 8,
+                              objectFit: 'cover',
+                              background: '#1a1b18',
+                              border: '1px solid var(--line)',
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: 32,
+                              height: 32,
+                              borderRadius: 8,
+                              background: '#1a1b18',
+                              color: '#ffffff',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontWeight: 800,
+                              fontSize: 11,
+                            }}
+                          >
+                            {deal.token.symbol.replace('$', '').slice(0, 3)}
+                          </div>
+                        )}
                         <div>
                           <b style={{ fontSize: 13, color: 'var(--ink)' }}>{deal.token.symbol} / ETH</b>
                           <div style={{ fontSize: 11, color: 'var(--muted)' }}>{deal.token.name}</div>

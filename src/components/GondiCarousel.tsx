@@ -215,19 +215,33 @@ export const GondiCarousel: React.FC = () => {
                   {deal.status === 'REPAID' ? 'REPAID' : deal.status === 'REPAYING' ? 'REPAYING' : `${progressPercent}%`}
                 </div>
 
-                {/* Big Token Symbol */}
-                <div
-                  style={{
-                    fontSize: 38,
-                    fontWeight: 900,
-                    letterSpacing: '-0.04em',
-                    color: 'var(--lime)',
-                    opacity: 0.95,
-                    textShadow: '0 0 24px rgba(167, 255, 99, 0.3)',
-                  }}
-                >
-                  {deal.token.symbol.replace('$', '').slice(0, 4)}
-                </div>
+                {deal.token.imageUrl ? (
+                  <img
+                    src={deal.token.imageUrl}
+                    alt={deal.token.name}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                      transition: 'transform 0.25s ease',
+                    }}
+                  />
+                ) : (
+                  /* Fallback Big Token Symbol */
+                  <div
+                    style={{
+                      fontSize: 38,
+                      fontWeight: 900,
+                      letterSpacing: '-0.04em',
+                      color: 'var(--lime)',
+                      opacity: 0.95,
+                      textShadow: '0 0 24px rgba(167, 255, 99, 0.3)',
+                    }}
+                  >
+                    {deal.token.symbol.replace('$', '').slice(0, 4)}
+                  </div>
+                )}
 
                 {/* Progress bar inside card bottom */}
                 <div

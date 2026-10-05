@@ -194,22 +194,37 @@ export const GondiHeader: React.FC = () => {
                 onMouseLeave={(e) => (e.currentTarget.style.background = 'transparent')}
               >
                 <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <div
-                    style={{
-                      width: 28,
-                      height: 28,
-                      borderRadius: 8,
-                      background: '#1a1b18',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 800,
-                      fontSize: 12,
-                      color: 'var(--lime)',
-                    }}
-                  >
-                    {deal.token.symbol.replace('$', '').slice(0, 3)}
-                  </div>
+                  {deal.token.imageUrl ? (
+                    <img
+                      src={deal.token.imageUrl}
+                      alt={deal.token.name}
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: 8,
+                        objectFit: 'cover',
+                        background: '#1a1b18',
+                        border: '1px solid var(--line)',
+                      }}
+                    />
+                  ) : (
+                    <div
+                      style={{
+                        width: 28,
+                        height: 28,
+                        borderRadius: 8,
+                        background: '#1a1b18',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        fontWeight: 800,
+                        fontSize: 12,
+                        color: 'var(--lime)',
+                      }}
+                    >
+                      {deal.token.symbol.replace('$', '').slice(0, 3)}
+                    </div>
+                  )}
                   <div>
                     <div style={{ fontSize: 13, fontWeight: 750, color: 'var(--ink)' }}>{deal.token.name}</div>
                     <div style={{ fontSize: 11, color: 'var(--muted)' }}>

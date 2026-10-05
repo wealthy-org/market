@@ -143,6 +143,20 @@ export const ContributionModal: React.FC = () => {
         </button>
 
         <div style={{ display: 'flex', alignItems: 'center', gap: 14, marginBottom: 18 }}>
+        {modalDeal.token.imageUrl ? (
+          <img
+            src={modalDeal.token.imageUrl}
+            alt={modalDeal.token.name}
+            style={{
+              width: 44,
+              height: 44,
+              borderRadius: 13,
+              objectFit: 'cover',
+              background: '#1a1b18',
+              border: '1px solid var(--line)',
+            }}
+          />
+        ) : (
           <div
             style={{
               width: 44,
@@ -159,6 +173,7 @@ export const ContributionModal: React.FC = () => {
           >
             {modalDeal.token.avatar}
           </div>
+        )}
           <div>
             <div className="eyebrow" style={{ fontSize: 9.5 }}>
               Launch Pool · {isConnected ? 'Onchain Mode' : 'Prototype Simulation'}

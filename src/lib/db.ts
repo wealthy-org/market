@@ -146,6 +146,9 @@ export async function dbGetDeals(): Promise<FundingDeal[]> {
         symbol: r.symbol,
         address: r.address,
         avatar: r.avatar,
+        imageUrl: (r.image_url && !r.image_url.includes('cdn.gondi.xyz/image/'))
+          ? r.image_url
+          : (INITIAL_DEALS.find((d) => d.id === r.id)?.token.imageUrl || undefined),
         age: r.age,
         chain: r.chain,
         pairToken: r.pair_token,

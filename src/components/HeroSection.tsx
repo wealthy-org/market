@@ -79,7 +79,22 @@ export const HeroSection: React.FC = () => {
         <div className="request-box">
           <div className="token-row">
             <div className="token-left">
-              <div className="avatar">{ponyDeal.token.avatar}</div>
+              {ponyDeal.token.imageUrl ? (
+                <img
+                  src={ponyDeal.token.imageUrl}
+                  alt={ponyDeal.token.name}
+                  style={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: 10,
+                    objectFit: 'cover',
+                    background: '#1a1b18',
+                    border: '1px solid var(--line)',
+                  }}
+                />
+              ) : (
+                <div className="avatar">{ponyDeal.token.avatar}</div>
+              )}
               <div>
                 <b style={{ fontSize: 16 }}>{ponyDeal.token.symbol}</b>
                 <small style={{ display: 'block', color: 'var(--muted)', fontSize: 11, marginTop: 2 }}>

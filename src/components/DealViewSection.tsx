@@ -82,22 +82,37 @@ export const DealViewSection: React.FC = () => {
           {/* Header Row */}
           <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-              <div
-                style={{
-                  width: 44,
-                  height: 44,
-                  borderRadius: 13,
-                  background: '#1a1b18',
-                  color: '#ffffff',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  fontWeight: 800,
-                  fontSize: 13,
-                }}
-              >
-                {selectedDeal.token.symbol.replace('$', '').slice(0, 3)}
-              </div>
+              {selectedDeal.token.imageUrl ? (
+                <img
+                  src={selectedDeal.token.imageUrl}
+                  alt={selectedDeal.token.name}
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 13,
+                    objectFit: 'cover',
+                    background: '#1a1b18',
+                    border: '1px solid var(--line)',
+                  }}
+                />
+              ) : (
+                <div
+                  style={{
+                    width: 44,
+                    height: 44,
+                    borderRadius: 13,
+                    background: '#1a1b18',
+                    color: '#ffffff',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    fontWeight: 800,
+                    fontSize: 13,
+                  }}
+                >
+                  {selectedDeal.token.symbol.replace('$', '').slice(0, 3)}
+                </div>
+              )}
               <div>
                 <b style={{ fontSize: 18, color: 'var(--ink)', display: 'block' }}>{selectedDeal.token.name}</b>
                 <span style={{ color: 'var(--muted)', fontSize: 12 }}>

@@ -80,6 +80,7 @@ export const CreateRequestModal: React.FC = () => {
         chain: 'Robinhood Chain',
         pairToken: 'WETH',
         creatorAddress: walletAddress,
+        imageUrl: 'https://lh3.googleusercontent.com/TbbppD5KJwxtyLaGM4dtCnLtMlwslnP2Tf1YJxQFSZqGwwmxTbZB_aIvp0mcIdd4UJg5O7W2PjXCoJ4DT7wKP3S_cbhb2JXGLTFb',
       },
       campaignName: 'DEX Screener Paid',
       campaignTargetUsd: 299,

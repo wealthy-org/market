@@ -5,6 +5,7 @@ export interface TokenInfo {
   symbol: string;
   address: string;
   avatar: string;
+  imageUrl?: string;
   age: string;
   chain: string;
   pairToken: string;
@@ -65,6 +66,7 @@ export interface LenderPosition {
   dealId: string;
   tokenSymbol: string;
   tokenAvatar: string;
+  imageUrl?: string;
   campaignName: string;
   contributedUsd: number;
   contributedEth: number;
@@ -85,6 +87,7 @@ export interface ActivityItem {
   dealId: string;
   tokenSymbol: string;
   tokenAvatar: string;
+  imageUrl?: string;
   amountUsd?: number;
   amountEth?: number;
   userAddress: string;
